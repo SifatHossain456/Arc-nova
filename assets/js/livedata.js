@@ -1,10 +1,9 @@
 /* ── Arc Nova — Live Data Engine ─────────────────────────────────────────── */
-/* Reads real on-chain data from Arc Testnet + real ETH/BTC prices           */
 (function () {
 'use strict';
 
-const RPC        = 'https://rpc.testnet.arc.network';
-const COINGECKO  = 'https://api.coingecko.com/api/v3/simple/price?ids=ethereum,bitcoin&vs_currencies=usd&include_24hr_change=true';
+const RPC       = 'https://rpc.testnet.arc.network';
+const COINGECKO = 'https://api.coingecko.com/api/v3/simple/price?ids=ethereum,bitcoin&vs_currencies=usd&include_24hr_change=true';
 
 const ADDRS = {
   NOVA_TOKEN: '0x3619Ce00C6300126543BcEd410D064212284B818',
@@ -12,24 +11,31 @@ const ADDRS = {
   STAKING:    '0xf6001aEceB3f3EF35b25682FCaF397ab11a14D59',
 };
 
-/* ── Market state ── */
+/* ── All live state ── */
 const S = {
-  tvl:       42.7,
-  vol24:     8.3,
-  users24:   3247,
-  txCount:   284917,
-  arcPrice:  2.47,
-  arcChange: 4.2,
-  ethPrice:  0,
-  ethChange: 0,
-  btcPrice:  0,
-  btcChange: 0,
+  tvl:       42.7,  tvlChg:    12.4,
+  vol24:     8.3,   volChg:    34.7,
+  users24:   3247,  usersChg:  8.2,
+  txCount:   284917, txChg:    21.6,
+  arcPrice:  2.47,  arcChange: 4.2,
+  ethPrice:  0,     ethChange: 0,
+  btcPrice:  0,     btcChange: 0,
+  gasPrice:  0.001,
   projects:  47,
   blockNum:  1847293,
   novaReserve: 0,
   usdcReserve: 0,
   totalStaked: 0,
 };
+
+/* ── Protocol TVL state — drifts every 30s ── */
+const PROTOCOLS = [
+  { tvl: 12.4, chg:  8.2 },
+  { tvl:  9.8, chg: 14.1 },
+  { tvl:  7.2, chg: -2.3 },
+  { tvl:  6.1, chg: 22.7 },
+  { tvl:  5.5, chg:  4.9 },
+];
 
 /* ── Smooth counter animation ── */
 function animNum(el, from, to, { prefix='', suffix='', dec=0, dur=1100 } = {}) {
@@ -44,7 +50,7 @@ function animNum(el, from, to, { prefix='', suffix='', dec=0, dur=1100 } = {}) {
   })(performance.now());
 }
 
-/* ── Flash element to show update ── */
+/* ── Flash element on update ── */
 function flash(el) {
   if (!el) return;
   el.classList.remove('live-updated');
@@ -52,7 +58,7 @@ function flash(el) {
   el.classList.add('live-updated');
 }
 
-/* ── Set element value with animation ── */
+/* ── Set [data-live] element with animation ── */
 function setLive(selector, newVal, opts) {
   document.querySelectorAll(selector).forEach(el => {
     const prev = parseFloat(el.dataset.lv || '0') || 0;
@@ -62,24 +68,102 @@ function setLive(selector, newVal, opts) {
   });
 }
 
-/* ── Simulate random drift ── */
+/* ── Simulate random drift every 30s ── */
 function drift() {
   const r = (v, pct) => v * (1 + (Math.random() - 0.48) * pct);
   S.tvl      = Math.max(40.0, r(S.tvl, 0.004));
+  S.tvlChg   = Math.max(0.5,  S.tvlChg   + (Math.random() - 0.40) * 0.3);
   S.vol24    = Math.max(7.0,  r(S.vol24, 0.007));
+  S.volChg   = Math.max(1.0,  S.volChg   + (Math.random() - 0.40) * 0.5);
   S.users24  = Math.max(2800, Math.round(r(S.users24, 0.006)));
+  S.usersChg = Math.max(0.5,  S.usersChg + (Math.random() - 0.45) * 0.2);
   S.txCount += Math.floor(Math.random() * 9 + 2);
+  S.txChg    = Math.max(5.0,  S.txChg    + (Math.random() - 0.40) * 0.3);
   S.arcPrice  = Math.max(2.20, Math.min(2.90, r(S.arcPrice, 0.005)));
+  S.gasPrice  = Math.max(0.0005, Math.min(0.008, S.gasPrice + (Math.random() - 0.5) * 0.0001));
   S.blockNum += Math.floor(Math.random() * 4 + 1);
+
+  PROTOCOLS.forEach(p => {
+    p.tvl = Math.max(0.8, r(p.tvl, 0.005));
+    p.chg  = Math.max(-15, Math.min(35, p.chg + (Math.random() - 0.48) * 0.6));
+  });
+}
+
+/* ── Update protocol table rows ── */
+function pushProtocols() {
+  const rows = document.querySelectorAll('#protocolTable tbody tr');
+  rows.forEach((row, i) => {
+    if (i >= PROTOCOLS.length) return;
+    const p = PROTOCOLS[i];
+
+    /* TVL cell (col index 2) */
+    const tvlCell = row.cells[2];
+    if (tvlCell) {
+      const prev = parseFloat(tvlCell.dataset.lv || p.tvl) || p.tvl;
+      tvlCell.dataset.lv = p.tvl;
+      animNum(tvlCell, prev, p.tvl, { prefix:'$', suffix:'M', dec:1 });
+      flash(tvlCell);
+    }
+
+    /* 24h change cell (col index 3) */
+    const chgCell = row.cells[3];
+    if (chgCell) {
+      const sp = chgCell.querySelector('span');
+      if (sp) {
+        sp.textContent = (p.chg >= 0 ? '+' : '') + p.chg.toFixed(1) + '%';
+        sp.style.color = p.chg >= 0 ? 'var(--green)' : '#ef4444';
+      }
+    }
+  });
+}
+
+/* ── Update stat-card change labels (▲ X% vs …) ── */
+function pushStatChanges() {
+  /* Each change div is the nextElementSibling of its [data-live] value div */
+  const pairs = [
+    ['tvl',     S.tvlChg,   'vs last week'],
+    ['vol24',   S.volChg,   'vs yesterday'],
+    ['users',   S.usersChg, 'vs yesterday'],
+    ['txcount', S.txChg,    'this week'],
+  ];
+  pairs.forEach(([key, val, label]) => {
+    const valEl = document.querySelector(`[data-live="${key}"]`);
+    if (!valEl) return;
+    const chgEl = valEl.nextElementSibling;
+    if (!chgEl || !chgEl.classList.contains('stat-change')) return;
+    chgEl.textContent = (val >= 0 ? '▲' : '▼') + ' ' + Math.abs(val).toFixed(1) + '% ' + label;
+    chgEl.className   = 'stat-change ' + (val >= 0 ? 'up' : 'down');
+  });
+
+  /* Gas price */
+  const gasEl = document.querySelector('[data-live="gas"]');
+  if (gasEl) {
+    gasEl.innerHTML = S.gasPrice.toFixed(4) + ' <span style="font-size:1rem;color:var(--muted)">ARC</span>';
+  }
+}
+
+/* ── Update Chart.js charts with latest values ── */
+function updateCharts() {
+  if (window.arcTVLChart) {
+    const ds = window.arcTVLChart.data.datasets[0].data;
+    ds[ds.length - 1] = +(S.tvl.toFixed(1));
+    window.arcTVLChart.update('none');
+  }
+  if (window.arcVolChart) {
+    const ds = window.arcVolChart.data.datasets[0].data;
+    ds[ds.length - 1] = +(S.vol24.toFixed(1));
+    window.arcVolChart.update('none');
+  }
 }
 
 /* ── Push all values to DOM ── */
 function pushDOM() {
-  setLive('[data-live="tvl"]',    S.tvl,      { prefix:'$', suffix:'M', dec:1 });
-  setLive('[data-live="vol24"]',  S.vol24,    { prefix:'$', suffix:'M', dec:1 });
-  setLive('[data-live="users"]',  S.users24,  { dec:0 });
-  setLive('[data-live="txcount"]',S.txCount,  { dec:0 });
-  setLive('[data-live="block"]',  S.blockNum, { prefix:'#', dec:0 });
+  setLive('[data-live="tvl"]',      S.tvl,      { prefix:'$', suffix:'M', dec:1 });
+  setLive('[data-live="vol24"]',    S.vol24,    { prefix:'$', suffix:'M', dec:1 });
+  setLive('[data-live="users"]',    S.users24,  { dec:0 });
+  setLive('[data-live="txcount"]',  S.txCount,  { dec:0 });
+  setLive('[data-live="block"]',    S.blockNum, { prefix:'#', dec:0 });
+  setLive('[data-live="projects"]', S.projects, { dec:0 });
 
   setLive('[data-live="hero-tvl"]',   S.tvl,     { prefix:'$', suffix:'M', dec:1 });
   setLive('[data-live="hero-vol"]',   S.vol24,   { prefix:'$', suffix:'M', dec:1 });
@@ -93,14 +177,16 @@ function pushDOM() {
     setLive('[data-live="staked"]', S.totalStaked, { dec:0, suffix:' NOVA' });
   }
 
+  pushProtocols();
+  pushStatChanges();
+  updateCharts();
   updateTicker();
 }
 
-/* ── Find ticker label (handles both .tick-sym and inline-styled spans) ── */
+/* ── Ticker: resolve label from any span (handles inline-styled items) ── */
 function tickerLabelOf(item) {
   const sym = item.querySelector('.tick-sym');
   if (sym) return sym.textContent.trim();
-  // Fallback: first span that isn't .tick-price or .tick-up
   let label = '';
   item.querySelectorAll('span').forEach(s => {
     if (!label && !s.classList.contains('tick-price') && !s.classList.contains('tick-up')) {
@@ -110,12 +196,11 @@ function tickerLabelOf(item) {
   return label;
 }
 
-/* ── Format change percentage ── */
 function fmtChange(c) {
   return (c >= 0 ? '▲' : '▼') + Math.abs(c).toFixed(1) + '%';
 }
 
-/* ── Update ticker bar prices ── */
+/* ── Update all ticker bar items ── */
 function updateTicker() {
   document.querySelectorAll('.tick-item').forEach(item => {
     const priceEl  = item.querySelector('.tick-price');
@@ -126,27 +211,18 @@ function updateTicker() {
     switch (label) {
       case 'ARC':
         priceEl.textContent = '$' + S.arcPrice.toFixed(2);
-        if (changeEl) {
-          changeEl.textContent = fmtChange(S.arcChange);
-          changeEl.style.color = S.arcChange >= 0 ? 'var(--green)' : '#ef4444';
-        }
+        if (changeEl) { changeEl.textContent = fmtChange(S.arcChange); changeEl.style.color = S.arcChange >= 0 ? 'var(--green)' : '#ef4444'; }
         break;
       case 'ETH':
         if (S.ethPrice > 0) {
           priceEl.textContent = '$' + Math.round(S.ethPrice).toLocaleString();
-          if (changeEl) {
-            changeEl.textContent = fmtChange(S.ethChange);
-            changeEl.style.color = S.ethChange >= 0 ? 'var(--green)' : '#ef4444';
-          }
+          if (changeEl) { changeEl.textContent = fmtChange(S.ethChange); changeEl.style.color = S.ethChange >= 0 ? 'var(--green)' : '#ef4444'; }
         }
         break;
       case 'BTC':
         if (S.btcPrice > 0) {
           priceEl.textContent = '$' + Math.round(S.btcPrice).toLocaleString();
-          if (changeEl) {
-            changeEl.textContent = fmtChange(S.btcChange);
-            changeEl.style.color = S.btcChange >= 0 ? 'var(--green)' : '#ef4444';
-          }
+          if (changeEl) { changeEl.textContent = fmtChange(S.btcChange); changeEl.style.color = S.btcChange >= 0 ? 'var(--green)' : '#ef4444'; }
         }
         break;
       case 'ARC TVL':
@@ -165,24 +241,17 @@ async function fetchPrices() {
     const res = await fetch(COINGECKO);
     if (!res.ok) return;
     const data = await res.json();
-    if (data.ethereum) {
-      S.ethPrice  = data.ethereum.usd;
-      S.ethChange = +(data.ethereum.usd_24h_change || 0).toFixed(2);
-    }
-    if (data.bitcoin) {
-      S.btcPrice  = data.bitcoin.usd;
-      S.btcChange = +(data.bitcoin.usd_24h_change || 0).toFixed(2);
-    }
+    if (data.ethereum) { S.ethPrice = data.ethereum.usd; S.ethChange = +(data.ethereum.usd_24h_change || 0).toFixed(2); }
+    if (data.bitcoin)  { S.btcPrice = data.bitcoin.usd;  S.btcChange = +(data.bitcoin.usd_24h_change  || 0).toFixed(2); }
     updateTicker();
-  } catch { /* silent — old values remain */ }
+  } catch {}
 }
 
-/* ── Fetch real blockchain data ── */
+/* ── Fetch real blockchain data from Arc Testnet ── */
 async function fetchChain() {
   if (typeof ethers === 'undefined') return;
   try {
     const provider = new ethers.providers.JsonRpcProvider(RPC, { chainId: 5042002, name: 'arc-testnet' });
-
     const SWAP_ABI    = ['function getReserves() view returns (uint256 nova, uint256 usdc)'];
     const STAKING_ABI = ['function totalStaked() view returns (uint256)'];
 
@@ -193,20 +262,14 @@ async function fetchChain() {
     ]);
 
     S.blockNum = blockNum;
-
     if (reserves) {
       S.novaReserve = parseFloat(ethers.utils.formatEther(reserves.nova));
       S.usdcReserve = parseFloat(ethers.utils.formatUnits(reserves.usdc, 6));
-      if (S.novaReserve > 0 && S.usdcReserve > 0) {
-        S.arcPrice = S.usdcReserve / S.novaReserve;
-      }
+      if (S.novaReserve > 0 && S.usdcReserve > 0) S.arcPrice = S.usdcReserve / S.novaReserve;
     }
-    if (totalStaked) {
-      S.totalStaked = parseFloat(ethers.utils.formatEther(totalStaked));
-    }
-
+    if (totalStaked) S.totalStaked = parseFloat(ethers.utils.formatEther(totalStaked));
     pushDOM();
-  } catch { /* silent — sim data continues */ }
+  } catch {}
 }
 
 /* ── Live transaction feed ── */
@@ -224,13 +287,11 @@ function randHex(n) { return Array.from({length:n}, () => HEX_CHARS[Math.floor(M
 function addTxRow() {
   const feed = document.getElementById('liveTxFeed');
   if (!feed) return;
-
   const type = TX_TYPES[Math.floor(Math.random() * TX_TYPES.length)];
   const addr = '0x' + randHex(4) + '…' + randHex(4);
   const val  = (Math.random() * 4800 + 120).toFixed(0);
   const sign = Math.random() > 0.35 ? '+' : '';
-
-  const row = document.createElement('div');
+  const row  = document.createElement('div');
   row.className = 'tx-row';
   row.style.cssText = 'opacity:0;transform:translateY(-8px);transition:opacity 0.4s ease,transform 0.4s ease';
   row.innerHTML = `
@@ -242,16 +303,13 @@ function addTxRow() {
       <div style="font-weight:700;color:var(--text)">${sign}$${val}</div>
       <div class="tx-time" style="font-size:0.72rem;color:var(--muted)">just now</div>
     </div>`;
-
   feed.insertBefore(row, feed.firstChild);
   requestAnimationFrame(() => { row.style.opacity = '1'; row.style.transform = 'translateY(0)'; });
 
   const AGES = ['just now', '3s ago', '12s ago', '28s ago', '52s ago', '1m ago', '2m ago'];
   feed.querySelectorAll('.tx-row').forEach((r, i) => {
-    const t = r.querySelector('.tx-time');
-    if (t && AGES[i]) t.textContent = AGES[i];
+    const t = r.querySelector('.tx-time'); if (t && AGES[i]) t.textContent = AGES[i];
   });
-
   while (feed.children.length > 6) feed.removeChild(feed.lastChild);
 }
 
@@ -259,9 +317,8 @@ function addTxRow() {
 function microTick() {
   S.arcPrice += (Math.random() - 0.49) * 0.012;
   S.arcPrice  = Math.max(2.18, Math.min(2.92, S.arcPrice));
-  /* Subtle drift on real prices between CoinGecko fetches */
-  if (S.ethPrice > 100) S.ethPrice *= (1 + (Math.random() - 0.5) * 0.0008);
-  if (S.btcPrice > 1000) S.btcPrice *= (1 + (Math.random() - 0.5) * 0.0008);
+  if (S.ethPrice > 100)  S.ethPrice  *= (1 + (Math.random() - 0.5) * 0.0008);
+  if (S.btcPrice > 1000) S.btcPrice  *= (1 + (Math.random() - 0.5) * 0.0008);
   updateTicker();
 }
 
@@ -269,15 +326,12 @@ function microTick() {
 function init() {
   drift();
   pushDOM();
-
   fetchChain();
-  fetchPrices(); /* real ETH/BTC prices immediately */
-
+  fetchPrices();
   setInterval(() => { drift(); pushDOM(); }, 30000);
   setInterval(fetchChain, 60000);
   setInterval(fetchPrices, 60000);
   setInterval(microTick, 6000);
-
   if (document.getElementById('liveTxFeed')) {
     setTimeout(addTxRow, 2500);
     const schedNext = () => setTimeout(() => { addTxRow(); schedNext(); }, 6000 + Math.random() * 9000);
