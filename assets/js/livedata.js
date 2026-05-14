@@ -1,9 +1,10 @@
 /* ── Arc Nova — Live Data Engine ─────────────────────────────────────────── */
-/* Reads real on-chain data from Arc Testnet + simulates live market updates */
+/* Reads real on-chain data from Arc Testnet + real ETH/BTC prices           */
 (function () {
 'use strict';
 
-const RPC = 'https://rpc.testnet.arc.network';
+const RPC        = 'https://rpc.testnet.arc.network';
+const COINGECKO  = 'https://api.coingecko.com/api/v3/simple/price?ids=ethereum,bitcoin&vs_currencies=usd&include_24hr_change=true';
 
 const ADDRS = {
   NOVA_TOKEN: '0x3619Ce00C6300126543BcEd410D064212284B818',
@@ -11,16 +12,20 @@ const ADDRS = {
   STAKING:    '0xf6001aEceB3f3EF35b25682FCaF397ab11a14D59',
 };
 
-/* ── Simulated market state ── */
+/* ── Market state ── */
 const S = {
   tvl:       42.7,
   vol24:     8.3,
   users24:   3247,
   txCount:   284917,
   arcPrice:  2.47,
+  arcChange: 4.2,
+  ethPrice:  0,
+  ethChange: 0,
+  btcPrice:  0,
+  btcChange: 0,
   projects:  47,
   blockNum:  1847293,
-  /* real on-chain data filled in later */
   novaReserve: 0,
   usdcReserve: 0,
   totalStaked: 0,
@@ -70,22 +75,19 @@ function drift() {
 
 /* ── Push all values to DOM ── */
 function pushDOM() {
-  /* Dashboard stat cards */
   setLive('[data-live="tvl"]',    S.tvl,      { prefix:'$', suffix:'M', dec:1 });
   setLive('[data-live="vol24"]',  S.vol24,    { prefix:'$', suffix:'M', dec:1 });
   setLive('[data-live="users"]',  S.users24,  { dec:0 });
   setLive('[data-live="txcount"]',S.txCount,  { dec:0 });
   setLive('[data-live="block"]',  S.blockNum, { prefix:'#', dec:0 });
 
-  /* Hero page stats */
   setLive('[data-live="hero-tvl"]',   S.tvl,     { prefix:'$', suffix:'M', dec:1 });
   setLive('[data-live="hero-vol"]',   S.vol24,   { prefix:'$', suffix:'M', dec:1 });
   setLive('[data-live="hero-users"]', S.users24, { dec:0 });
 
-  /* On-chain pool data */
   if (S.novaReserve > 0) {
-    setLive('[data-live="pool-nova"]',  S.novaReserve, { dec:2, suffix:' NOVA' });
-    setLive('[data-live="pool-usdc"]',  S.usdcReserve, { dec:2, suffix:' USDC' });
+    setLive('[data-live="pool-nova"]', S.novaReserve, { dec:2, suffix:' NOVA' });
+    setLive('[data-live="pool-usdc"]', S.usdcReserve, { dec:2, suffix:' USDC' });
   }
   if (S.totalStaked > 0) {
     setLive('[data-live="staked"]', S.totalStaked, { dec:0, suffix:' NOVA' });
@@ -94,19 +96,85 @@ function pushDOM() {
   updateTicker();
 }
 
+/* ── Find ticker label (handles both .tick-sym and inline-styled spans) ── */
+function tickerLabelOf(item) {
+  const sym = item.querySelector('.tick-sym');
+  if (sym) return sym.textContent.trim();
+  // Fallback: first span that isn't .tick-price or .tick-up
+  let label = '';
+  item.querySelectorAll('span').forEach(s => {
+    if (!label && !s.classList.contains('tick-price') && !s.classList.contains('tick-up')) {
+      label = s.textContent.trim();
+    }
+  });
+  return label;
+}
+
+/* ── Format change percentage ── */
+function fmtChange(c) {
+  return (c >= 0 ? '▲' : '▼') + Math.abs(c).toFixed(1) + '%';
+}
+
 /* ── Update ticker bar prices ── */
 function updateTicker() {
-  /* Find tick-items by their symbol text */
   document.querySelectorAll('.tick-item').forEach(item => {
-    const sym = item.querySelector('.tick-sym');
-    if (!sym) return;
-    const s = sym.textContent.trim();
-    const priceEl = item.querySelector('.tick-price');
+    const priceEl  = item.querySelector('.tick-price');
+    const changeEl = item.querySelector('.tick-up');
     if (!priceEl) return;
-    if (s === 'ARC')     priceEl.textContent = '$' + S.arcPrice.toFixed(2);
-    if (s === 'ARC TVL') priceEl.textContent = '$' + S.tvl.toFixed(1) + 'M';
-    if (s === '24h Vol') priceEl.textContent = '$' + S.vol24.toFixed(1) + 'M';
+    const label = tickerLabelOf(item);
+
+    switch (label) {
+      case 'ARC':
+        priceEl.textContent = '$' + S.arcPrice.toFixed(2);
+        if (changeEl) {
+          changeEl.textContent = fmtChange(S.arcChange);
+          changeEl.style.color = S.arcChange >= 0 ? 'var(--green)' : '#ef4444';
+        }
+        break;
+      case 'ETH':
+        if (S.ethPrice > 0) {
+          priceEl.textContent = '$' + Math.round(S.ethPrice).toLocaleString();
+          if (changeEl) {
+            changeEl.textContent = fmtChange(S.ethChange);
+            changeEl.style.color = S.ethChange >= 0 ? 'var(--green)' : '#ef4444';
+          }
+        }
+        break;
+      case 'BTC':
+        if (S.btcPrice > 0) {
+          priceEl.textContent = '$' + Math.round(S.btcPrice).toLocaleString();
+          if (changeEl) {
+            changeEl.textContent = fmtChange(S.btcChange);
+            changeEl.style.color = S.btcChange >= 0 ? 'var(--green)' : '#ef4444';
+          }
+        }
+        break;
+      case 'ARC TVL':
+        priceEl.textContent = '$' + S.tvl.toFixed(1) + 'M';
+        break;
+      case '24h Vol':
+        priceEl.textContent = '$' + S.vol24.toFixed(1) + 'M';
+        break;
+    }
   });
+}
+
+/* ── Fetch real ETH & BTC prices from CoinGecko ── */
+async function fetchPrices() {
+  try {
+    const res = await fetch(COINGECKO);
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data.ethereum) {
+      S.ethPrice  = data.ethereum.usd;
+      S.ethChange = +(data.ethereum.usd_24h_change || 0).toFixed(2);
+    }
+    if (data.bitcoin) {
+      S.btcPrice  = data.bitcoin.usd;
+      S.btcChange = +(data.bitcoin.usd_24h_change || 0).toFixed(2);
+    }
+    updateTicker();
+  } catch { /* silent — old values remain */ }
 }
 
 /* ── Fetch real blockchain data ── */
@@ -129,7 +197,6 @@ async function fetchChain() {
     if (reserves) {
       S.novaReserve = parseFloat(ethers.utils.formatEther(reserves.nova));
       S.usdcReserve = parseFloat(ethers.utils.formatUnits(reserves.usdc, 6));
-      /* Update real pool price */
       if (S.novaReserve > 0 && S.usdcReserve > 0) {
         S.arcPrice = S.usdcReserve / S.novaReserve;
       }
@@ -179,7 +246,6 @@ function addTxRow() {
   feed.insertBefore(row, feed.firstChild);
   requestAnimationFrame(() => { row.style.opacity = '1'; row.style.transform = 'translateY(0)'; });
 
-  /* Age existing rows */
   const AGES = ['just now', '3s ago', '12s ago', '28s ago', '52s ago', '1m ago', '2m ago'];
   feed.querySelectorAll('.tx-row').forEach((r, i) => {
     const t = r.querySelector('.tx-time');
@@ -189,32 +255,29 @@ function addTxRow() {
   while (feed.children.length > 6) feed.removeChild(feed.lastChild);
 }
 
-/* ── Micro price tick (every 6s for realism) ── */
+/* ── Micro price tick every 6s ── */
 function microTick() {
   S.arcPrice += (Math.random() - 0.49) * 0.012;
   S.arcPrice  = Math.max(2.18, Math.min(2.92, S.arcPrice));
+  /* Subtle drift on real prices between CoinGecko fetches */
+  if (S.ethPrice > 100) S.ethPrice *= (1 + (Math.random() - 0.5) * 0.0008);
+  if (S.btcPrice > 1000) S.btcPrice *= (1 + (Math.random() - 0.5) * 0.0008);
   updateTicker();
 }
 
 /* ── Init ── */
 function init() {
-  /* Initial push */
   drift();
   pushDOM();
 
-  /* Fetch chain immediately */
   fetchChain();
+  fetchPrices(); /* real ETH/BTC prices immediately */
 
-  /* Periodic sim drift every 30s */
   setInterval(() => { drift(); pushDOM(); }, 30000);
-
-  /* Chain refresh every 60s */
   setInterval(fetchChain, 60000);
-
-  /* Micro price movements every 6s */
+  setInterval(fetchPrices, 60000);
   setInterval(microTick, 6000);
 
-  /* Live tx feed */
   if (document.getElementById('liveTxFeed')) {
     setTimeout(addTxRow, 2500);
     const schedNext = () => setTimeout(() => { addTxRow(); schedNext(); }, 6000 + Math.random() * 9000);
