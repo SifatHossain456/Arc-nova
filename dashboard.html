@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Dashboard — Arc Nova</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+.chart-card{
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--radius-lg); padding:24px;
+}
+.chart-title{ font-weight:700; font-size:0.95rem; margin-bottom:4px; }
+.chart-sub{ font-size:0.78rem; color:var(--muted); margin-bottom:20px; }
+.network-dot{
+  width:8px; height:8px; border-radius:50%;
+  background:var(--green); display:inline-block;
+  animation:pulseGlow 2s infinite; margin-right:6px;
+}
+.rank-num{
+  width:28px; height:28px; border-radius:6px;
+  background:rgba(255,255,255,0.05);
+  display:inline-flex; align-items:center; justify-content:center;
+  font-size:0.78rem; font-weight:700; color:var(--muted);
+}
+.proto-logo{
+  width:36px; height:36px; border-radius:9px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; flex-shrink:0;
+}
+.tx-row{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.04);
+  font-size:0.84rem;
+}
+.tx-row:last-child{ border-bottom:none; }
+.tx-type{
+  padding:2px 8px; border-radius:6px; font-size:0.72rem; font-weight:700;
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">N</div>Arc Nova
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="dashboard.html" class="active">Dashboard</a></li>
+    <li><a href="launchpad.html">Launchpad</a></li>
+    <li><a href="defi.html">DeFi</a></li>
+    <li><a href="https://docs.arc.network/" target="_blank">Docs ↗</a></li>
+  </ul>
+  <div class="nav-right">
+    <span class="badge-testnet">Testnet</span>
+    <div class="notif-wrapper">
+      <button class="notif-btn" onclick="toggleNotifPanel();renderNotifications()">🔔<span class="notif-badge">3</span></button>
+      <div class="notif-panel" id="notifPanel"></div>
+    </div>
+    <button class="btn btn-primary" onclick="connectWallet()" id="walletBtn">Connect Wallet</button>
+    <button class="hamburger" onclick="toggleMobileNav()" id="hamburgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobileNav()"></div>
+<div class="mobile-nav" id="mobileNav">
+  <div class="mobile-nav-header">
+    <a href="index.html" class="nav-logo"><div class="nav-logo-icon">N</div>Arc Nova</a>
+    <button class="mobile-nav-close" onclick="toggleMobileNav()">✕</button>
+  </div>
+  <ul class="mobile-nav-links">
+    <li><a href="index.html">🏠 Home</a></li>
+    <li><a href="dashboard.html">📊 Dashboard</a></li>
+    <li><a href="launchpad.html">🚀 Launchpad</a></li>
+    <li><a href="defi.html">🔄 DeFi</a></li>
+    <li><a href="https://docs.arc.network/" target="_blank">📄 Docs ↗</a></li>
+  </ul>
+  <div class="mobile-nav-footer">
+    <span class="badge-testnet">Testnet</span>
+    <button class="btn btn-primary" style="width:100%" onclick="connectWallet();toggleMobileNav()">Connect Wallet</button>
+  </div>
+</div>
+
+<!-- Price Ticker -->
+<div class="ticker-bar">
+  <div class="ticker-track"><div class="ticker-scroll">
+    <span class="tick-item"><span class="tick-sym">ARC</span>&nbsp;<span class="tick-price">$2.47</span>&nbsp;<span class="tick-up">▲4.2%</span></span>
+    <span class="tick-item"><span class="tick-sym">USDC</span>&nbsp;<span class="tick-price">$1.000</span>&nbsp;<span style="color:var(--muted)">Stable</span></span>
+    <span class="tick-item"><span class="tick-sym">ETH</span>&nbsp;<span class="tick-price">$3,241</span>&nbsp;<span class="tick-up">▲2.1%</span></span>
+    <span class="tick-item"><span class="tick-sym">BTC</span>&nbsp;<span class="tick-price">$67,420</span>&nbsp;<span class="tick-up">▲1.3%</span></span>
+    <span class="tick-item"><span style="color:var(--lavender);font-weight:700">ARC TVL</span>&nbsp;<span class="tick-price">$42.7M</span>&nbsp;<span class="tick-up">▲12.4%</span></span>
+    <span class="tick-item"><span style="color:var(--cyan);font-weight:700">24h Vol</span>&nbsp;<span class="tick-price">$8.3M</span>&nbsp;<span class="tick-up">▲34.7%</span></span>
+    <span class="tick-item"><span style="color:var(--green);font-weight:700">Projects</span>&nbsp;<span class="tick-price">47</span>&nbsp;<span class="tick-up">+3 new</span></span>
+    <span class="tick-item"><span class="tick-sym">ARC</span>&nbsp;<span class="tick-price">$2.47</span>&nbsp;<span class="tick-up">▲4.2%</span></span>
+    <span class="tick-item"><span class="tick-sym">USDC</span>&nbsp;<span class="tick-price">$1.000</span>&nbsp;<span style="color:var(--muted)">Stable</span></span>
+    <span class="tick-item"><span class="tick-sym">ETH</span>&nbsp;<span class="tick-price">$3,241</span>&nbsp;<span class="tick-up">▲2.1%</span></span>
+    <span class="tick-item"><span class="tick-sym">BTC</span>&nbsp;<span class="tick-price">$67,420</span>&nbsp;<span class="tick-up">▲1.3%</span></span>
+    <span class="tick-item"><span style="color:var(--lavender);font-weight:700">ARC TVL</span>&nbsp;<span class="tick-price">$42.7M</span>&nbsp;<span class="tick-up">▲12.4%</span></span>
+    <span class="tick-item"><span style="color:var(--cyan);font-weight:700">24h Vol</span>&nbsp;<span class="tick-price">$8.3M</span>&nbsp;<span class="tick-up">▲34.7%</span></span>
+    <span class="tick-item"><span style="color:var(--green);font-weight:700">Projects</span>&nbsp;<span class="tick-price">47</span>&nbsp;<span class="tick-up">+3 new</span></span>
+  </div></div>
+</div>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="container">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap">
+      <div>
+        <span class="section-label">📊 Live Analytics</span>
+        <h1 class="section-title" style="margin-bottom:8px">Protocol Dashboard</h1>
+        <p style="color:var(--muted);font-size:0.875rem">
+          <span class="network-dot"></span>Arc Testnet · Updated just now
+        </p>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-ghost btn-sm" onclick="refreshData()">🔄 Refresh</button>
+        <select style="background:var(--card);border:1px solid var(--border);color:var(--text-2);padding:6px 12px;border-radius:8px;font-size:0.8rem;font-family:inherit;outline:none;cursor:pointer">
+          <option>Last 7 days</option>
+          <option>Last 30 days</option>
+          <option>All time</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STATS GRID -->
+<div style="position:relative;z-index:1">
+  <div class="container">
+    <div class="grid-4" style="margin-bottom:24px">
+      <div class="stat-card">
+        <div class="stat-label">Total Value Locked</div>
+        <div class="stat-value" data-count="42.7" data-prefix="$" data-suffix="M">$0M</div>
+        <div class="stat-change up">▲ 12.4% vs last week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">24h Volume</div>
+        <div class="stat-value" data-count="8.3" data-prefix="$" data-suffix="M">$0M</div>
+        <div class="stat-change up">▲ 34.7% vs yesterday</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Active Users (24h)</div>
+        <div class="stat-value" data-count="3247" data-suffix="">0</div>
+        <div class="stat-change up">▲ 8.2% vs yesterday</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Transactions</div>
+        <div class="stat-value" data-count="284917" data-suffix="">0</div>
+        <div class="stat-change up">▲ 21.6% this week</div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:24px">
+      <!-- TVL Chart -->
+      <div class="chart-card">
+        <div class="chart-title">TVL Over Time</div>
+        <div class="chart-sub">Total Value Locked — Last 30 days</div>
+        <div style="height:220px">
+          <canvas id="tvlChart"></canvas>
+        </div>
+      </div>
+      <!-- Volume Chart -->
+      <div class="chart-card">
+        <div class="chart-title">Daily Volume</div>
+        <div class="chart-sub">Swap + Stake volume — Last 14 days</div>
+        <div style="height:220px">
+          <canvas id="volChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:24px">
+      <!-- Top Protocols Table -->
+      <div>
+        <div style="font-weight:700;margin-bottom:14px;font-size:0.95rem">Top Protocols by TVL</div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Protocol</th>
+                <th>TVL</th>
+                <th>24h Change</th>
+                <th>Category</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="rank-num">1</span></td>
+                <td><div style="display:flex;align-items:center;gap:10px"><div class="proto-logo" style="background:rgba(124,58,237,0.15)">⚡</div><div><div style="font-weight:600;color:var(--text)">ArcSwap</div><div style="font-size:0.72rem;color:var(--muted)">DEX</div></div></div></td>
+                <td style="font-weight:700;color:var(--text)">$12.4M</td>
+                <td><span style="color:var(--green);font-weight:700">+8.2%</span></td>
+                <td><span class="tag tag-purple">DEX</span></td>
+              </tr>
+              <tr>
+                <td><span class="rank-num">2</span></td>
+                <td><div style="display:flex;align-items:center;gap:10px"><div class="proto-logo" style="background:rgba(245,158,11,0.12)">🌉</div><div><div style="font-weight:600;color:var(--text)">ArcBridge</div><div style="font-size:0.72rem;color:var(--muted)">Bridge</div></div></div></td>
+                <td style="font-weight:700;color:var(--text)">$9.8M</td>
+                <td><span style="color:var(--green);font-weight:700">+14.1%</span></td>
+                <td><span class="tag tag-blue">Bridge</span></td>
+              </tr>
+              <tr>
+                <td><span class="rank-num">3</span></td>
+                <td><div style="display:flex;align-items:center;gap:10px"><div class="proto-logo" style="background:rgba(16,185,129,0.12)">💰</div><div><div style="font-weight:600;color:var(--text)">ArcVault</div><div style="font-size:0.72rem;color:var(--muted)">Yield</div></div></div></td>
+                <td style="font-weight:700;color:var(--text)">$7.2M</td>
+                <td><span style="color:var(--red);font-weight:700">-2.3%</span></td>
+                <td><span class="tag tag-green">Yield</span></td>
+              </tr>
+              <tr>
+                <td><span class="rank-num">4</span></td>
+                <td><div style="display:flex;align-items:center;gap:10px"><div class="proto-logo" style="background:rgba(34,211,238,0.12)">📈</div><div><div style="font-weight:600;color:var(--text)">ArcPerp</div><div style="font-size:0.72rem;color:var(--muted)">Perps</div></div></div></td>
+                <td style="font-weight:700;color:var(--text)">$6.1M</td>
+                <td><span style="color:var(--green);font-weight:700">+22.7%</span></td>
+                <td><span class="tag tag-blue">Perps</span></td>
+              </tr>
+              <tr>
+                <td><span class="rank-num">5</span></td>
+                <td><div style="display:flex;align-items:center;gap:10px"><div class="proto-logo" style="background:rgba(99,102,241,0.15)">🏦</div><div><div style="font-weight:600;color:var(--text)">NovaLend</div><div style="font-size:0.72rem;color:var(--muted)">Lending</div></div></div></td>
+                <td style="font-weight:700;color:var(--text)">$5.5M</td>
+                <td><span style="color:var(--green);font-weight:700">+4.9%</span></td>
+                <td><span class="tag tag-yellow">Lending</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Recent Transactions -->
+      <div>
+        <div style="font-weight:700;margin-bottom:14px;font-size:0.95rem">Recent Transactions</div>
+        <div class="card" style="padding:16px">
+          <div class="tx-row">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span class="tx-type" style="background:rgba(124,58,237,0.15);color:#a78bfa">Swap</span>
+              <span style="color:var(--text-2)">0x3f8a…d921</span>
+            </div>
+            <div style="text-align:right">
+              <div style="font-weight:700;color:var(--text)">+$1,240</div>
+              <div style="font-size:0.72rem;color:var(--muted)">2s ago</div>
+            </div>
+          </div>
+          <div class="tx-row">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span class="tx-type" style="background:rgba(16,185,129,0.12);color:#10b981">Stake</span>
+              <span style="color:var(--text-2)">0x9c12…f4a3</span>
+            </div>
+            <div style="text-align:right">
+              <div style="font-weight:700;color:var(--text)">$5,000</div>
+              <div style="font-size:0.72rem;color:var(--muted)">14s ago</div>
+            </div>
+          </div>
+          <div class="tx-row">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span class="tx-type" style="background:rgba(34,211,238,0.12);color:#22d3ee">Bridge</span>
+              <span style="color:var(--text-2)">0xab77…1e06</span>
+            </div>
+            <div style="text-align:right">
+              <div style="font-weight:700;color:var(--text)">$800</div>
+              <div style="font-size:0.72rem;color:var(--muted)">38s ago</div>
+            </div>
+          </div>
+          <div class="tx-row">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span class="tx-type" style="background:rgba(245,158,11,0.12);color:#f59e0b">LP Add</span>
+              <span style="color:var(--text-2)">0x72cc…8b4d</span>
+            </div>
+            <div style="text-align:right">
+              <div style="font-weight:700;color:var(--text)">$3,450</div>
+              <div style="font-size:0.72rem;color:var(--muted)">1m ago</div>
+            </div>
+          </div>
+          <div class="tx-row">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span class="tx-type" style="background:rgba(124,58,237,0.15);color:#a78bfa">Swap</span>
+              <span style="color:var(--text-2)">0x1d09…a7f2</span>
+            </div>
+            <div style="text-align:right">
+              <div style="font-weight:700;color:var(--text)">+$290</div>
+              <div style="font-size:0.72rem;color:var(--muted)">2m ago</div>
+            </div>
+          </div>
+          <div class="tx-row">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span class="tx-type" style="background:rgba(239,68,68,0.12);color:#ef4444">Unstake</span>
+              <span style="color:var(--text-2)">0x5e34…c019</span>
+            </div>
+            <div style="text-align:right">
+              <div style="font-weight:700;color:var(--text)">$2,000</div>
+              <div style="font-size:0.72rem;color:var(--muted)">3m ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Network Info -->
+    <div class="grid-3" style="padding-bottom:60px">
+      <div class="stat-card">
+        <div class="stat-label">Arc Testnet Block</div>
+        <div class="stat-value" data-count="1847293" data-suffix="">#0</div>
+        <div style="margin-top:8px;font-size:0.78rem;color:var(--muted)">~2s avg block time</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Gas Price</div>
+        <div class="stat-value">0.001 <span style="font-size:1rem;color:var(--muted)">ARC</span></div>
+        <div class="stat-change up">Very Low</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Projects</div>
+        <div class="stat-value" data-count="47" data-suffix="">0</div>
+        <div class="stat-change up">▲ 3 new this week</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="border-top:none;padding-top:0">
+      <div>© 2025 Arc Nova. Built on Arc Network.</div>
+      <div style="display:flex;gap:16px">
+        <a href="index.html" style="color:var(--muted);text-decoration:none" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--muted)'">Home</a>
+        <a href="launchpad.html" style="color:var(--muted);text-decoration:none" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--muted)'">Launchpad</a>
+        <a href="defi.html" style="color:var(--muted);text-decoration:none" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--muted)'">DeFi</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+<script src="assets/js/contracts.js"></script>
+<script src="assets/js/wallet.js"></script>
+<script src="assets/js/web3.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+/* ── CHARTS ── */
+const labels30 = Array.from({length:30},(_,i)=>{
+  const d=new Date(); d.setDate(d.getDate()-29+i);
+  return d.toLocaleDateString('en',{month:'short',day:'numeric'});
+});
+
+const tvlData = [18,19,21,20,22,24,23,25,27,26,28,30,29,31,33,32,34,35,34,36,38,37,39,40,39,41,42,41,43,42.7];
+
+new Chart(document.getElementById('tvlChart'), {
+  type:'line',
+  data:{
+    labels:labels30,
+    datasets:[{
+      label:'TVL ($M)',
+      data:tvlData,
+      borderColor:'#8b5cf6',
+      borderWidth:2.5,
+      fill:true,
+      backgroundColor:'rgba(139,92,246,0.07)',
+      pointRadius:0,
+      tension:0.4
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}, tooltip:{
+      backgroundColor:'rgba(14,14,36,0.95)',
+      borderColor:'rgba(139,92,246,0.3)',
+      borderWidth:1,
+      titleColor:'#a78bfa',
+      bodyColor:'#f8fafc',
+      callbacks:{label:ctx=>`$${ctx.raw}M TVL`}
+    }},
+    scales:{
+      x:{grid:{color:'rgba(255,255,255,0.03)'},ticks:{color:'#64748b',font:{size:10},maxTicksLimit:6}},
+      y:{grid:{color:'rgba(255,255,255,0.03)'},ticks:{color:'#64748b',font:{size:10},callback:v=>`$${v}M`}}
+    }
+  }
+});
+
+const volLabels = Array.from({length:14},(_,i)=>{
+  const d=new Date(); d.setDate(d.getDate()-13+i);
+  return d.toLocaleDateString('en',{month:'short',day:'numeric'});
+});
+const volData = [4.2,5.1,3.8,6.7,7.2,5.4,8.1,6.9,7.4,9.2,7.8,8.5,8.0,8.3];
+
+new Chart(document.getElementById('volChart'), {
+  type:'bar',
+  data:{
+    labels:volLabels,
+    datasets:[{
+      label:'Volume ($M)',
+      data:volData,
+      backgroundColor:'rgba(34,211,238,0.25)',
+      borderColor:'rgba(34,211,238,0.7)',
+      borderWidth:1.5,
+      borderRadius:5,
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}, tooltip:{
+      backgroundColor:'rgba(14,14,36,0.95)',
+      borderColor:'rgba(34,211,238,0.3)',
+      borderWidth:1,
+      titleColor:'#22d3ee',
+      bodyColor:'#f8fafc',
+      callbacks:{label:ctx=>`$${ctx.raw}M`}
+    }},
+    scales:{
+      x:{grid:{display:false},ticks:{color:'#64748b',font:{size:10}}},
+      y:{grid:{color:'rgba(255,255,255,0.03)'},ticks:{color:'#64748b',font:{size:10},callback:v=>`$${v}M`}}
+    }
+  }
+});
+
+function refreshData(){
+  showToast('Data refreshed!','success');
+}
+</script>
+<script src="assets/js/animations.js"></script>
+</body>
+</html>

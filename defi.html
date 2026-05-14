@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>DeFi — Arc Nova</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+<style>
+.defi-layout{
+  display:grid;
+  grid-template-columns:420px 1fr;
+  gap:24px;
+  align-items:flex-start;
+}
+
+.tab-bar{
+  display:flex; gap:6px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border);
+  border-radius:12px; padding:6px;
+  margin-bottom:24px;
+}
+.tab-btn{
+  flex:1; padding:9px 16px; border-radius:8px;
+  border:1px solid transparent;
+  background:none; color:var(--text-2);
+  font-size:0.875rem; font-weight:600;
+  cursor:pointer; transition:all 0.2s; font-family:inherit;
+}
+.tab-btn.active{
+  background:rgba(139,92,246,0.15); color:var(--lavender);
+  border-color:rgba(139,92,246,0.3);
+}
+
+.swap-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-xl);
+  padding:24px;
+}
+
+.swap-arrow{
+  display:flex; justify-content:center; margin:-4px 0; position:relative; z-index:1;
+}
+.swap-arrow-btn{
+  width:36px; height:36px; border-radius:50%;
+  background:var(--bg-1); border:2px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; font-size:1rem; transition:all 0.2s;
+  color:var(--text-2);
+}
+.swap-arrow-btn:hover{ border-color:var(--border-purple); color:var(--lavender); transform:rotate(180deg); }
+
+.swap-info-row{
+  display:flex; justify-content:space-between;
+  font-size:0.78rem; color:var(--muted); margin-top:12px; margin-bottom:16px;
+}
+
+.pool-list{ display:flex; flex-direction:column; gap:12px; }
+
+.pool-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:20px 22px;
+  display:flex; align-items:center;
+  justify-content:space-between; gap:16px;
+  transition:all 0.2s;
+}
+.pool-card:hover{ border-color:var(--border-purple); background:var(--card-hover); }
+
+.pool-tokens{
+  display:flex; align-items:center; gap:-4px;
+}
+.pool-token-icon{
+  width:32px; height:32px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; border:2px solid var(--bg-0);
+}
+.pool-token-icon:nth-child(2){ margin-left:-8px; }
+
+.pool-apy{
+  font-size:1.3rem; font-weight:900;
+  letter-spacing:-0.02em;
+}
+
+.earn-card{
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--radius-lg); padding:22px 24px;
+  transition:all 0.2s;
+}
+.earn-card:hover{ border-color:var(--border-purple); }
+
+.positions-card{
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--radius-lg); padding:20px;
+}
+
+.mini-stat{
+  background:rgba(255,255,255,0.04); border-radius:10px; padding:14px 16px;
+}
+.mini-stat-label{ font-size:0.72rem; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:6px; }
+.mini-stat-val{ font-size:1.1rem; font-weight:800; }
+
+@media(max-width:900px){
+  .defi-layout{ grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">N</div>Arc Nova
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="launchpad.html">Launchpad</a></li>
+    <li><a href="defi.html" class="active">DeFi</a></li>
+    <li><a href="https://docs.arc.network/" target="_blank">Docs ↗</a></li>
+  </ul>
+  <div class="nav-right">
+    <span class="badge-testnet">Testnet</span>
+    <div class="notif-wrapper">
+      <button class="notif-btn" onclick="toggleNotifPanel();renderNotifications()">🔔<span class="notif-badge">3</span></button>
+      <div class="notif-panel" id="notifPanel"></div>
+    </div>
+    <button class="btn btn-primary" onclick="connectWallet()" id="walletBtn">Connect Wallet</button>
+    <button class="hamburger" onclick="toggleMobileNav()" id="hamburgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobileNav()"></div>
+<div class="mobile-nav" id="mobileNav">
+  <div class="mobile-nav-header">
+    <a href="index.html" class="nav-logo"><div class="nav-logo-icon">N</div>Arc Nova</a>
+    <button class="mobile-nav-close" onclick="toggleMobileNav()">✕</button>
+  </div>
+  <ul class="mobile-nav-links">
+    <li><a href="index.html">🏠 Home</a></li>
+    <li><a href="dashboard.html">📊 Dashboard</a></li>
+    <li><a href="launchpad.html">🚀 Launchpad</a></li>
+    <li><a href="defi.html">🔄 DeFi</a></li>
+    <li><a href="https://docs.arc.network/" target="_blank">📄 Docs ↗</a></li>
+  </ul>
+  <div class="mobile-nav-footer">
+    <span class="badge-testnet">Testnet</span>
+    <button class="btn btn-primary" style="width:100%" onclick="connectWallet();toggleMobileNav()">Connect Wallet</button>
+  </div>
+</div>
+
+<!-- Price Ticker -->
+<div class="ticker-bar">
+  <div class="ticker-track"><div class="ticker-scroll">
+    <span class="tick-item"><span class="tick-sym">ARC</span>&nbsp;<span class="tick-price">$2.47</span>&nbsp;<span class="tick-up">▲4.2%</span></span>
+    <span class="tick-item"><span class="tick-sym">USDC</span>&nbsp;<span class="tick-price">$1.000</span>&nbsp;<span style="color:var(--muted)">Stable</span></span>
+    <span class="tick-item"><span class="tick-sym">ETH</span>&nbsp;<span class="tick-price">$3,241</span>&nbsp;<span class="tick-up">▲2.1%</span></span>
+    <span class="tick-item"><span class="tick-sym">BTC</span>&nbsp;<span class="tick-price">$67,420</span>&nbsp;<span class="tick-up">▲1.3%</span></span>
+    <span class="tick-item"><span style="color:var(--lavender);font-weight:700">ARC TVL</span>&nbsp;<span class="tick-price">$42.7M</span>&nbsp;<span class="tick-up">▲12.4%</span></span>
+    <span class="tick-item"><span style="color:var(--cyan);font-weight:700">24h Vol</span>&nbsp;<span class="tick-price">$8.3M</span>&nbsp;<span class="tick-up">▲34.7%</span></span>
+    <span class="tick-item"><span style="color:var(--green);font-weight:700">Projects</span>&nbsp;<span class="tick-price">47</span>&nbsp;<span class="tick-up">+3 new</span></span>
+    <span class="tick-item"><span class="tick-sym">ARC</span>&nbsp;<span class="tick-price">$2.47</span>&nbsp;<span class="tick-up">▲4.2%</span></span>
+    <span class="tick-item"><span class="tick-sym">USDC</span>&nbsp;<span class="tick-price">$1.000</span>&nbsp;<span style="color:var(--muted)">Stable</span></span>
+    <span class="tick-item"><span class="tick-sym">ETH</span>&nbsp;<span class="tick-price">$3,241</span>&nbsp;<span class="tick-up">▲2.1%</span></span>
+    <span class="tick-item"><span class="tick-sym">BTC</span>&nbsp;<span class="tick-price">$67,420</span>&nbsp;<span class="tick-up">▲1.3%</span></span>
+    <span class="tick-item"><span style="color:var(--lavender);font-weight:700">ARC TVL</span>&nbsp;<span class="tick-price">$42.7M</span>&nbsp;<span class="tick-up">▲12.4%</span></span>
+    <span class="tick-item"><span style="color:var(--cyan);font-weight:700">24h Vol</span>&nbsp;<span class="tick-price">$8.3M</span>&nbsp;<span class="tick-up">▲34.7%</span></span>
+    <span class="tick-item"><span style="color:var(--green);font-weight:700">Projects</span>&nbsp;<span class="tick-price">47</span>&nbsp;<span class="tick-up">+3 new</span></span>
+  </div></div>
+</div>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="container">
+    <span class="section-label">🔄 DeFi Hub</span>
+    <h1 class="section-title" style="margin-bottom:8px">Trade & Earn on <span class="grad-text">Arc Nova</span></h1>
+    <p style="color:var(--text-2);font-size:1rem;max-width:480px;line-height:1.7">
+      Swap tokens, stake for rewards, and earn yield — all powered by Arc Network's stablecoin-native infrastructure.
+    </p>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div style="position:relative;z-index:1;padding-bottom:80px">
+  <div class="container">
+
+    <!-- Mini stats bar -->
+    <div class="grid-4" style="margin-bottom:32px">
+      <div class="mini-stat">
+        <div class="mini-stat-label">Your Balance</div>
+        <div class="mini-stat-val" id="userBalance" style="color:var(--lavender)">—</div>
+      </div>
+      <div class="mini-stat">
+        <div class="mini-stat-label">Staked Value</div>
+        <div class="mini-stat-val" id="stakedValue" style="color:var(--green)">—</div>
+      </div>
+      <div class="mini-stat">
+        <div class="mini-stat-label">Earned Rewards</div>
+        <div class="mini-stat-val" id="earnedRewards" style="color:var(--cyan)">—</div>
+      </div>
+      <div class="mini-stat">
+        <div class="mini-stat-label">Net APY</div>
+        <div class="mini-stat-val" style="color:var(--yellow)">18.4%</div>
+      </div>
+    </div>
+
+    <!-- TAB BAR -->
+    <div id="defi-tabs">
+      <div class="tab-bar">
+        <button class="tab-btn" data-tab="swap" onclick="switchTab('swap',this)">🔄 Swap</button>
+        <button class="tab-btn" data-tab="stake" onclick="switchTab('stake',this)">💎 Stake</button>
+        <button class="tab-btn" data-tab="earn" onclick="switchTab('earn',this)">💰 Earn</button>
+        <button class="tab-btn" data-tab="pools" onclick="switchTab('pools',this)">🌊 Pools</button>
+      </div>
+
+      <!-- ═══════════ SWAP ═══════════ -->
+      <div id="panel-swap" class="defi-layout">
+        <!-- SWAP WIDGET -->
+        <div class="swap-card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+            <div style="font-weight:800;font-size:1rem">Swap Tokens</div>
+            <button style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem" title="Settings" onclick="showToast('Settings coming soon','info')">⚙️</button>
+          </div>
+
+          <!-- FROM -->
+          <div class="swap-box">
+            <div class="swap-label">From</div>
+            <div class="swap-row">
+              <button class="token-btn" id="fromToken" data-symbol="NOVA" onclick="showToast('Token selection: NOVA ↔ USDC supported on-chain','info')">
+                <div class="token-dot" style="background:rgba(124,58,237,0.3);color:#a78bfa">N</div>
+                NOVA ▾
+              </button>
+              <input type="number" class="amount-input" id="fromAmount" placeholder="0.00" oninput="calcSwap()">
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:0.78rem;color:var(--muted)">
+              <span>Balance: <span id="fromBal">—</span> <button onclick="setFromMax()" style="background:none;border:none;color:var(--lavender);cursor:pointer;font-size:0.72rem;font-weight:700;padding:0 4px">MAX</button></span>
+              <span>≈ $<span id="fromUsd">0.00</span></span>
+            </div>
+          </div>
+
+          <!-- ARROW -->
+          <div class="swap-arrow">
+            <button class="swap-arrow-btn" onclick="swapTokens()">⇅</button>
+          </div>
+
+          <!-- TO -->
+          <div class="swap-box">
+            <div class="swap-label">To</div>
+            <div class="swap-row">
+              <button class="token-btn" id="toToken" data-symbol="USDC" onclick="openTokenModal('to')">
+                <div class="token-dot" style="background:rgba(34,211,238,0.2);color:#22d3ee">U</div>
+                USDC ▾
+              </button>
+              <input type="number" class="amount-input" id="toAmount" placeholder="0.00" readonly style="opacity:0.7">
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:0.78rem;color:var(--muted)">
+              <span>Balance: <span id="toBal">—</span></span>
+              <span>≈ $<span id="toUsd">0.00</span></span>
+            </div>
+          </div>
+
+          <!-- Swap Info -->
+          <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:14px;margin:16px 0;font-size:0.82rem">
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+              <span style="color:var(--muted)">Rate</span>
+              <span style="color:var(--text)"><span id="swapRateLabel">1 NOVA =</span> <span id="swapRate">—</span> USDC</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+              <span style="color:var(--muted)">Price Impact</span>
+              <span style="color:var(--green)">0.08%</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+              <span style="color:var(--muted)">Slippage Tolerance</span>
+              <span style="color:var(--text)">0.5%</span>
+            </div>
+            <div style="display:flex;justify-content:space-between">
+              <span style="color:var(--muted)">Est. Gas</span>
+              <span style="color:var(--text)">~0.01 USDC</span>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" style="width:100%;padding:14px" onclick="doSwap()">
+            Swap NOVA ↔ USDC
+          </button>
+          <button class="btn btn-ghost" style="width:100%;padding:10px;margin-top:8px;font-size:0.82rem" onclick="doFaucet()">
+            🚰 Claim 1,000 NOVA from Faucet (Testnet)
+          </button>
+        </div>
+
+        <!-- RIGHT: Token prices + recent swaps -->
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <div class="card">
+            <div style="font-weight:700;margin-bottom:16px">Token Prices</div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="token-dot" style="background:rgba(124,58,237,0.25);color:#a78bfa;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900">A</div>
+                  <div><div style="font-weight:700">ARC</div><div style="font-size:0.75rem;color:var(--muted)">Arc Network</div></div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font-weight:800">$2.47</div>
+                  <div style="font-size:0.78rem;color:var(--green)">▲ 4.2%</div>
+                </div>
+              </div>
+              <div class="divider" style="margin:4px 0"></div>
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="token-dot" style="background:rgba(16,185,129,0.2);color:#10b981;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900">T</div>
+                  <div><div style="font-weight:700">USDT</div><div style="font-size:0.75rem;color:var(--muted)">Tether</div></div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font-weight:800">$1.00</div>
+                  <div style="font-size:0.78rem;color:var(--muted)">Stable</div>
+                </div>
+              </div>
+              <div class="divider" style="margin:4px 0"></div>
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="token-dot" style="background:rgba(16,185,129,0.2);color:#10b981;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900">U</div>
+                  <div><div style="font-weight:700">USDC</div><div style="font-size:0.75rem;color:var(--muted)">USD Coin</div></div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font-weight:800">$1.00</div>
+                  <div style="font-size:0.78rem;color:var(--muted)">Stable</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div style="font-weight:700;margin-bottom:14px">Recent Swaps</div>
+            <div style="display:flex;flex-direction:column;gap:10px;font-size:0.84rem">
+              <div style="display:flex;justify-content:space-between;color:var(--text-2)">
+                <span>100 ARC → 247 USDC</span><span style="color:var(--muted)">4s ago</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;color:var(--text-2)">
+                <span>500 USDT → 202 ARC</span><span style="color:var(--muted)">22s ago</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;color:var(--text-2)">
+                <span>500 USDC → 202.4 ARC</span><span style="color:var(--muted)">1m ago</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;color:var(--text-2)">
+                <span>1,000 ARC → 2,470 USDC</span><span style="color:var(--muted)">2m ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ STAKE ═══════════ -->
+      <div id="panel-stake" style="display:none">
+        <div style="margin-bottom:20px;padding:18px 20px;background:rgba(139,92,246,0.07);border:1px solid rgba(139,92,246,0.2);border-radius:12px;font-size:0.875rem;color:var(--text-2)">
+          💎 Stake your NOVA tokens to earn protocol rewards. Unstake at any time with a 24-hour unbonding period.
+        </div>
+        <div class="defi-layout">
+          <div class="swap-card">
+            <div style="font-weight:800;font-size:1rem;margin-bottom:20px">Stake NOVA</div>
+
+            <!-- STAKE -->
+            <div class="swap-box" style="margin-bottom:12px">
+              <div class="swap-label">Amount to Stake</div>
+              <div class="swap-row">
+                <div class="token-btn" style="cursor:default">
+                  <div class="token-dot" style="background:rgba(124,58,237,0.3);color:#a78bfa">N</div>NOVA
+                </div>
+                <input type="number" class="amount-input" id="stakeAmount" placeholder="0.00">
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-top:10px">
+                <span style="font-size:0.78rem;color:var(--muted)">Balance: <span class="balance-nova">—</span></span>
+                <div style="display:flex;gap:6px">
+                  <button class="btn btn-sm" style="padding:3px 8px;font-size:0.7rem;background:rgba(139,92,246,0.12);color:var(--lavender);border:1px solid rgba(139,92,246,0.25)" onclick="setStakeMaxPct(0.25)">25%</button>
+                  <button class="btn btn-sm" style="padding:3px 8px;font-size:0.7rem;background:rgba(139,92,246,0.12);color:var(--lavender);border:1px solid rgba(139,92,246,0.25)" onclick="setStakeMaxPct(0.5)">50%</button>
+                  <button class="btn btn-sm" style="padding:3px 8px;font-size:0.7rem;background:rgba(139,92,246,0.12);color:var(--lavender);border:1px solid rgba(139,92,246,0.25)" onclick="setStakeMaxPct(1)">MAX</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- UNSTAKE -->
+            <div class="swap-box" style="margin-bottom:12px">
+              <div class="swap-label">Amount to Unstake</div>
+              <div class="swap-row">
+                <div class="token-btn" style="cursor:default">
+                  <div class="token-dot" style="background:rgba(124,58,237,0.3);color:#a78bfa">N</div>NOVA
+                </div>
+                <input type="number" class="amount-input" id="unstakeAmount" placeholder="0.00">
+              </div>
+              <div style="font-size:0.78rem;color:var(--muted);margin-top:8px">Staked: <span id="stakedValue">—</span></div>
+            </div>
+
+            <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:16px;font-size:0.82rem">
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+                <span style="color:var(--muted)">Current APY</span><span style="color:var(--green);font-weight:800">~12%</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+                <span style="color:var(--muted)">Unbonding Period</span><span>24 hours</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+                <span style="color:var(--muted)">Pending Rewards</span>
+                <span style="color:var(--lavender);font-weight:700"><span id="earnedRewards">—</span></span>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+              <button class="btn btn-primary" style="padding:12px" onclick="doStake()">Stake NOVA</button>
+              <button class="btn btn-outline" style="padding:12px" onclick="doUnstake()">Unstake</button>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <button class="btn btn-ghost" style="padding:12px" onclick="doClaim()">Claim Rewards</button>
+              <button class="btn btn-ghost" style="padding:12px" onclick="doWithdraw()">Withdraw</button>
+            </div>
+          </div>
+          <div>
+            <div style="font-weight:700;margin-bottom:14px">Staking Pools</div>
+            <div class="pool-list">
+              <div class="pool-card">
+                <div style="display:flex;align-items:center;gap:14px">
+                  <div class="pool-tokens">
+                    <div class="pool-token-icon" style="background:rgba(124,58,237,0.25);color:#a78bfa">A</div>
+                  </div>
+                  <div>
+                    <div style="font-weight:700">ARC Single Stake</div>
+                    <div style="font-size:0.78rem;color:var(--muted)">Staked: $7.2M</div>
+                  </div>
+                </div>
+                <div style="text-align:center">
+                  <div class="pool-apy" style="color:var(--green)">12.4%</div>
+                  <div style="font-size:0.72rem;color:var(--muted)">APY</div>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="doStake()">Stake</button>
+              </div>
+              <div class="pool-card">
+                <div style="display:flex;align-items:center;gap:14px">
+                  <div class="pool-tokens">
+                    <div class="pool-token-icon" style="background:rgba(124,58,237,0.25);color:#a78bfa">A</div>
+                    <div class="pool-token-icon" style="background:rgba(34,211,238,0.2);color:#22d3ee">U</div>
+                  </div>
+                  <div>
+                    <div style="font-weight:700">ARC-USDC LP</div>
+                    <div style="font-size:0.78rem;color:var(--muted)">TVL: $4.8M</div>
+                  </div>
+                </div>
+                <div style="text-align:center">
+                  <div class="pool-apy" style="color:var(--cyan)">24.7%</div>
+                  <div style="font-size:0.72rem;color:var(--muted)">APY</div>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="doStake()">Stake</button>
+              </div>
+              <div class="pool-card">
+                <div style="display:flex;align-items:center;gap:14px">
+                  <div class="pool-tokens">
+                    <div class="pool-token-icon" style="background:rgba(124,58,237,0.25);color:#a78bfa">A</div>
+                    <div class="pool-token-icon" style="background:rgba(34,211,238,0.2);color:#22d3ee">M</div>
+                  </div>
+                  <div>
+                    <div style="font-weight:700">ARC-USDT LP</div>
+                    <div style="font-size:0.78rem;color:var(--muted)">TVL: $3.1M</div>
+                  </div>
+                </div>
+                <div style="text-align:center">
+                  <div class="pool-apy" style="color:var(--yellow)">38.2%</div>
+                  <div style="font-size:0.72rem;color:var(--muted)">APY</div>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="doStake()">Stake</button>
+              </div>
+              <div class="pool-card">
+                <div style="display:flex;align-items:center;gap:14px">
+                  <div class="pool-tokens">
+                    <div class="pool-token-icon" style="background:rgba(34,211,238,0.2);color:#22d3ee">M</div>
+                  </div>
+                  <div>
+                    <div style="font-weight:700">USDT Stable Stake</div>
+                    <div style="font-size:0.78rem;color:var(--muted)">TVL: $2.4M</div>
+                  </div>
+                </div>
+                <div style="text-align:center">
+                  <div class="pool-apy" style="color:var(--lavender)">9.8%</div>
+                  <div style="font-size:0.72rem;color:var(--muted)">APY</div>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="doStake()">Stake</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ EARN ═══════════ -->
+      <div id="panel-earn" style="display:none">
+        <div style="margin-bottom:20px;padding:18px 20px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.18);border-radius:12px;font-size:0.875rem;color:var(--text-2)">
+          💰 Deposit assets into yield vaults and earn automated returns. Strategies are auto-compounded for maximum APY.
+        </div>
+        <div style="display:flex;flex-direction:column;gap:16px">
+
+          <div class="earn-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+              <div style="display:flex;align-items:center;gap:16px">
+                <div style="width:48px;height:48px;border-radius:12px;background:rgba(34,211,238,0.12);display:flex;align-items:center;justify-content:center;font-size:22px">💵</div>
+                <div>
+                  <div style="font-weight:800;font-size:1rem">USDC Vault</div>
+                  <div style="font-size:0.78rem;color:var(--muted);margin-top:2px">Auto-compounding stablecoin vault</div>
+                  <div style="display:flex;gap:6px;margin-top:6px">
+                    <span class="tag tag-green">Low Risk</span>
+                    <span class="tag tag-blue">Stable</span>
+                  </div>
+                </div>
+              </div>
+              <div style="display:flex;gap:32px;flex-wrap:wrap">
+                <div style="text-align:center">
+                  <div style="font-size:1.5rem;font-weight:900;color:var(--green)">8.2%</div>
+                  <div style="font-size:0.72rem;color:var(--muted)">APY</div>
+                </div>
+                <div style="text-align:center">
+                  <div style="font-size:1rem;font-weight:700">$8.4M</div>
+                  <div style="font-size:0.72rem;color:var(--muted)">TVL</div>
+                </div>
+                <div style="text-align:center">
+                  <div style="font-size:1rem;font-weight:700">$5M</div>
+                  <div style="font-size:0.72rem;color:var(--muted)">Capacity</div>
+                </div>
+                <button class="btn btn-green" onclick="depositVault('USDC Vault')">Deposit</button>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div style="font-size:0.78rem;color:var(--muted)">Strategy: Supplies USDC to NovaLend + ArcSwap LP for optimized yield with automatic rebalancing.</div>
+          </div>
+
+          <div class="earn-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+              <div style="display:flex;align-items:center;gap:16px">
+                <div style="width:48px;height:48px;border-radius:12px;background:rgba(124,58,237,0.15);display:flex;align-items:center;justify-content:center;font-size:22px">⚡</div>
+                <div>
+                  <div style="font-weight:800;font-size:1rem">ARC Growth Vault</div>
+                  <div style="font-size:0.78rem;color:var(--muted);margin-top:2px">High-yield ARC compounding strategy</div>
+                  <div style="display:flex;gap:6px;margin-top:6px">
+                    <span class="tag tag-yellow">Medium Risk</span>
+                    <span class="tag tag-purple">Growth</span>
+                  </div>
+                </div>
+              </div>
+              <div style="display:flex;gap:32px;flex-wrap:wrap">
+                <div style="text-align:center">
+                  <div style="font-size:1.5rem;font-weight:900;color:var(--yellow)">21.6%</div>
+                  <div style="font-size:0.72rem;color:var(--muted)">APY</div>
+                </div>
+                <div style="text-align:center">
+                  <div style="font-size:1rem;font-weight:700">$3.7M</div>
+                  <div style="font-size:0.72rem;color:var(--muted)">TVL</div>
+                </div>
+                <div style="text-align:center">
+                  <div style="font-size:1rem;font-weight:700">$2M</div>
+                  <div style="font-size:0.72rem;color:var(--muted)">Capacity</div>
+                </div>
+                <button class="btn btn-primary" onclick="depositVault('ARC Growth Vault')">Deposit</button>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div style="font-size:0.78rem;color:var(--muted)">Strategy: Stakes ARC + provides ARC-USDC liquidity. Rewards auto-compounded every 4 hours.</div>
+          </div>
+
+          <div class="earn-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+              <div style="display:flex;align-items:center;gap:16px">
+                <div style="width:48px;height:48px;border-radius:12px;background:rgba(245,158,11,0.12);display:flex;align-items:center;justify-content:center;font-size:22px">🔥</div>
+                <div>
+                  <div style="font-weight:800;font-size:1rem">Nova Alpha Vault</div>
+                  <div style="font-size:0.78rem;color:var(--muted);margin-top:2px">High-risk, high-reward multi-strategy vault</div>
+                  <div style="display:flex;gap:6px;margin-top:6px">
+                    <span class="tag tag-red">High Risk</span>
+                    <span class="tag tag-yellow">Alpha</span>
+                  </div>
+                </div>
+              </div>
+              <div style="display:flex;gap:32px;flex-wrap:wrap">
+                <div style="text-align:center">
+                  <div style="font-size:1.5rem;font-weight:900;color:var(--red)">58.4%</div>
+                  <div style="font-size:0.72rem;color:var(--muted)">APY</div>
+                </div>
+                <div style="text-align:center">
+                  <div style="font-size:1rem;font-weight:700">$1.2M</div>
+                  <div style="font-size:0.72rem;color:var(--muted)">TVL</div>
+                </div>
+                <div style="text-align:center">
+                  <div style="font-size:1rem;font-weight:700">$800K</div>
+                  <div style="font-size:0.72rem;color:var(--muted)">Capacity</div>
+                </div>
+                <button class="btn btn-outline" onclick="depositVault('Nova Alpha Vault')">Deposit</button>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div style="font-size:0.78rem;color:var(--muted)">Strategy: ARC-USDT LP + launchpad allocations + ArcPerp trading. High volatility. DYOR.</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ═══════════ POOLS ═══════════ -->
+      <div id="panel-pools" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+          <div style="font-weight:700">Liquidity Pools</div>
+          <button class="btn btn-primary btn-sm" onclick="addLiquidity()">+ Add Liquidity</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Pool</th>
+                <th>TVL</th>
+                <th>24h Volume</th>
+                <th>24h Fees</th>
+                <th>APR</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div style="display:flex;align-items:center;gap:10px">
+                    <div style="display:flex"><div class="pool-token-icon" style="background:rgba(124,58,237,0.25);color:#a78bfa;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid var(--bg-0)">A</div><div class="pool-token-icon" style="background:rgba(34,211,238,0.2);color:#22d3ee;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid var(--bg-0);margin-left:-6px">U</div></div>
+                    <span style="font-weight:700;color:var(--text)">ARC / USDC</span>
+                  </div>
+                </td>
+                <td style="color:var(--text);font-weight:600">$4.8M</td>
+                <td>$1.2M</td>
+                <td style="color:var(--green)">$3,600</td>
+                <td><span style="color:var(--cyan);font-weight:800">24.7%</span></td>
+                <td><button class="btn btn-ghost btn-sm" onclick="addLiquidityPool('ARC/USDC')">Add LP</button></td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="display:flex;align-items:center;gap:10px">
+                    <div style="display:flex"><div class="pool-token-icon" style="background:rgba(124,58,237,0.25);color:#a78bfa;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid var(--bg-0)">A</div><div class="pool-token-icon" style="background:rgba(34,211,238,0.2);color:#22d3ee;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid var(--bg-0);margin-left:-6px">M</div></div>
+                    <span style="font-weight:700;color:var(--text)">ARC / USDT</span>
+                  </div>
+                </td>
+                <td style="color:var(--text);font-weight:600">$3.1M</td>
+                <td>$890K</td>
+                <td style="color:var(--green)">$2,670</td>
+                <td><span style="color:var(--yellow);font-weight:800">38.2%</span></td>
+                <td><button class="btn btn-ghost btn-sm" onclick="addLiquidityPool('ARC/USDT')">Add LP</button></td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="display:flex;align-items:center;gap:10px">
+                    <div style="display:flex"><div class="pool-token-icon" style="background:rgba(34,211,238,0.2);color:#22d3ee;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid var(--bg-0)">M</div><div class="pool-token-icon" style="background:rgba(34,211,238,0.15);color:#10b981;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid var(--bg-0);margin-left:-6px">U</div></div>
+                    <span style="font-weight:700;color:var(--text)">USDT / USDC</span>
+                  </div>
+                </td>
+                <td style="color:var(--text);font-weight:600">$2.6M</td>
+                <td>$640K</td>
+                <td style="color:var(--green)">$1,920</td>
+                <td><span style="color:var(--lavender);font-weight:800">16.3%</span></td>
+                <td><button class="btn btn-ghost btn-sm" onclick="addLiquidityPool('USDT/USDC')">Add LP</button></td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="display:flex;align-items:center;gap:10px">
+                    <div style="display:flex"><div class="pool-token-icon" style="background:rgba(124,58,237,0.25);color:#a78bfa;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid var(--bg-0)">A</div><div class="pool-token-icon" style="background:rgba(124,58,237,0.15);color:#818cf8;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;border:2px solid var(--bg-0);margin-left:-6px">N</div></div>
+                    <span style="font-weight:700;color:var(--text)">ARC / NOVA</span>
+                  </div>
+                </td>
+                <td style="color:var(--text);font-weight:600">$1.4M</td>
+                <td>$320K</td>
+                <td style="color:var(--green)">$960</td>
+                <td><span style="color:var(--red);font-weight:800">54.1%</span></td>
+                <td><button class="btn btn-ghost btn-sm" onclick="addLiquidityPool('ARC/NOVA')">Add LP</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- end defi-tabs -->
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom" style="border-top:none;padding-top:0">
+      <div>© 2025 Arc Nova. Built on Arc Network.</div>
+      <div style="display:flex;gap:16px">
+        <a href="index.html" style="color:var(--muted);text-decoration:none" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--muted)'">Home</a>
+        <a href="dashboard.html" style="color:var(--muted);text-decoration:none" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--muted)'">Dashboard</a>
+        <a href="launchpad.html" style="color:var(--muted);text-decoration:none" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--muted)'">Launchpad</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Token Selector Modal -->
+<div class="modal-overlay" id="tokenModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title">Select Token</span>
+      <button class="modal-close" onclick="closeTokenModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input class="token-search" id="tokenSearch" placeholder="Search by name or symbol..." oninput="renderTokenList(this.value)">
+      <div class="token-list" id="tokenList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Modal -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title" id="confirmTitle">Confirm Swap</span>
+      <button class="modal-close" onclick="closeConfirmModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="confirmDetails"></div>
+      <div style="margin-top:20px;padding:12px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:10px;font-size:0.8rem;color:var(--yellow);line-height:1.6">
+        ⚠️ Output is estimated. You will receive at least the minimum amount or the transaction will revert.
+      </div>
+      <div style="display:flex;gap:10px;margin-top:16px">
+        <button class="btn btn-ghost" style="flex:1" onclick="closeConfirmModal()">Cancel</button>
+        <button class="btn btn-primary" style="flex:2" id="confirmBtn">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+<script src="assets/js/contracts.js"></script>
+<script src="assets/js/wallet.js"></script>
+<script src="assets/js/web3.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+/* ── DeFi page state ── */
+let fromSym = 'NOVA', toSym = 'USDC';
+let _quoteTimer = null;
+
+/* USD prices for display */
+const TOKEN_USD = { NOVA: 0.001, USDC: 1.0, ARC: 2.47, USDT: 1.0 };
+
+/* ── Tab switcher ── */
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  ['swap','stake','earn','pools'].forEach(p => {
+    const el = document.getElementById('panel-' + p);
+    if (el) el.style.display = p === name ? 'block' : 'none';
+  });
+}
+
+/* ── Swap: flip tokens ── */
+function swapTokens() {
+  [fromSym, toSym] = [toSym, fromSym];
+  const fBtn = document.getElementById('fromToken');
+  const tBtn = document.getElementById('toToken');
+  if (fBtn) { fBtn.dataset.symbol = fromSym; fBtn.innerHTML = `<div class="token-dot" style="background:rgba(124,58,237,0.3);color:#a78bfa">${fromSym[0]}</div>${fromSym} ▾`; }
+  if (tBtn) { tBtn.dataset.symbol = toSym;   tBtn.innerHTML = `<div class="token-dot" style="background:rgba(34,211,238,0.2);color:#22d3ee">${toSym[0]}</div>${toSym} ▾`; }
+  const fromInp = document.getElementById('fromAmount');
+  const toInp   = document.getElementById('toAmount');
+  if (fromInp) fromInp.value = '';
+  if (toInp)   toInp.value   = '';
+  /* Swap balance labels */
+  const fb = document.getElementById('fromBal');
+  const tb = document.getElementById('toBal');
+  if (fb && tb) { const t = fb.textContent; fb.textContent = tb.textContent; tb.textContent = t; }
+  _updateSwapRate();
+  _updateUSD();
+}
+
+/* ── Update ≈ $USD displays ── */
+function _updateUSD() {
+  const fromAmt = parseFloat(document.getElementById('fromAmount')?.value) || 0;
+  const toAmt   = parseFloat(document.getElementById('toAmount')?.value)   || 0;
+  const fUsd = document.getElementById('fromUsd');
+  const tUsd = document.getElementById('toUsd');
+  if (fUsd) fUsd.textContent = (fromAmt * (TOKEN_USD[fromSym] || 0)).toFixed(2);
+  if (tUsd) tUsd.textContent = (toAmt   * (TOKEN_USD[toSym]   || 0)).toFixed(2);
+}
+
+/* ── Live quote (debounced 350ms) ── */
+async function calcSwap() {
+  clearTimeout(_quoteTimer);
+  const amt = parseFloat(document.getElementById('fromAmount').value) || 0;
+  if (!amt) {
+    const toInp = document.getElementById('toAmount');
+    if (toInp) toInp.value = '';
+    _updateUSD();
+    return;
+  }
+  _quoteTimer = setTimeout(async () => {
+    const out = await getSwapQuote(fromSym, toSym, amt);
+    const toInp = document.getElementById('toAmount');
+    if (toInp) toInp.value = out || '';
+    const rateEl = document.getElementById('swapRate');
+    if (rateEl && out) rateEl.textContent = (parseFloat(out) / amt).toFixed(6);
+    _updateUSD();
+  }, 350);
+}
+
+/* ── Update rate display ── */
+async function _updateSwapRate() {
+  const rateEl = document.getElementById('swapRate');
+  if (!rateEl) return;
+  const q = await getSwapQuote(fromSym, toSym, 1);
+  rateEl.textContent = q ? parseFloat(q).toFixed(6) : '—';
+  /* Also update rate label text */
+  const rateLbl = document.getElementById('swapRateLabel');
+  if (rateLbl) rateLbl.textContent = `1 ${fromSym} =`;
+}
+
+/* ── Swap button ── */
+async function doSwap() {
+  if (!walletConnected) { showToast('Connect your wallet first', 'error'); openWalletModal(); return; }
+  const amt = parseFloat(document.getElementById('fromAmount').value);
+  if (!amt || amt <= 0) { showToast('Enter an amount to swap', 'error'); return; }
+  if (fromSym === toSym) { showToast('Select different tokens', 'error'); return; }
+  if (fromSym !== 'NOVA' && fromSym !== 'USDC') { showToast('Only NOVA ↔ USDC swaps are available', 'info'); return; }
+  if (toSym   !== 'NOVA' && toSym   !== 'USDC') { showToast('Only NOVA ↔ USDC swaps are available', 'info'); return; }
+
+  const outAmt = document.getElementById('toAmount').value || '...';
+  showConfirmModal('Confirm Swap', [
+    ['You Pay',     `${amt} ${fromSym}`,      'var(--text)'],
+    ['You Receive', `~${outAmt} ${toSym}`,    'var(--green)'],
+    ['Fee',         '0.30%',                  'var(--muted)'],
+    ['Slippage',    '0.5%',                   'var(--text-2)'],
+    ['Gas',         '~0.01 USDC',             'var(--muted)'],
+  ], async () => {
+    await executeSwap(fromSym, toSym, amt, 0.5);
+    if (document.getElementById('fromAmount')) document.getElementById('fromAmount').value = '';
+    if (document.getElementById('toAmount'))   document.getElementById('toAmount').value   = '';
+    _updateUSD();
+  });
+}
+
+/* ── MAX button for swap from-input ── */
+async function setFromMax() {
+  if (!walletConnected) { showToast('Connect wallet first', 'error'); openWalletModal(); return; }
+  try {
+    let bal;
+    if (!isDeployed(CONTRACT_ADDRESSES.NOVA_TOKEN)) {
+      bal = fromSym === 'NOVA' ? _demo.nova : _demo.usdc;
+    } else {
+      const addr = fromSym === 'NOVA' ? CONTRACT_ADDRESSES.NOVA_TOKEN : CONTRACT_ADDRESSES.USDC;
+      const dec  = fromSym === 'NOVA' ? 18 : 6;
+      const c    = new ethers.Contract(addr, ERC20_ABI, ethersProvider);
+      const raw  = await c.balanceOf(activeAccount);
+      bal = parseFloat(ethers.utils.formatUnits(raw, dec));
+    }
+    document.getElementById('fromAmount').value = bal.toFixed(fromSym === 'NOVA' ? 2 : 2);
+    calcSwap();
+  } catch { showToast('Could not read balance', 'error'); }
+}
+
+/* ── Stake tab ── */
+async function doStake() {
+  if (!walletConnected) { showToast('Connect wallet first', 'error'); openWalletModal(); return; }
+  const amtEl = document.getElementById('stakeAmount');
+  const amt   = parseFloat(amtEl?.value);
+  if (!amt || amt <= 0) { showToast('Enter amount to stake', 'error'); return; }
+  showConfirmModal('Confirm Stake', [
+    ['Amount',           `${amt} NOVA`,                              'var(--text)'],
+    ['APY',              '~12% annually',                            'var(--green)'],
+    ['Unbonding Period', '24 hours',                                 'var(--text-2)'],
+    ['Daily Earnings',   `~${(amt * 0.12 / 365).toFixed(4)} NOVA`,  'var(--lavender)'],
+  ], async () => {
+    await executeStake(String(amt));
+    if (amtEl) amtEl.value = '';
+  });
+}
+
+async function doUnstake() {
+  if (!walletConnected) { showToast('Connect wallet first', 'error'); openWalletModal(); return; }
+  const amtEl = document.getElementById('unstakeAmount');
+  const amt   = parseFloat(amtEl?.value);
+  if (!amt || amt <= 0) { showToast('Enter amount to unstake', 'error'); return; }
+  showConfirmModal('Confirm Unstake', [
+    ['Amount',   `${amt} NOVA`,  'var(--text)'],
+    ['Unbonding','24 hours',     'var(--text-2)'],
+    ['Note',     'Tokens unlock after unbonding period', 'var(--muted)'],
+  ], async () => {
+    await executeUnstake(String(amt));
+    if (amtEl) amtEl.value = '';
+  });
+}
+
+async function doWithdraw() {
+  if (!walletConnected) { showToast('Connect wallet first', 'error'); openWalletModal(); return; }
+  await executeWithdraw();
+}
+
+async function doClaim() {
+  if (!walletConnected) { showToast('Connect wallet first', 'error'); openWalletModal(); return; }
+  await executeClaim();
+}
+
+async function doFaucet() {
+  if (!walletConnected) { showToast('Connect wallet first', 'error'); openWalletModal(); return; }
+  await claimFaucet();
+}
+
+/* ── % buttons for stake input ── */
+async function setStakeMaxPct(pct) {
+  if (!walletConnected) { showToast('Connect wallet first', 'error'); openWalletModal(); return; }
+  let bal;
+  try {
+    if (!isDeployed(CONTRACT_ADDRESSES.NOVA_TOKEN)) {
+      bal = _demo.nova;
+    } else {
+      const c   = new ethers.Contract(CONTRACT_ADDRESSES.NOVA_TOKEN, ERC20_ABI, ethersProvider);
+      const raw = await c.balanceOf(activeAccount);
+      bal = parseFloat(ethers.utils.formatEther(raw));
+    }
+    document.getElementById('stakeAmount').value = (bal * pct).toFixed(2);
+  } catch { showToast('Could not read NOVA balance', 'error'); }
+}
+
+/* ── Accrue demo staking rewards every 30s ── */
+function _startDemoRewardAccrual() {
+  setInterval(() => {
+    if (!walletConnected || !_demo || _demo.staked <= 0) return;
+    _demo.rewards += _demo.staked * 0.12 / 365 / (24 * 120); /* per 30s */
+    const er = document.getElementById('earnedRewards');
+    if (er) er.textContent = _demo.rewards.toFixed(4) + ' NOVA';
+  }, 30000);
+}
+
+/* ── Vault / Pool (UI stubs) ── */
+function depositVault(name) {
+  if (!walletConnected) { showToast('Connect wallet first', 'error'); openWalletModal(); return; }
+  showToast(`${name} — coming soon on mainnet`, 'info');
+}
+function addLiquidityPool(pair) {
+  if (!walletConnected) { showToast('Connect wallet first', 'error'); openWalletModal(); return; }
+  showToast(`${pair} LP — coming soon`, 'info');
+}
+function addLiquidity() { addLiquidityPool('this pool'); }
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded', () => {
+  switchTab('swap', document.querySelector('.tab-btn'));
+  _updateSwapRate();
+  _startDemoRewardAccrual();
+});
+</script>
+<script src="assets/js/animations.js"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+# Private key — NEVER commit
+contracts/.env
+
+# Node modules
+contracts/node_modules/
+node_modules/
+
+# Hardhat build artifacts
+contracts/artifacts/
+contracts/cache/
+contracts/typechain-types/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Portable Node (local tool, not project code)
+node/
