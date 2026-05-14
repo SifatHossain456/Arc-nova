@@ -134,31 +134,31 @@
 <div style="position:relative;z-index:1">
   <div class="container">
     <div class="grid-4" style="margin-bottom:24px">
-      <div class="stat-card">
+      <div class="stat-card fade-up d1">
         <div class="stat-label">Total Value Locked</div>
-        <div class="stat-value" data-count="42.7" data-prefix="$" data-suffix="M">$0M</div>
+        <div class="stat-value" data-live="tvl">$42.7M</div>
         <div class="stat-change up">▲ 12.4% vs last week</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card fade-up d2">
         <div class="stat-label">24h Volume</div>
-        <div class="stat-value" data-count="8.3" data-prefix="$" data-suffix="M">$0M</div>
+        <div class="stat-value" data-live="vol24">$8.3M</div>
         <div class="stat-change up">▲ 34.7% vs yesterday</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card fade-up d3">
         <div class="stat-label">Active Users (24h)</div>
-        <div class="stat-value" data-count="3247" data-suffix="">0</div>
+        <div class="stat-value" data-live="users">3,247</div>
         <div class="stat-change up">▲ 8.2% vs yesterday</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card fade-up d4">
         <div class="stat-label">Total Transactions</div>
-        <div class="stat-value" data-count="284917" data-suffix="">0</div>
+        <div class="stat-value" data-live="txcount">284,917</div>
         <div class="stat-change up">▲ 21.6% this week</div>
       </div>
     </div>
 
     <div class="grid-2" style="margin-bottom:24px">
       <!-- TVL Chart -->
-      <div class="chart-card">
+      <div class="chart-card fade-up d1">
         <div class="chart-title">TVL Over Time</div>
         <div class="chart-sub">Total Value Locked — Last 30 days</div>
         <div style="height:220px">
@@ -166,7 +166,7 @@
         </div>
       </div>
       <!-- Volume Chart -->
-      <div class="chart-card">
+      <div class="chart-card fade-up d2">
         <div class="chart-title">Daily Volume</div>
         <div class="chart-sub">Swap + Stake volume — Last 14 days</div>
         <div style="height:220px">
@@ -233,8 +233,10 @@
 
       <!-- Recent Transactions -->
       <div>
-        <div style="font-weight:700;margin-bottom:14px;font-size:0.95rem">Recent Transactions</div>
-        <div class="card" style="padding:16px">
+        <div style="font-weight:700;margin-bottom:14px;font-size:0.95rem">
+          <span class="live-dot"></span>Recent Transactions <span style="font-size:0.72rem;color:var(--green);font-weight:600">● Live</span>
+        </div>
+        <div class="card" style="padding:16px" id="liveTxFeed">
           <div class="tx-row">
             <div style="display:flex;align-items:center;gap:10px">
               <span class="tx-type" style="background:rgba(124,58,237,0.15);color:#a78bfa">Swap</span>
@@ -242,7 +244,7 @@
             </div>
             <div style="text-align:right">
               <div style="font-weight:700;color:var(--text)">+$1,240</div>
-              <div style="font-size:0.72rem;color:var(--muted)">2s ago</div>
+              <div class="tx-time" style="font-size:0.72rem;color:var(--muted)">2s ago</div>
             </div>
           </div>
           <div class="tx-row">
@@ -301,19 +303,19 @@
 
     <!-- Network Info -->
     <div class="grid-3" style="padding-bottom:60px">
-      <div class="stat-card">
-        <div class="stat-label">Arc Testnet Block</div>
-        <div class="stat-value" data-count="1847293" data-suffix="">#0</div>
+      <div class="stat-card fade-up d1">
+        <div class="stat-label"><span class="live-dot"></span>Arc Testnet Block</div>
+        <div class="stat-value" data-live="block">#1,847,293</div>
         <div style="margin-top:8px;font-size:0.78rem;color:var(--muted)">~2s avg block time</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card fade-up d2">
         <div class="stat-label">Gas Price</div>
         <div class="stat-value">0.001 <span style="font-size:1rem;color:var(--muted)">ARC</span></div>
         <div class="stat-change up">Very Low</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card fade-up d3">
         <div class="stat-label">Total Projects</div>
-        <div class="stat-value" data-count="47" data-suffix="">0</div>
+        <div class="stat-value">47</div>
         <div class="stat-change up">▲ 3 new this week</div>
       </div>
     </div>
@@ -421,5 +423,6 @@ function refreshData(){
 }
 </script>
 <script src="assets/js/animations.js"></script>
+<script src="assets/js/livedata.js"></script>
 </body>
 </html>

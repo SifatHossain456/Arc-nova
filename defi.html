@@ -191,21 +191,21 @@
 
     <!-- Mini stats bar -->
     <div class="grid-4" style="margin-bottom:32px">
-      <div class="mini-stat">
+      <div class="mini-stat fade-up d1">
         <div class="mini-stat-label">Your Balance</div>
         <div class="mini-stat-val" id="userBalance" style="color:var(--lavender)">—</div>
       </div>
-      <div class="mini-stat">
+      <div class="mini-stat fade-up d2">
         <div class="mini-stat-label">Staked Value</div>
         <div class="mini-stat-val" id="stakedValue" style="color:var(--green)">—</div>
       </div>
-      <div class="mini-stat">
+      <div class="mini-stat fade-up d3">
         <div class="mini-stat-label">Earned Rewards</div>
         <div class="mini-stat-val" id="earnedRewards" style="color:var(--cyan)">—</div>
       </div>
-      <div class="mini-stat">
-        <div class="mini-stat-label">Net APY</div>
-        <div class="mini-stat-val" style="color:var(--yellow)">18.4%</div>
+      <div class="mini-stat fade-up d4">
+        <div class="mini-stat-label">Pool TVL</div>
+        <div class="mini-stat-val" data-live="pool-tvl" style="color:var(--yellow)">—</div>
       </div>
     </div>
 
@@ -942,5 +942,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 <script src="assets/js/animations.js"></script>
+<script src="assets/js/livedata.js"></script>
 </body>
 </html>
