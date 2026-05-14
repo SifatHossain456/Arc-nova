@@ -5,38 +5,98 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Arc Nova — DeFi Hub on Arc Network</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/styles.css">
 <style>
+/* ── Index-page overrides ── */
+body { background:#03020b; }
+.ticker-bar { display:none; }         /* clean hero — no ticker on home */
+canvas { opacity:0.18 !important; }   /* very subtle particles */
+
+/* ── Hero layout ── */
 .hero{
   min-height:100vh; display:flex; align-items:center;
-  position:relative; z-index:1; padding-top:100px;
+  position:relative; z-index:1; overflow:hidden;
+  padding-top:80px; padding-bottom:140px;
 }
-.hero-badge{
-  display:inline-flex; align-items:center; gap:8px;
-  padding:6px 14px 6px 8px; border-radius:100px;
-  background:rgba(139,92,246,0.08);
-  border:1px solid rgba(139,92,246,0.2);
-  font-size:0.78rem; color:var(--lavender); font-weight:500; margin-bottom:24px;
-}
-.badge-dot{
-  width:7px; height:7px; border-radius:50%; background:#10b981;
-  animation:pulseGlow 2s infinite;
-}
-.hero-title{
-  font-size:clamp(2.8rem,7vw,5.5rem);
-  font-weight:900; letter-spacing:-0.04em;
-  line-height:1.05; margin-bottom:24px;
-}
-.hero-desc{
-  font-size:1.1rem; color:var(--text-2);
-  line-height:1.8; max-width:540px; margin-bottom:36px;
-}
-.hero-cta{ display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:60px; }
-.hero-stats{ display:flex; gap:48px; flex-wrap:wrap; padding-top:32px; border-top:1px solid var(--border); }
-.hstat-num{ font-size:1.7rem; font-weight:900; letter-spacing:-0.03em; }
-.hstat-lbl{ font-size:0.78rem; color:var(--muted); margin-top:2px; }
 
+/* ── Hero label ── */
+.hero-label{
+  font-size:0.7rem; font-weight:700; letter-spacing:0.14em;
+  text-transform:uppercase; color:#7c3aed; margin-bottom:22px;
+}
+
+/* ── Serif headline ── */
+.hero-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(3rem,5.5vw,5.2rem);
+  font-weight:700; line-height:1.1;
+  color:#ffffff; margin-bottom:22px; letter-spacing:-0.01em;
+}
+
+.hero-desc{
+  font-size:1rem; color:rgba(248,250,252,0.45);
+  line-height:1.8; max-width:440px; margin-bottom:40px;
+}
+
+/* ── Buttons ── */
+.hero-cta{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+.btn-hero-primary{
+  padding:14px 32px; border-radius:10px;
+  background:#7c3aed; color:#fff; font-weight:700; font-size:0.93rem;
+  text-decoration:none; border:none; cursor:pointer;
+  box-shadow:0 0 32px rgba(124,58,237,.45),0 4px 16px rgba(124,58,237,.2);
+  transition:all .2s; display:inline-block;
+}
+.btn-hero-primary:hover{ background:#6d28d9; box-shadow:0 0 40px rgba(124,58,237,.6); transform:translateY(-2px); }
+.btn-hero-outline{
+  padding:13px 28px; border-radius:10px;
+  background:transparent; color:rgba(248,250,252,.8); font-weight:600; font-size:0.93rem;
+  text-decoration:none; border:1px solid rgba(255,255,255,.18); cursor:pointer;
+  transition:all .2s; display:inline-block;
+}
+.btn-hero-outline:hover{ border-color:rgba(255,255,255,.35); background:rgba(255,255,255,.04); transform:translateY(-2px); }
+
+/* ── Stats row (bottom of hero) ── */
+.hero-stats{
+  position:absolute; bottom:0; left:0; right:0;
+  display:flex; align-items:flex-end; padding-bottom:52px;
+  padding-left:max(calc((100vw - 1200px)/2), 24px);
+  padding-right:max(calc((100vw - 1200px)/2), 24px);
+}
+.hstat{ flex:1; padding:0 0 0 40px; border-left:1px solid rgba(255,255,255,.09); }
+.hstat:first-child{ padding-left:0; border-left:none; }
+.hstat-num{
+  font-size:1.9rem; font-weight:800; color:#ffffff;
+  letter-spacing:-0.03em; margin-bottom:6px; display:block;
+}
+.hstat-lbl{ font-size:0.72rem; color:rgba(248,250,252,.35); font-weight:500; }
+
+/* ── The glowing arc ── */
+.hero-arc-wrap{
+  position:absolute; right:-130px; top:50%;
+  transform:translateY(-52%);
+  width:720px; height:720px; pointer-events:none;
+}
+.arc-nebula{
+  position:absolute; inset:80px; border-radius:50%;
+  background:radial-gradient(ellipse at 44% 46%,rgba(80,20,200,.2) 0%,rgba(60,10,160,.07) 45%,transparent 70%);
+  animation:nebulaPulse 7s ease-in-out infinite;
+}
+.arc-svg{
+  position:absolute; inset:0; width:100%; height:100%;
+  animation:arcBreathe 8s ease-in-out infinite;
+}
+@keyframes nebulaPulse{
+  0%,100%{ opacity:.7; transform:scale(1); }
+  50%{ opacity:1; transform:scale(1.06); }
+}
+@keyframes arcBreathe{
+  0%,100%{ opacity:.75; }
+  50%{ opacity:1; }
+}
+
+/* ── Feature cards ── */
 .feat-card{
   background:var(--card); border:1px solid var(--border);
   border-radius:var(--radius-xl); padding:28px;
@@ -63,7 +123,6 @@
   display:flex; align-items:center; justify-content:center;
   font-size:22px; font-weight:900;
 }
-
 .proj-row{
   display:flex; align-items:center; justify-content:space-between;
   padding:16px 0; border-bottom:1px solid var(--border);
@@ -75,7 +134,6 @@
   display:flex; align-items:center; justify-content:center;
   font-size:17px; font-weight:900; flex-shrink:0;
 }
-
 .step-circle{
   width:56px; height:56px; border-radius:50%;
   display:flex; align-items:center; justify-content:center;
@@ -151,43 +209,76 @@
 
 <!-- ── HERO ── -->
 <section class="hero">
-  <div class="container">
-    <div style="max-width:720px">
-      <div class="hero-badge fade-up">
-        <span class="badge-dot"></span>
-        Live on Arc Testnet &nbsp;·&nbsp; Chain ID 5042002
-      </div>
+
+  <!-- Left content -->
+  <div class="container" style="position:relative;z-index:2">
+    <div style="max-width:520px">
+      <div class="hero-label fade-up">Built on Arc Network</div>
       <h1 class="hero-title fade-up d1">
-        The Future of<br><span class="grad-text">Onchain Finance</span>
+        The Future of<br>Onchain Finance
       </h1>
       <p class="hero-desc fade-up d2">
         Arc Nova is the premier DeFi hub built on Arc Network — combining blazing-fast execution with stablecoin-native finance. Trade, stake, launch, and earn.
       </p>
       <div class="hero-cta fade-up d3">
-        <a href="defi.html" class="btn btn-primary btn-lg">🚀 Launch App</a>
-        <a href="launchpad.html" class="btn btn-ghost btn-lg">View Launchpad</a>
-        <a href="dashboard.html" class="btn btn-outline btn-lg">📊 Dashboard</a>
-      </div>
-      <div class="hero-stats fade-up d4">
-        <div>
-          <div class="hstat-num grad-text" data-live="hero-tvl">—</div>
-          <div class="hstat-lbl">Total Value Locked</div>
-        </div>
-        <div>
-          <div class="hstat-num" style="color:var(--lavender)" data-live="projects">47</div>
-          <div class="hstat-lbl">Projects</div>
-        </div>
-        <div>
-          <div class="hstat-num" style="color:var(--cyan)" data-live="hero-users">—</div>
-          <div class="hstat-lbl">Active Users</div>
-        </div>
-        <div>
-          <div class="hstat-num" style="color:var(--green)" data-live="hero-vol">—</div>
-          <div class="hstat-lbl">24h Volume</div>
-        </div>
+        <a href="defi.html" class="btn-hero-primary">Launch App</a>
+        <a href="dashboard.html" class="btn-hero-outline">View Dashboard</a>
       </div>
     </div>
   </div>
+
+  <!-- Glowing arc visual -->
+  <div class="hero-arc-wrap">
+    <div class="arc-nebula"></div>
+    <svg class="arc-svg" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="arcG1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%"   stop-color="#a78bfa" stop-opacity="0"/>
+          <stop offset="30%"  stop-color="#a78bfa" stop-opacity="0"/>
+          <stop offset="48%"  stop-color="#c4b5fd" stop-opacity="1"/>
+          <stop offset="62%"  stop-color="#7c3aed" stop-opacity="0.7"/>
+          <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+        </linearGradient>
+        <filter id="arcGlow" x="-15%" y="-15%" width="130%" height="130%">
+          <feGaussianBlur stdDeviation="5" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="arcSoftGlow" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="12" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <!-- Soft outer glow ring -->
+      <circle cx="300" cy="300" r="290" fill="none" stroke="url(#arcG1)" stroke-width="6" filter="url(#arcSoftGlow)" opacity="0.35"/>
+      <!-- Sharp main arc line -->
+      <circle cx="300" cy="300" r="290" fill="none" stroke="url(#arcG1)" stroke-width="1.2" filter="url(#arcGlow)"/>
+      <!-- Inner subtle ring -->
+      <circle cx="300" cy="300" r="268" fill="none" stroke="rgba(139,92,246,0.05)" stroke-width="1"/>
+      <!-- Outer subtle ring -->
+      <circle cx="300" cy="300" r="312" fill="none" stroke="rgba(139,92,246,0.04)" stroke-width="1"/>
+    </svg>
+  </div>
+
+  <!-- Stats row pinned to bottom -->
+  <div class="hero-stats fade-up d4">
+    <div class="hstat">
+      <span class="hstat-num" data-live="hero-tvl">—</span>
+      <div class="hstat-lbl">Total Value Locked</div>
+    </div>
+    <div class="hstat">
+      <span class="hstat-num" data-live="projects">47</span>
+      <div class="hstat-lbl">Projects</div>
+    </div>
+    <div class="hstat">
+      <span class="hstat-num" data-live="hero-users">—</span>
+      <div class="hstat-lbl">Active Users</div>
+    </div>
+    <div class="hstat">
+      <span class="hstat-num" data-live="hero-vol">—</span>
+      <div class="hstat-lbl">24h Volume</div>
+    </div>
+  </div>
+
 </section>
 
 <!-- ── FEATURES ── -->
