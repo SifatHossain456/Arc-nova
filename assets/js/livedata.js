@@ -253,6 +253,7 @@ function init() {
   setLive('[data-live="hero-vol"]',   null, {});
   setLive('[data-live="hero-users"]', null, {});
   setLive('[data-live="pool-tvl"]',   null, {});
+  setLive('[data-live="projects"]',   null, {});
 
   clearStatChanges();
   clearProtocols();

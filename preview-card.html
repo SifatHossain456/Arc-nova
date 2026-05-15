@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1200">
+<title>Arc Nova — Preview Card</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  width:1200px; height:630px; overflow:hidden;
+  font-family:'Inter',sans-serif;
+  background:#05040f;
+  position:relative;
+}
+
+/* ── Aurora blobs ── */
+.blob{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none}
+.b1{width:700px;height:500px;top:-180px;right:-100px;background:radial-gradient(ellipse,rgba(124,58,237,.35),transparent 70%)}
+.b2{width:500px;height:400px;bottom:-100px;left:-80px;background:radial-gradient(ellipse,rgba(34,211,238,.18),transparent 70%)}
+.b3{width:400px;height:300px;top:200px;left:350px;background:radial-gradient(ellipse,rgba(99,102,241,.14),transparent 70%)}
+
+/* ── Grid dots ── */
+.grid{
+  position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(139,92,246,.12) 1px,transparent 1px);
+  background-size:36px 36px;
+}
+
+/* ── Vignette ── */
+.vignette{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 90% 90% at 50% 50%,transparent 40%,rgba(5,4,15,.7));
+}
+
+/* ── Main content ── */
+.wrap{position:relative;z-index:10;height:100%;display:flex;flex-direction:column;padding:52px 64px}
+
+/* ── Top row ── */
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:44px}
+.logo{display:flex;align-items:center;gap:14px}
+.logo-icon{
+  width:52px;height:52px;border-radius:14px;
+  background:linear-gradient(135deg,#7c3aed,#4f46e5);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;font-weight:900;color:#fff;
+  box-shadow:0 0 28px rgba(124,58,237,.5);
+}
+.logo-text{font-size:1.5rem;font-weight:800;color:#f8fafc;letter-spacing:-.03em}
+.logo-sub{font-size:.78rem;color:rgba(255,255,255,.4);margin-top:2px;font-weight:500}
+
+.badge{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 18px;border-radius:100px;
+  background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25);
+  font-size:.8rem;font-weight:600;color:#10b981;
+}
+.badge-dot{width:8px;height:8px;border-radius:50%;background:#10b981;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,.4)}50%{box-shadow:0 0 0 6px rgba(16,185,129,0)}}
+
+/* ── Hero text ── */
+.hero{flex:1;display:flex;gap:64px;align-items:center}
+.hero-left{flex:1}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 14px;border-radius:100px;margin-bottom:20px;
+  background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.25);
+  font-size:.72rem;font-weight:600;color:#a78bfa;letter-spacing:.04em;text-transform:uppercase;
+}
+h1{
+  font-size:3.2rem;font-weight:900;line-height:1.08;
+  letter-spacing:-.04em;color:#f8fafc;margin-bottom:16px;
+}
+.grad{background:linear-gradient(135deg,#a78bfa,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.desc{font-size:1rem;color:rgba(248,250,252,.5);line-height:1.7;max-width:400px;margin-bottom:32px}
+
+/* Buttons */
+.btns{display:flex;gap:12px}
+.btn{
+  padding:12px 24px;border-radius:10px;font-size:.88rem;font-weight:700;
+  cursor:pointer;border:none;font-family:inherit;letter-spacing:-.01em;
+}
+.btn-p{
+  background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;
+  box-shadow:0 0 24px rgba(124,58,237,.4),0 4px 12px rgba(124,58,237,.2);
+}
+.btn-g{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:rgba(248,250,252,.8)}
+
+/* ── Right panel ── */
+.hero-right{width:360px;display:flex;flex-direction:column;gap:12px}
+
+.card{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;padding:18px 20px;
+  backdrop-filter:blur(12px);
+}
+.card-title{font-size:.7rem;font-weight:600;color:rgba(248,250,252,.35);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+
+/* Stats row */
+.stats-row{display:flex;gap:24px}
+.stat{flex:1}
+.stat-val{font-size:1.4rem;font-weight:800;color:#f8fafc;letter-spacing:-.03em;margin-bottom:2px}
+.stat-lbl{font-size:.68rem;color:rgba(248,250,252,.35);font-weight:500}
+.green{color:#10b981}
+.cyan{color:#22d3ee}
+.purple{color:#a78bfa}
+.yellow{color:#f59e0b}
+
+/* Feature pills */
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
+.pill{
+  padding:6px 14px;border-radius:100px;font-size:.72rem;font-weight:700;
+}
+.pill-p{background:rgba(124,58,237,.15);color:#a78bfa;border:1px solid rgba(124,58,237,.2)}
+.pill-c{background:rgba(34,211,238,.1);color:#22d3ee;border:1px solid rgba(34,211,238,.15)}
+.pill-g{background:rgba(16,185,129,.1);color:#10b981;border:1px solid rgba(16,185,129,.15)}
+.pill-y{background:rgba(245,158,11,.1);color:#f59e0b;border:1px solid rgba(245,158,11,.15)}
+
+/* Ticker strip */
+.ticker{
+  display:flex;gap:20px;overflow:hidden;
+  padding:12px 20px;margin-top:auto;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;
+  font-size:.78rem;
+}
+.tick{display:flex;align-items:center;gap:6px}
+.tick-sym{color:rgba(248,250,252,.4);font-weight:600}
+.tick-val{color:#f8fafc;font-weight:700}
+.tick-up{color:#10b981;font-size:.7rem}
+.tick-dn{color:#ef4444;font-size:.7rem}
+
+/* ── Bottom bar ── */
+.bottom{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:20px;border-top:1px solid rgba(255,255,255,.06);margin-top:auto;
+}
+.chain{display:flex;align-items:center;gap:8px;font-size:.75rem;color:rgba(248,250,252,.35)}
+.chain-dot{width:6px;height:6px;border-radius:50%;background:#10b981}
+.url{font-size:.75rem;color:rgba(248,250,252,.25);font-weight:500}
+
+/* Glow lines */
+.glow-line{
+  position:absolute;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(124,58,237,.5),transparent);
+  pointer-events:none;
+}
+.gl1{width:600px;top:0;left:50%;transform:translateX(-50%)}
+.gl2{width:400px;bottom:0;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,transparent,rgba(34,211,238,.3),transparent)}
+</style>
+</head>
+<body>
+
+<!-- Background -->
+<div class="blob b1"></div>
+<div class="blob b2"></div>
+<div class="blob b3"></div>
+<div class="grid"></div>
+<div class="vignette"></div>
+<div class="glow-line gl1"></div>
+<div class="glow-line gl2"></div>
+
+<!-- Content -->
+<div class="wrap">
+  <!-- Top -->
+  <div class="top">
+    <div class="logo">
+      <div class="logo-icon">N</div>
+      <div>
+        <div class="logo-text">Arc Nova</div>
+        <div class="logo-sub">DeFi Hub on Arc Network</div>
+      </div>
+    </div>
+    <div class="badge">
+      <div class="badge-dot"></div>
+      Live on Arc Testnet · Chain ID 5042002
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-tag">⚡ Premier DeFi Protocol</div>
+      <h1>The Future of<br><span class="grad">Onchain Finance</span></h1>
+      <p class="desc">Trade, stake, launch, and earn — all powered by Arc Network's fast stablecoin-native settlement infrastructure.</p>
+      <div class="btns">
+        <div class="btn btn-p">🚀 Launch App</div>
+        <div class="btn btn-g">📊 Dashboard</div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <!-- Market data card -->
+      <div class="card">
+        <div class="card-title">Live Market Data</div>
+        <div class="stats-row">
+          <div class="stat">
+            <div class="stat-val cyan" id="eth-price">—</div>
+            <div class="stat-lbl">ETH / USD</div>
+          </div>
+          <div class="stat">
+            <div class="stat-val yellow" id="btc-price">—</div>
+            <div class="stat-lbl">BTC / USD</div>
+          </div>
+          <div class="stat">
+            <div class="stat-val purple" id="arc-price">—</div>
+            <div class="stat-lbl">ARC / USDC</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Features card -->
+      <div class="card">
+        <div class="card-title">Platform Features</div>
+        <div class="pills">
+          <div class="pill pill-p">🔄 Token Swap</div>
+          <div class="pill pill-g">💎 Staking</div>
+          <div class="pill pill-c">🌉 Bridge</div>
+          <div class="pill pill-y">🚀 Launchpad</div>
+          <div class="pill pill-p">📊 Analytics</div>
+          <div class="pill pill-g">💧 Liquidity</div>
+        </div>
+      </div>
+
+      <!-- Chain card -->
+      <div class="card" style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div class="card-title" style="margin-bottom:4px">Arc Testnet Block</div>
+          <div class="stat-val green" id="block-num" style="font-size:1.1rem">Fetching…</div>
+        </div>
+        <div style="text-align:right">
+          <div class="card-title" style="margin-bottom:4px">Network Status</div>
+          <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end">
+            <div class="badge-dot"></div>
+            <span style="font-size:.8rem;color:#10b981;font-weight:700">Online</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom -->
+  <div class="bottom">
+    <div class="chain">
+      <div class="chain-dot"></div>
+      EVM Compatible · USDC Native Gas · ~2s Block Time
+    </div>
+    <div class="url">arc-nova.vercel.app</div>
+  </div>
+</div>
+
+<script>
+/* Fetch real data for the card */
+async function loadData() {
+  try {
+    const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum,bitcoin&vs_currencies=usd&include_24hr_change=true');
+    const d = await r.json();
+    if (d.ethereum) {
+      const chg = d.ethereum.usd_24h_change;
+      document.getElementById('eth-price').innerHTML =
+        '$' + Math.round(d.ethereum.usd).toLocaleString() +
+        '<span style="font-size:.7rem;margin-left:4px;color:' + (chg>=0?'#10b981':'#ef4444') + '">' +
+        (chg>=0?'▲':'▼') + Math.abs(chg).toFixed(1) + '%</span>';
+    }
+    if (d.bitcoin) {
+      const chg = d.bitcoin.usd_24h_change;
+      document.getElementById('btc-price').innerHTML =
+        '$' + Math.round(d.bitcoin.usd).toLocaleString() +
+        '<span style="font-size:.7rem;margin-left:4px;color:' + (chg>=0?'#10b981':'#ef4444') + '">' +
+        (chg>=0?'▲':'▼') + Math.abs(chg).toFixed(1) + '%</span>';
+    }
+  } catch {}
+
+  try {
+    const ethers = await new Promise(r => {
+      const s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js';
+      s.onload = () => r(window.ethers);
+      document.head.appendChild(s);
+    });
+    const p = new ethers.providers.JsonRpcProvider('https://rpc.testnet.arc.network', { chainId: 5042002, name: 'arc-testnet' });
+    const SWAP_ABI = ['function getReserves() view returns (uint256 nova, uint256 usdc)'];
+    const [block, res] = await Promise.all([
+      p.getBlockNumber(),
+      new ethers.Contract('0x334db09B3809c595E4D1B317E95c725715a65c39', SWAP_ABI, p).getReserves().catch(() => null)
+    ]);
+    document.getElementById('block-num').textContent = '#' + block.toLocaleString();
+    if (res) {
+      const nova = parseFloat(ethers.utils.formatEther(res.nova));
+      const usdc = parseFloat(ethers.utils.formatUnits(res.usdc, 6));
+      if (nova > 0 && usdc > 0)
+        document.getElementById('arc-price').textContent = '$' + (usdc / nova).toFixed(4);
+    }
+  } catch {}
+}
+loadData();
+</script>
+</body>
+</html>

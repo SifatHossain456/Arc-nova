@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Dashboard — Arc Nova</title>
+<meta name="description" content="Live analytics dashboard for Arc Nova — track TVL, volume, block height, pool reserves, and protocol activity on Arc Testnet in real time.">
+<meta property="og:title" content="Dashboard — Arc Nova">
+<meta property="og:description" content="Real-time DeFi analytics for Arc Nova on Arc Testnet. Live block data, pool reserves, and protocol metrics.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#7c3aed">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%237c3aed'/><text x='16' y='23' font-family='Arial,sans-serif' font-size='19' font-weight='900' text-anchor='middle' fill='white'>N</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/styles.css">
@@ -90,20 +96,18 @@
 <!-- Price Ticker -->
 <div class="ticker-bar">
   <div class="ticker-track"><div class="ticker-scroll">
-    <span class="tick-item"><span class="tick-sym">ARC</span>&nbsp;<span class="tick-price">$2.47</span>&nbsp;<span class="tick-up">▲4.2%</span></span>
+    <span class="tick-item"><span class="tick-sym">ARC</span>&nbsp;<span class="tick-price">—</span>&nbsp;<span class="tick-up"></span></span>
     <span class="tick-item"><span class="tick-sym">USDC</span>&nbsp;<span class="tick-price">$1.000</span>&nbsp;<span style="color:var(--muted)">Stable</span></span>
-    <span class="tick-item"><span class="tick-sym">ETH</span>&nbsp;<span class="tick-price">$3,241</span>&nbsp;<span class="tick-up">▲2.1%</span></span>
-    <span class="tick-item"><span class="tick-sym">BTC</span>&nbsp;<span class="tick-price">$67,420</span>&nbsp;<span class="tick-up">▲1.3%</span></span>
-    <span class="tick-item"><span style="color:var(--lavender);font-weight:700">ARC TVL</span>&nbsp;<span class="tick-price">$42.7M</span>&nbsp;<span class="tick-up">▲12.4%</span></span>
-    <span class="tick-item"><span style="color:var(--cyan);font-weight:700">24h Vol</span>&nbsp;<span class="tick-price">$8.3M</span>&nbsp;<span class="tick-up">▲34.7%</span></span>
-    <span class="tick-item"><span style="color:var(--green);font-weight:700">Projects</span>&nbsp;<span class="tick-price">47</span>&nbsp;<span class="tick-up">+3 new</span></span>
-    <span class="tick-item"><span class="tick-sym">ARC</span>&nbsp;<span class="tick-price">$2.47</span>&nbsp;<span class="tick-up">▲4.2%</span></span>
+    <span class="tick-item"><span class="tick-sym">ETH</span>&nbsp;<span class="tick-price">—</span>&nbsp;<span class="tick-up"></span></span>
+    <span class="tick-item"><span class="tick-sym">BTC</span>&nbsp;<span class="tick-price">—</span>&nbsp;<span class="tick-up"></span></span>
+    <span class="tick-item"><span style="color:var(--lavender);font-weight:700">ARC TVL</span>&nbsp;<span class="tick-price">—</span>&nbsp;<span class="tick-up"></span></span>
+    <span class="tick-item"><span style="color:var(--cyan);font-weight:700">24h Vol</span>&nbsp;<span class="tick-price">—</span>&nbsp;<span class="tick-up"></span></span>
+    <span class="tick-item"><span class="tick-sym">ARC</span>&nbsp;<span class="tick-price">—</span>&nbsp;<span class="tick-up"></span></span>
     <span class="tick-item"><span class="tick-sym">USDC</span>&nbsp;<span class="tick-price">$1.000</span>&nbsp;<span style="color:var(--muted)">Stable</span></span>
-    <span class="tick-item"><span class="tick-sym">ETH</span>&nbsp;<span class="tick-price">$3,241</span>&nbsp;<span class="tick-up">▲2.1%</span></span>
-    <span class="tick-item"><span class="tick-sym">BTC</span>&nbsp;<span class="tick-price">$67,420</span>&nbsp;<span class="tick-up">▲1.3%</span></span>
-    <span class="tick-item"><span style="color:var(--lavender);font-weight:700">ARC TVL</span>&nbsp;<span class="tick-price">$42.7M</span>&nbsp;<span class="tick-up">▲12.4%</span></span>
-    <span class="tick-item"><span style="color:var(--cyan);font-weight:700">24h Vol</span>&nbsp;<span class="tick-price">$8.3M</span>&nbsp;<span class="tick-up">▲34.7%</span></span>
-    <span class="tick-item"><span style="color:var(--green);font-weight:700">Projects</span>&nbsp;<span class="tick-price">47</span>&nbsp;<span class="tick-up">+3 new</span></span>
+    <span class="tick-item"><span class="tick-sym">ETH</span>&nbsp;<span class="tick-price">—</span>&nbsp;<span class="tick-up"></span></span>
+    <span class="tick-item"><span class="tick-sym">BTC</span>&nbsp;<span class="tick-price">—</span>&nbsp;<span class="tick-up"></span></span>
+    <span class="tick-item"><span style="color:var(--lavender);font-weight:700">ARC TVL</span>&nbsp;<span class="tick-price">—</span>&nbsp;<span class="tick-up"></span></span>
+    <span class="tick-item"><span style="color:var(--cyan);font-weight:700">24h Vol</span>&nbsp;<span class="tick-price">—</span>&nbsp;<span class="tick-up"></span></span>
   </div></div>
 </div>
 
@@ -315,8 +319,8 @@
       </div>
       <div class="stat-card fade-up d3">
         <div class="stat-label">Total Projects</div>
-        <div class="stat-value" data-live="projects">47</div>
-        <div class="stat-change up">▲ 3 new this week</div>
+        <div class="stat-value" data-live="projects">—</div>
+        <div class="stat-change">—</div>
       </div>
     </div>
   </div>
@@ -326,7 +330,7 @@
 <footer class="footer">
   <div class="container">
     <div class="footer-bottom" style="border-top:none;padding-top:0">
-      <div>© 2025 Arc Nova. Built on Arc Network.</div>
+      <div>© 2026 Arc Nova. Built on Arc Network.</div>
       <div style="display:flex;gap:16px">
         <a href="index.html" style="color:var(--muted);text-decoration:none" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--muted)'">Home</a>
         <a href="launchpad.html" style="color:var(--muted);text-decoration:none" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--muted)'">Launchpad</a>
@@ -341,6 +345,7 @@
 <script src="assets/js/wallet.js"></script>
 <script src="assets/js/web3.js"></script>
 <script src="assets/js/app.js"></script>
+<script src="assets/js/livedata.js"></script>
 <script>
 /* ── CHARTS ── */
 const labels30 = Array.from({length:30},(_,i)=>{
