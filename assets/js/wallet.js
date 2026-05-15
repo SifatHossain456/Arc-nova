@@ -126,12 +126,11 @@ function _renderWalletList() {
 
   if (wallets.length === 0) {
     list.innerHTML = `
-      <div style="text-align:center;padding:28px 0;color:var(--muted)">
-        <div style="font-size:2.5rem;margin-bottom:12px">🔌</div>
+      <div style="text-align:center;padding:32px 0;color:var(--muted)">
+        <div style="width:56px;height:56px;border-radius:16px;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.15);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px">🔌</div>
         <div style="font-weight:700;margin-bottom:6px;color:var(--text);font-size:0.95rem">No Wallet Detected</div>
-        <div style="font-size:0.83rem;line-height:1.6;margin-bottom:16px">
-          Make sure your wallet extension is installed and this page is served via
-          <strong style="color:var(--lavender)">http://localhost:3000</strong> (not file://).
+        <div style="font-size:0.82rem;line-height:1.65;margin-bottom:20px;color:var(--muted)">
+          Install a wallet extension and reload,<br>or serve this page via <strong style="color:var(--lavender)">http://</strong> (not file://).
         </div>
         <button onclick="_retryDetect()" class="btn btn-outline btn-sm" style="width:100%">
           🔄 Retry Detection
@@ -140,23 +139,37 @@ function _renderWalletList() {
     return;
   }
 
-  list.innerHTML = wallets.map(w => {
+  const header = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border)">
+      <span style="font-size:0.7rem;font-weight:700;color:var(--muted);letter-spacing:0.07em;text-transform:uppercase">Available Wallets</span>
+      <div style="display:flex;align-items:center;gap:5px">
+        <div style="width:6px;height:6px;border-radius:50%;background:#10b981;box-shadow:0 0 6px rgba(16,185,129,0.5)"></div>
+        <span style="font-size:0.72rem;color:#10b981;font-weight:600">${wallets.length} detected</span>
+      </div>
+    </div>`;
+
+  const items = wallets.map(w => {
     const meta = WALLET_META[w.name] || { emoji: '👛', color: '#8b5cf6' };
     const icon = w.iconUrl
-      ? `<img src="${w.iconUrl}" style="width:36px;height:36px;border-radius:10px;object-fit:contain" onerror="this.outerHTML='<div style=width:36px;height:36px;border-radius:10px;background:${meta.color}22;display:flex;align-items:center;justify-content:center;font-size:18px>${meta.emoji}</div>'">`
-      : `<div style="width:36px;height:36px;border-radius:10px;background:${meta.color}22;display:flex;align-items:center;justify-content:center;font-size:18px">${meta.emoji}</div>`;
+      ? `<img src="${w.iconUrl}" style="width:40px;height:40px;border-radius:12px;object-fit:contain;flex-shrink:0" onerror="this.outerHTML='<div style=width:40px;height:40px;border-radius:12px;background:${meta.color}1a;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0>${meta.emoji}</div>'">`
+      : `<div style="width:40px;height:40px;border-radius:12px;background:${meta.color}1a;border:1px solid ${meta.color}30;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${meta.emoji}</div>`;
     return `
-      <div class="wallet-item" onclick="_connect('${w.uuid}')">
-        <div style="display:flex;align-items:center;gap:14px">
+      <div class="wallet-item" onclick="_connect('${w.uuid}')" style="margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:14px;min-width:0">
           ${icon}
-          <div>
-            <div style="font-weight:700;font-size:0.9rem;color:var(--text)">${w.name}</div>
-            <div style="font-size:0.75rem;color:var(--muted)">Click to connect</div>
+          <div style="min-width:0">
+            <div style="font-weight:700;font-size:0.92rem;color:var(--text)">${w.name}</div>
+            <div style="display:flex;align-items:center;gap:5px;margin-top:3px">
+              <div style="width:5px;height:5px;border-radius:50%;background:#10b981;flex-shrink:0"></div>
+              <span style="font-size:0.72rem;color:#10b981;font-weight:600">Ready · Click to connect</span>
+            </div>
           </div>
         </div>
-        <div style="font-size:1.1rem;color:var(--muted)">→</div>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted);flex-shrink:0"><polyline points="9 18 15 12 9 6"></polyline></svg>
       </div>`;
   }).join('');
+
+  list.innerHTML = header + `<div>${items}</div>`;
 }
 
 /* ── Manual retry detection ── */
@@ -187,7 +200,7 @@ async function _connect(uuid) {
   if (!prov) { showToast('Provider not found', 'error'); return; }
 
   const listEl = document.getElementById('walletList');
-  if (listEl) listEl.innerHTML = `<div style="text-align:center;padding:32px;color:var(--muted)"><div style="font-size:2rem;margin-bottom:12px;animation:spin 1s linear infinite">⟳</div><div>Connecting…</div></div>`;
+  if (listEl) listEl.innerHTML = `<div style="text-align:center;padding:40px 0;color:var(--muted)"><div style="width:48px;height:48px;border-radius:14px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 16px;animation:spin 1s linear infinite">⟳</div><div style="font-weight:600;color:var(--text);margin-bottom:4px">Connecting…</div><div style="font-size:0.8rem">Approve in your wallet</div></div>`;
 
   try {
     const accounts = await prov.request({ method: 'eth_requestAccounts' });
