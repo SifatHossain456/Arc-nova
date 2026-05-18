@@ -239,7 +239,7 @@ async function executeStake(amountStr) {
 
   /* ── Real Mode ── */
   await _ensureNetwork();
-  openTxModal('Staking NOVA', 'Confirm the staking transaction in your wallet');
+  openTxModal('Staking NOVA', 'Step 1 — Approve NOVA in your wallet (then step 2: confirm stake)');
   try {
     const parsed = ethers.utils.parseEther(amountStr);
     await _ensureApproval(CONTRACT_ADDRESSES.NOVA_TOKEN, CONTRACT_ADDRESSES.STAKING, parsed);
@@ -296,6 +296,18 @@ async function executeWithdraw() {
   }
 
   await _ensureNetwork();
+  /* Pre-check: must have unbonded tokens ready */
+  try {
+    const scR = new ethers.Contract(CONTRACT_ADDRESSES.STAKING, STAKING_ABI, ethersProvider);
+    const info = await scR.getUserInfo(activeAccount);
+    const unbonding = parseFloat(ethers.utils.formatEther(info[2]));
+    if (unbonding <= 0) { showToast('Nothing to withdraw — unstake first', 'info'); return; }
+    const unbondEnd = info[3].toNumber();
+    if (unbondEnd > Math.floor(Date.now() / 1000)) {
+      const h = Math.ceil((unbondEnd - Date.now() / 1000) / 3600);
+      showToast(`Tokens still bonding — ${h}h remaining`, 'info'); return;
+    }
+  } catch {}
   openTxModal('Withdrawing NOVA', 'Confirm the withdrawal in your wallet');
   try {
     const sc = new ethers.Contract(CONTRACT_ADDRESSES.STAKING, STAKING_ABI, activeSigner);
@@ -326,6 +338,12 @@ async function executeClaim() {
   }
 
   await _ensureNetwork();
+  /* Pre-check: must have rewards accumulated */
+  try {
+    const scR   = new ethers.Contract(CONTRACT_ADDRESSES.STAKING, STAKING_ABI, ethersProvider);
+    const earned = await scR.earned(activeAccount);
+    if (earned.eq(0)) { showToast('No rewards to claim yet', 'info'); return; }
+  } catch {}
   openTxModal('Claiming Rewards', 'Confirm the claim transaction in your wallet');
   try {
     const sc = new ethers.Contract(CONTRACT_ADDRESSES.STAKING, STAKING_ABI, activeSigner);

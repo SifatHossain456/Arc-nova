@@ -113,6 +113,11 @@
 @media(max-width:900px){
   .defi-layout{ grid-template-columns:1fr; }
 }
+
+/* Hide browser number-input spinners */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance:none; margin:0; }
+input[type=number] { -moz-appearance:textfield; }
 </style>
 </head>
 <body>
@@ -392,7 +397,14 @@
                 </div>
                 <input type="number" class="amount-input" id="unstakeAmount" placeholder="0.00">
               </div>
-              <div style="font-size:0.78rem;color:var(--muted);margin-top:8px">Staked: <span id="stakedValue">—</span></div>
+              <div style="display:flex;justify-content:space-between;margin-top:10px">
+                <span style="font-size:0.78rem;color:var(--muted)">Staked: <span id="stakedValue">—</span></span>
+                <div style="display:flex;gap:6px">
+                  <button class="btn btn-sm" style="padding:3px 8px;font-size:0.7rem;background:rgba(139,92,246,0.12);color:var(--lavender);border:1px solid rgba(139,92,246,0.25)" onclick="setUnstakeMaxPct(0.25)">25%</button>
+                  <button class="btn btn-sm" style="padding:3px 8px;font-size:0.7rem;background:rgba(139,92,246,0.12);color:var(--lavender);border:1px solid rgba(139,92,246,0.25)" onclick="setUnstakeMaxPct(0.5)">50%</button>
+                  <button class="btn btn-sm" style="padding:3px 8px;font-size:0.7rem;background:rgba(139,92,246,0.12);color:var(--lavender);border:1px solid rgba(139,92,246,0.25)" onclick="setUnstakeMaxPct(1)">MAX</button>
+                </div>
+              </div>
             </div>
 
             <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:16px;font-size:0.82rem">
@@ -438,7 +450,7 @@
                   <div class="pool-apy" id="p1-apy" style="color:var(--green)">—</div>
                   <div style="font-size:0.72rem;color:var(--muted)">APY</div>
                 </div>
-                <button class="btn btn-outline btn-sm" onclick="doStake()">Stake</button>
+                <button class="btn btn-outline btn-sm" onclick="focusStakeInput()">Stake</button>
               </div>
               <div class="pool-card">
                 <div style="display:flex;align-items:center;gap:14px">
@@ -455,7 +467,7 @@
                   <div class="pool-apy" id="p2-apy" style="color:var(--cyan)">—</div>
                   <div style="font-size:0.72rem;color:var(--muted)">APY</div>
                 </div>
-                <button class="btn btn-outline btn-sm" onclick="doStake()">Stake</button>
+                <button class="btn btn-outline btn-sm" onclick="focusStakeInput()">Stake</button>
               </div>
               <div class="pool-card">
                 <div style="display:flex;align-items:center;gap:14px">
@@ -472,7 +484,7 @@
                   <div class="pool-apy" id="p3-apy" style="color:var(--yellow)">—</div>
                   <div style="font-size:0.72rem;color:var(--muted)">APY</div>
                 </div>
-                <button class="btn btn-outline btn-sm" onclick="doStake()">Stake</button>
+                <button class="btn btn-outline btn-sm" onclick="focusStakeInput()">Stake</button>
               </div>
               <div class="pool-card">
                 <div style="display:flex;align-items:center;gap:14px">
@@ -488,7 +500,7 @@
                   <div class="pool-apy" id="p4-apy" style="color:var(--lavender)">—</div>
                   <div style="font-size:0.72rem;color:var(--muted)">APY</div>
                 </div>
-                <button class="btn btn-outline btn-sm" onclick="doStake()">Stake</button>
+                <button class="btn btn-outline btn-sm" onclick="focusStakeInput()">Stake</button>
               </div>
             </div>
           </div>
@@ -879,6 +891,12 @@ async function doUnstake() {
   const amtEl = document.getElementById('unstakeAmount');
   const amt   = parseFloat(amtEl?.value);
   if (!amt || amt <= 0) { showToast('Enter amount to unstake', 'error'); return; }
+  /* Validate against staked balance shown in DOM */
+  const stakedEl  = document.getElementById('stakedValue');
+  const stakedVal = parseFloat(stakedEl?.textContent);
+  if (stakedEl && stakedEl.textContent !== '—' && !isNaN(stakedVal) && amt > stakedVal) {
+    showToast(`Max unstakeable: ${stakedVal.toFixed(2)} NOVA`, 'error'); return;
+  }
   showConfirmModal('Confirm Unstake', [
     ['Amount',   `${amt} NOVA`,  'var(--text)'],
     ['Unbonding','24 hours',     'var(--text-2)'],
@@ -887,6 +905,32 @@ async function doUnstake() {
     await executeUnstake(String(amt));
     if (amtEl) amtEl.value = '';
   });
+}
+
+/* ── Set unstake amount from % of staked balance ── */
+async function setUnstakeMaxPct(pct) {
+  if (!walletConnected) { showToast('Connect wallet first', 'error'); openWalletModal(); return; }
+  let staked;
+  try {
+    if (!isDeployed(CONTRACT_ADDRESSES.STAKING)) {
+      staked = _demo.staked;
+    } else {
+      const sc   = new ethers.Contract(CONTRACT_ADDRESSES.STAKING, STAKING_ABI, ethersProvider);
+      const info = await sc.getUserInfo(activeAccount);
+      staked = parseFloat(ethers.utils.formatEther(info[0]));
+    }
+    if (!staked || staked <= 0) { showToast('No staked balance', 'info'); return; }
+    document.getElementById('unstakeAmount').value = (staked * pct).toFixed(2);
+  } catch { showToast('Could not read staked balance', 'error'); }
+}
+
+/* ── Pool Stake button: scroll & focus the stake input ── */
+function focusStakeInput() {
+  const inp = document.getElementById('stakeAmount');
+  if (!inp) return;
+  inp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(() => inp.focus(), 400);
+  showToast('Enter amount above and click Stake NOVA', 'info');
 }
 
 async function doWithdraw() {
