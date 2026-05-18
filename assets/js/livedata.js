@@ -235,6 +235,73 @@ function addTxRow() {
   while (feed.children.length > 6) feed.removeChild(feed.lastChild);
 }
 
+/* ── DeFi stats — realistic simulated data with subtle jitter ── */
+const DEFI_BASE = {
+  stakeApy:  12.4,
+  p1Apy: 12.4,  p1Staked: 840000,
+  p2Apy: 18.7,  p2Tvl:   1240000,
+  p3Apy: 14.2,  p3Tvl:    680000,
+  p4Apy:  7.8,  p4Tvl:    420000,
+  v1Apy:  8.4,  v1Tvl:  2100000, v1Cap: 85,
+  v2Apy: 23.7,  v2Tvl:   890000, v2Cap: 67,
+  v3Apy: 48.2,  v3Tvl:   340000, v3Cap: 42,
+  lp1Tvl: 1240000, lp1Vol: 187000, lp1Fees:  561, lp1Apr: 18.2,
+  lp2Tvl:  680000, lp2Vol:  93000, lp2Fees:  279, lp2Apr: 14.8,
+  lp3Tvl:  420000, lp3Vol: 312000, lp3Fees:  936, lp3Apr:  8.2,
+  lp4Tvl:  290000, lp4Vol:  47000, lp4Fees:  141, lp4Apr: 22.4,
+};
+
+function _j(v, pct) { return v * (1 + (Math.random() - 0.5) * (pct || 0.03)); }
+function _fmtM(v) {
+  if (v >= 1e6) return '$' + (v / 1e6).toFixed(2) + 'M';
+  if (v >= 1e3) return '$' + (v / 1e3).toFixed(1) + 'K';
+  return '$' + Math.round(v);
+}
+function _set(id, txt) { const e = document.getElementById(id); if (e) e.textContent = txt; }
+
+function _updateDeFiStats() {
+  const b = DEFI_BASE;
+  _set('stake-info-apy', _j(b.stakeApy).toFixed(1) + '%');
+  _set('p1-apy',   _j(b.p1Apy).toFixed(1) + '%');
+  _set('p1-staked', _fmtM(_j(b.p1Staked)));
+  _set('p2-apy',   _j(b.p2Apy).toFixed(1) + '%');
+  _set('p2-tvl',   _fmtM(_j(b.p2Tvl)));
+  _set('p3-apy',   _j(b.p3Apy).toFixed(1) + '%');
+  _set('p3-tvl',   _fmtM(_j(b.p3Tvl)));
+  _set('p4-apy',   _j(b.p4Apy).toFixed(1) + '%');
+  _set('p4-tvl',   _fmtM(_j(b.p4Tvl)));
+
+  _set('v1-apy', _j(b.v1Apy, 0.01).toFixed(1) + '%');
+  _set('v1-tvl', _fmtM(_j(b.v1Tvl)));
+  _set('v1-cap', Math.round(_j(b.v1Cap, 0.01)) + '%');
+  _set('v2-apy', _j(b.v2Apy, 0.01).toFixed(1) + '%');
+  _set('v2-tvl', _fmtM(_j(b.v2Tvl)));
+  _set('v2-cap', Math.round(_j(b.v2Cap, 0.01)) + '%');
+  _set('v3-apy', _j(b.v3Apy, 0.02).toFixed(1) + '%');
+  _set('v3-tvl', _fmtM(_j(b.v3Tvl)));
+  _set('v3-cap', Math.round(_j(b.v3Cap, 0.01)) + '%');
+
+  _set('lp1-tvl',  _fmtM(_j(b.lp1Tvl)));
+  _set('lp1-vol',  _fmtM(_j(b.lp1Vol)));
+  _set('lp1-fees', '$' + Math.round(_j(b.lp1Fees)));
+  _set('lp1-apr',  _j(b.lp1Apr, 0.02).toFixed(1) + '%');
+
+  _set('lp2-tvl',  _fmtM(_j(b.lp2Tvl)));
+  _set('lp2-vol',  _fmtM(_j(b.lp2Vol)));
+  _set('lp2-fees', '$' + Math.round(_j(b.lp2Fees)));
+  _set('lp2-apr',  _j(b.lp2Apr, 0.02).toFixed(1) + '%');
+
+  _set('lp3-tvl',  _fmtM(_j(b.lp3Tvl)));
+  _set('lp3-vol',  _fmtM(_j(b.lp3Vol)));
+  _set('lp3-fees', '$' + Math.round(_j(b.lp3Fees)));
+  _set('lp3-apr',  _j(b.lp3Apr, 0.02).toFixed(1) + '%');
+
+  _set('lp4-tvl',  _fmtM(_j(b.lp4Tvl)));
+  _set('lp4-vol',  _fmtM(_j(b.lp4Vol)));
+  _set('lp4-fees', '$' + Math.round(_j(b.lp4Fees)));
+  _set('lp4-apr',  _j(b.lp4Apr, 0.02).toFixed(1) + '%');
+}
+
 /* ── Micro tick — subtle ETH/BTC price movement between 60s fetches ── */
 function microTick() {
   if (S.ethPrice !== null) S.ethPrice *= (1 + (Math.random() - 0.5) * 0.0006);
@@ -265,6 +332,10 @@ function init() {
   setInterval(fetchChain,  60000);
   setInterval(fetchPrices, 60000);
   setInterval(microTick,    6000);
+
+  /* DeFi stats — populate on load then refresh every 30s */
+  _updateDeFiStats();
+  setInterval(_updateDeFiStats, 30000);
 
   if (document.getElementById('liveTxFeed')) {
     setTimeout(addTxRow, 2500);

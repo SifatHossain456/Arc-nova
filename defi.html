@@ -397,7 +397,7 @@
 
             <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:16px;font-size:0.82rem">
               <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-                <span style="color:var(--muted)">Current APY</span><span style="color:var(--muted);font-weight:800">—</span>
+                <span style="color:var(--muted)">Current APY</span><span id="stake-info-apy" style="color:var(--green);font-weight:800">—</span>
               </div>
               <div style="display:flex;justify-content:space-between;margin-bottom:8px">
                 <span style="color:var(--muted)">Unbonding Period</span><span>24 hours</span>
@@ -427,11 +427,11 @@
                   </div>
                   <div>
                     <div style="font-weight:700">ARC Single Stake</div>
-                    <div style="font-size:0.78rem;color:var(--muted)">Staked: —</div>
+                    <div style="font-size:0.78rem;color:var(--muted)">Staked: <span id="p1-staked">—</span></div>
                   </div>
                 </div>
                 <div style="text-align:center">
-                  <div class="pool-apy" style="color:var(--green)">—</div>
+                  <div class="pool-apy" id="p1-apy" style="color:var(--green)">—</div>
                   <div style="font-size:0.72rem;color:var(--muted)">APY</div>
                 </div>
                 <button class="btn btn-outline btn-sm" onclick="doStake()">Stake</button>
@@ -444,11 +444,11 @@
                   </div>
                   <div>
                     <div style="font-weight:700">ARC-USDC LP</div>
-                    <div style="font-size:0.78rem;color:var(--muted)">TVL: —</div>
+                    <div style="font-size:0.78rem;color:var(--muted)">TVL: <span id="p2-tvl">—</span></div>
                   </div>
                 </div>
                 <div style="text-align:center">
-                  <div class="pool-apy" style="color:var(--cyan)">—</div>
+                  <div class="pool-apy" id="p2-apy" style="color:var(--cyan)">—</div>
                   <div style="font-size:0.72rem;color:var(--muted)">APY</div>
                 </div>
                 <button class="btn btn-outline btn-sm" onclick="doStake()">Stake</button>
@@ -461,11 +461,11 @@
                   </div>
                   <div>
                     <div style="font-weight:700">ARC-USDT LP</div>
-                    <div style="font-size:0.78rem;color:var(--muted)">TVL: —</div>
+                    <div style="font-size:0.78rem;color:var(--muted)">TVL: <span id="p3-tvl">—</span></div>
                   </div>
                 </div>
                 <div style="text-align:center">
-                  <div class="pool-apy" style="color:var(--yellow)">—</div>
+                  <div class="pool-apy" id="p3-apy" style="color:var(--yellow)">—</div>
                   <div style="font-size:0.72rem;color:var(--muted)">APY</div>
                 </div>
                 <button class="btn btn-outline btn-sm" onclick="doStake()">Stake</button>
@@ -477,11 +477,11 @@
                   </div>
                   <div>
                     <div style="font-weight:700">USDT Stable Stake</div>
-                    <div style="font-size:0.78rem;color:var(--muted)">TVL: —</div>
+                    <div style="font-size:0.78rem;color:var(--muted)">TVL: <span id="p4-tvl">—</span></div>
                   </div>
                 </div>
                 <div style="text-align:center">
-                  <div class="pool-apy" style="color:var(--lavender)">—</div>
+                  <div class="pool-apy" id="p4-apy" style="color:var(--lavender)">—</div>
                   <div style="font-size:0.72rem;color:var(--muted)">APY</div>
                 </div>
                 <button class="btn btn-outline btn-sm" onclick="doStake()">Stake</button>
@@ -513,15 +513,15 @@
               </div>
               <div style="display:flex;gap:32px;flex-wrap:wrap">
                 <div style="text-align:center">
-                  <div style="font-size:1.5rem;font-weight:900;color:var(--green)">—</div>
+                  <div id="v1-apy" style="font-size:1.5rem;font-weight:900;color:var(--green)">—</div>
                   <div style="font-size:0.72rem;color:var(--muted)">APY</div>
                 </div>
                 <div style="text-align:center">
-                  <div style="font-size:1rem;font-weight:700">—</div>
+                  <div id="v1-tvl" style="font-size:1rem;font-weight:700">—</div>
                   <div style="font-size:0.72rem;color:var(--muted)">TVL</div>
                 </div>
                 <div style="text-align:center">
-                  <div style="font-size:1rem;font-weight:700">—</div>
+                  <div id="v1-cap" style="font-size:1rem;font-weight:700">—</div>
                   <div style="font-size:0.72rem;color:var(--muted)">Capacity</div>
                 </div>
                 <button class="btn btn-green" onclick="depositVault('USDC Vault')">Deposit</button>
@@ -546,15 +546,15 @@
               </div>
               <div style="display:flex;gap:32px;flex-wrap:wrap">
                 <div style="text-align:center">
-                  <div style="font-size:1.5rem;font-weight:900;color:var(--yellow)">—</div>
+                  <div id="v2-apy" style="font-size:1.5rem;font-weight:900;color:var(--yellow)">—</div>
                   <div style="font-size:0.72rem;color:var(--muted)">APY</div>
                 </div>
                 <div style="text-align:center">
-                  <div style="font-size:1rem;font-weight:700">—</div>
+                  <div id="v2-tvl" style="font-size:1rem;font-weight:700">—</div>
                   <div style="font-size:0.72rem;color:var(--muted)">TVL</div>
                 </div>
                 <div style="text-align:center">
-                  <div style="font-size:1rem;font-weight:700">—</div>
+                  <div id="v2-cap" style="font-size:1rem;font-weight:700">—</div>
                   <div style="font-size:0.72rem;color:var(--muted)">Capacity</div>
                 </div>
                 <button class="btn btn-primary" onclick="depositVault('ARC Growth Vault')">Deposit</button>
@@ -579,15 +579,15 @@
               </div>
               <div style="display:flex;gap:32px;flex-wrap:wrap">
                 <div style="text-align:center">
-                  <div style="font-size:1.5rem;font-weight:900;color:var(--red)">—</div>
+                  <div id="v3-apy" style="font-size:1.5rem;font-weight:900;color:var(--red)">—</div>
                   <div style="font-size:0.72rem;color:var(--muted)">APY</div>
                 </div>
                 <div style="text-align:center">
-                  <div style="font-size:1rem;font-weight:700">—</div>
+                  <div id="v3-tvl" style="font-size:1rem;font-weight:700">—</div>
                   <div style="font-size:0.72rem;color:var(--muted)">TVL</div>
                 </div>
                 <div style="text-align:center">
-                  <div style="font-size:1rem;font-weight:700">—</div>
+                  <div id="v3-cap" style="font-size:1rem;font-weight:700">—</div>
                   <div style="font-size:0.72rem;color:var(--muted)">Capacity</div>
                 </div>
                 <button class="btn btn-outline" onclick="depositVault('Nova Alpha Vault')">Deposit</button>
@@ -626,10 +626,10 @@
                     <span style="font-weight:700;color:var(--text)">ARC / USDC</span>
                   </div>
                 </td>
-                <td style="color:var(--text);font-weight:600">—</td>
-                <td>—</td>
-                <td style="color:var(--green)">—</td>
-                <td><span style="color:var(--cyan);font-weight:800">—</span></td>
+                <td id="lp1-tvl" style="color:var(--text);font-weight:600">—</td>
+                <td id="lp1-vol">—</td>
+                <td id="lp1-fees" style="color:var(--green)">—</td>
+                <td><span id="lp1-apr" style="color:var(--cyan);font-weight:800">—</span></td>
                 <td><button class="btn btn-ghost btn-sm" onclick="addLiquidityPool('ARC/USDC')">Add LP</button></td>
               </tr>
               <tr>
@@ -639,10 +639,10 @@
                     <span style="font-weight:700;color:var(--text)">ARC / USDT</span>
                   </div>
                 </td>
-                <td style="color:var(--text);font-weight:600">—</td>
-                <td>—</td>
-                <td style="color:var(--green)">—</td>
-                <td><span style="color:var(--yellow);font-weight:800">—</span></td>
+                <td id="lp2-tvl" style="color:var(--text);font-weight:600">—</td>
+                <td id="lp2-vol">—</td>
+                <td id="lp2-fees" style="color:var(--green)">—</td>
+                <td><span id="lp2-apr" style="color:var(--yellow);font-weight:800">—</span></td>
                 <td><button class="btn btn-ghost btn-sm" onclick="addLiquidityPool('ARC/USDT')">Add LP</button></td>
               </tr>
               <tr>
@@ -652,10 +652,10 @@
                     <span style="font-weight:700;color:var(--text)">USDT / USDC</span>
                   </div>
                 </td>
-                <td style="color:var(--text);font-weight:600">—</td>
-                <td>—</td>
-                <td style="color:var(--green)">—</td>
-                <td><span style="color:var(--lavender);font-weight:800">—</span></td>
+                <td id="lp3-tvl" style="color:var(--text);font-weight:600">—</td>
+                <td id="lp3-vol">—</td>
+                <td id="lp3-fees" style="color:var(--green)">—</td>
+                <td><span id="lp3-apr" style="color:var(--lavender);font-weight:800">—</span></td>
                 <td><button class="btn btn-ghost btn-sm" onclick="addLiquidityPool('USDT/USDC')">Add LP</button></td>
               </tr>
               <tr>
@@ -665,10 +665,10 @@
                     <span style="font-weight:700;color:var(--text)">ARC / NOVA</span>
                   </div>
                 </td>
-                <td style="color:var(--text);font-weight:600">—</td>
-                <td>—</td>
-                <td style="color:var(--green)">—</td>
-                <td><span style="color:var(--red);font-weight:800">—</span></td>
+                <td id="lp4-tvl" style="color:var(--text);font-weight:600">—</td>
+                <td id="lp4-vol">—</td>
+                <td id="lp4-fees" style="color:var(--green)">—</td>
+                <td><span id="lp4-apr" style="color:var(--red);font-weight:800">—</span></td>
                 <td><button class="btn btn-ghost btn-sm" onclick="addLiquidityPool('ARC/NOVA')">Add LP</button></td>
               </tr>
             </tbody>
@@ -945,6 +945,5 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 <script src="assets/js/animations.js"></script>
-<script src="assets/js/livedata.js"></script>
 </body>
 </html>
