@@ -355,6 +355,12 @@ const labels30 = Array.from({length:30},(_,i)=>{
 
 const tvlData = [18,19,21,20,22,24,23,25,27,26,28,30,29,31,33,32,34,35,34,36,38,37,39,40,39,41,42,41,43,42.7];
 
+const tvlCtx = document.getElementById('tvlChart').getContext('2d');
+const tvlGrad = tvlCtx.createLinearGradient(0, 0, 0, 220);
+tvlGrad.addColorStop(0, 'rgba(168,85,247,0.22)');
+tvlGrad.addColorStop(0.6, 'rgba(139,92,246,0.06)');
+tvlGrad.addColorStop(1, 'rgba(139,92,246,0.00)');
+
 window.arcTVLChart = new Chart(document.getElementById('tvlChart'), {
   type:'line',
   data:{
@@ -362,22 +368,25 @@ window.arcTVLChart = new Chart(document.getElementById('tvlChart'), {
     datasets:[{
       label:'TVL ($M)',
       data:tvlData,
-      borderColor:'#8b5cf6',
-      borderWidth:2.5,
+      borderColor:'#a78bfa',
+      borderWidth:2,
       fill:true,
-      backgroundColor:'rgba(139,92,246,0.07)',
+      backgroundColor:tvlGrad,
       pointRadius:0,
+      pointHoverRadius:4,
+      pointHoverBackgroundColor:'#a78bfa',
       tension:0.4
     }]
   },
   options:{
     responsive:true, maintainAspectRatio:false,
     plugins:{legend:{display:false}, tooltip:{
-      backgroundColor:'rgba(14,14,36,0.95)',
-      borderColor:'rgba(139,92,246,0.3)',
+      backgroundColor:'rgba(10,10,28,0.96)',
+      borderColor:'rgba(168,85,247,0.35)',
       borderWidth:1,
-      titleColor:'#a78bfa',
+      titleColor:'#c084fc',
       bodyColor:'#f8fafc',
+      padding:10,
       callbacks:{label:ctx=>`$${ctx.raw}M TVL`}
     }},
     scales:{
@@ -393,6 +402,12 @@ const volLabels = Array.from({length:14},(_,i)=>{
 });
 const volData = [4.2,5.1,3.8,6.7,7.2,5.4,8.1,6.9,7.4,9.2,7.8,8.5,8.0,8.3];
 
+const volCtx = document.getElementById('volChart').getContext('2d');
+const volBarGrad = volCtx.createLinearGradient(0, 0, 0, 220);
+volBarGrad.addColorStop(0, 'rgba(34,211,238,0.80)');
+volBarGrad.addColorStop(0.5, 'rgba(34,211,238,0.40)');
+volBarGrad.addColorStop(1, 'rgba(34,211,238,0.10)');
+
 window.arcVolChart = new Chart(document.getElementById('volChart'), {
   type:'bar',
   data:{
@@ -400,20 +415,22 @@ window.arcVolChart = new Chart(document.getElementById('volChart'), {
     datasets:[{
       label:'Volume ($M)',
       data:volData,
-      backgroundColor:'rgba(34,211,238,0.25)',
-      borderColor:'rgba(34,211,238,0.7)',
-      borderWidth:1.5,
-      borderRadius:5,
+      backgroundColor:volBarGrad,
+      borderColor:'rgba(34,211,238,0)',
+      borderWidth:0,
+      borderRadius:7,
+      borderSkipped:false,
     }]
   },
   options:{
     responsive:true, maintainAspectRatio:false,
     plugins:{legend:{display:false}, tooltip:{
-      backgroundColor:'rgba(14,14,36,0.95)',
-      borderColor:'rgba(34,211,238,0.3)',
+      backgroundColor:'rgba(10,10,28,0.96)',
+      borderColor:'rgba(34,211,238,0.35)',
       borderWidth:1,
       titleColor:'#22d3ee',
       bodyColor:'#f8fafc',
+      padding:10,
       callbacks:{label:ctx=>`$${ctx.raw}M`}
     }},
     scales:{
