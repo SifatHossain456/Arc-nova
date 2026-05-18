@@ -77,6 +77,39 @@ function _injectWalletModal() {
         <button id="txCloseBtn" style="display:none;margin-top:10px;width:100%" class="btn btn-primary" onclick="closeTxModal()">Done</button>
       </div>
     </div>
+  </div>
+
+  <div class="modal-overlay" id="accountModal">
+    <div class="modal-box" style="width:340px">
+      <div class="modal-header">
+        <span class="modal-title">Connected Account</span>
+        <button class="modal-close" onclick="closeAccountModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="text-align:center;padding:8px 0 20px">
+          <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#7c3aed);margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;box-shadow:0 0 32px rgba(168,85,247,.45)">◈</div>
+          <div id="acctAddress" style="font-size:1rem;font-weight:800;letter-spacing:-0.01em;font-family:monospace">—</div>
+          <div style="font-size:0.75rem;color:var(--muted);margin-top:6px;display:flex;align-items:center;justify-content:center;gap:5px">
+            <div style="width:6px;height:6px;border-radius:50%;background:#10b981;box-shadow:0 0 6px rgba(16,185,129,.5)"></div>
+            Arc Testnet
+          </div>
+        </div>
+        <div style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:16px">
+          <div style="font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;font-weight:700">Balance</div>
+          <div id="acctBalance" style="font-size:1.5rem;font-weight:900;letter-spacing:-0.02em">—</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <button class="btn btn-ghost" onclick="copyWalletAddress()" style="font-size:0.82rem;gap:6px">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            Copy
+          </button>
+          <button class="btn btn-ghost" style="font-size:0.82rem;border-color:rgba(239,68,68,.28);color:#f87171;gap:6px" onclick="_disconnect();closeAccountModal()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            Disconnect
+          </button>
+        </div>
+      </div>
+    </div>
   </div>`;
 
   document.body.appendChild(el);
@@ -263,7 +296,7 @@ function _updateNavUI() {
     btn.textContent = short;
     btn.classList.remove('btn-primary');
     btn.classList.add('btn-ghost');
-    btn.onclick = openWalletModal;
+    btn.onclick = openAccountModal;
   });
 
   document.querySelectorAll('.wallet-address').forEach(el => el.textContent = short);
@@ -430,6 +463,32 @@ function closeWalletModal() {
   document.getElementById('walletModal')?.classList.remove('open');
 }
 
+function openAccountModal() {
+  if (!walletConnected) { openWalletModal(); return; }
+  const modal = document.getElementById('accountModal');
+  if (!modal) return;
+  const short = activeAccount ? activeAccount.slice(0,6) + '…' + activeAccount.slice(-4) : '—';
+  const addrEl = document.getElementById('acctAddress');
+  if (addrEl) addrEl.textContent = short;
+  const balEl = document.getElementById('acctBalance');
+  if (balEl) {
+    const ub = document.getElementById('userBalance');
+    balEl.textContent = (ub && ub.textContent !== '—' && ub.textContent !== 'Loading…') ? ub.textContent : '— USDC';
+  }
+  modal.classList.add('open');
+}
+
+function closeAccountModal() {
+  document.getElementById('accountModal')?.classList.remove('open');
+}
+
+function copyWalletAddress() {
+  if (!activeAccount) return;
+  navigator.clipboard?.writeText(activeAccount)
+    .then(() => showToast('Address copied!', 'success'))
+    .catch(() => showToast(activeAccount.slice(0,6)+'…'+activeAccount.slice(-4), 'info'));
+}
+
 /* connectWallet() called from HTML onclick buttons */
 function connectWallet() { openWalletModal(); }
 
@@ -442,8 +501,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.addEventListener('click', e => {
-    if (e.target.id === 'walletModal') closeWalletModal();
-    if (e.target.id === 'txModal')     closeTxModal();
+    if (e.target.id === 'walletModal')  closeWalletModal();
+    if (e.target.id === 'txModal')      closeTxModal();
+    if (e.target.id === 'accountModal') closeAccountModal();
   });
 
   /* Broadcast EIP-6963 + poll for late-injecting wallets */
