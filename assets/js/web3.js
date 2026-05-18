@@ -39,13 +39,62 @@ function _refreshDemoUI() {
   const fb = document.getElementById('fromBal');
   if (fb) fb.textContent = fromSym === 'NOVA' ? d.nova.toFixed(2) + ' NOVA' : d.usdc.toFixed(2) + ' USDC';
   const tb = document.getElementById('toBal');
-  if (tb) tb.textContent = toSym  === 'NOVA' ? d.nova.toFixed(2) + ' NOVA' : d.usdc.toFixed(2) + ' USDC';
+  if (tb) tb.textContent = toSym === 'NOVA' ? d.nova.toFixed(2) + ' NOVA' : d.usdc.toFixed(2) + ' USDC';
   const ub = document.getElementById('userBalance');
   if (ub) ub.textContent = d.usdc.toFixed(2) + ' USDC';
-  const sv = document.getElementById('stakedValue');
-  if (sv) sv.textContent = d.staked.toFixed(2) + ' NOVA';
-  const er = document.getElementById('earnedRewards');
-  if (er) er.textContent = d.rewards.toFixed(4) + ' NOVA';
+  /* Update every element that shows staked / rewards (handles duplicate IDs) */
+  document.querySelectorAll('#stakedValue, #miniStakedValue').forEach(el => {
+    el.textContent = d.staked > 0 ? d.staked.toFixed(2) + ' NOVA' : '—';
+  });
+  document.querySelectorAll('#earnedRewards, #miniEarnedRewards').forEach(el => {
+    el.textContent = d.rewards > 0 ? d.rewards.toFixed(4) + ' NOVA' : '—';
+  });
+  const unb = document.getElementById('unbondingDisplay');
+  if (unb) {
+    unb.textContent = d.unbonding > 0 ? d.unbonding.toFixed(2) + ' NOVA (unlocks in ~24h)' : '—';
+  }
+}
+
+/* Refresh UI from real on-chain data after a tx */
+async function _refreshOnchainUI() {
+  if (!walletConnected || !activeAccount || !ethersProvider) return;
+  try {
+    const novaC = new ethers.Contract(CONTRACT_ADDRESSES.NOVA_TOKEN, ERC20_ABI, ethersProvider);
+    const scC   = new ethers.Contract(CONTRACT_ADDRESSES.STAKING, STAKING_ABI, ethersProvider);
+    const [nBal, userInfo] = await Promise.all([
+      novaC.balanceOf(activeAccount).catch(() => null),
+      scC.getUserInfo(activeAccount).catch(() => null),
+    ]);
+    if (nBal) {
+      const nova = parseFloat(ethers.utils.formatEther(nBal));
+      document.querySelectorAll('.balance-nova').forEach(el => el.textContent = nova.toFixed(2) + ' NOVA');
+      const fb = document.getElementById('fromBal');
+      const fromSym = document.getElementById('fromToken')?.dataset.symbol || 'NOVA';
+      if (fb && fromSym === 'NOVA') fb.textContent = nova.toFixed(2) + ' NOVA';
+    }
+    if (userInfo) {
+      const staked    = parseFloat(ethers.utils.formatEther(userInfo[0]));
+      const rewards   = parseFloat(ethers.utils.formatEther(userInfo[1]));
+      const unbonding = parseFloat(ethers.utils.formatEther(userInfo[2]));
+      const unbondEnd = userInfo[3].toNumber();
+      document.querySelectorAll('#stakedValue, #miniStakedValue').forEach(el => {
+        el.textContent = staked > 0 ? staked.toFixed(2) + ' NOVA' : '—';
+      });
+      document.querySelectorAll('#earnedRewards, #miniEarnedRewards').forEach(el => {
+        el.textContent = rewards > 0 ? rewards.toFixed(4) + ' NOVA' : '—';
+      });
+      const unb = document.getElementById('unbondingDisplay');
+      if (unb) {
+        if (unbonding > 0) {
+          const now  = Math.floor(Date.now() / 1000);
+          const left = unbondEnd > now
+            ? Math.ceil((unbondEnd - now) / 3600) + 'h left'
+            : 'ready to withdraw';
+          unb.textContent = unbonding.toFixed(2) + ' NOVA (' + left + ')';
+        } else { unb.textContent = '—'; }
+      }
+    }
+  } catch {}
 }
 
 /* ── Guard helpers ── */
@@ -199,6 +248,7 @@ async function executeStake(amountStr) {
     txPending(tx.hash);
     await tx.wait();
     txSuccess(`Staked ${amount} NOVA successfully!`);
+    _refreshOnchainUI();
   } catch (err) { txError(_parseErr(err)); }
 }
 
@@ -226,6 +276,7 @@ async function executeUnstake(amountStr) {
     txPending(tx.hash);
     await tx.wait();
     txSuccess('Unstake requested! Tokens unlock after 24h.');
+    _refreshOnchainUI();
   } catch (err) { txError(_parseErr(err)); }
 }
 
@@ -252,6 +303,7 @@ async function executeWithdraw() {
     txPending(tx.hash);
     await tx.wait();
     txSuccess('NOVA withdrawn to your wallet!');
+    _refreshOnchainUI();
   } catch (err) { txError(_parseErr(err)); }
 }
 
@@ -281,6 +333,7 @@ async function executeClaim() {
     txPending(tx.hash);
     await tx.wait();
     txSuccess('Staking rewards claimed!');
+    _refreshOnchainUI();
   } catch (err) { txError(_parseErr(err)); }
 }
 
@@ -311,9 +364,13 @@ async function getSwapQuote(fromSym, toSym, amountIn) {
   } catch { return (amountIn * (DEMO_RATES[key] || 1)).toFixed(4); }
 }
 
-/* ── Expose demo refresh for wallet.js to call after connect ── */
+/* ── Called by wallet.js after wallet connect ── */
 function initDemoBalances() {
-  if (_isDemo() && walletConnected) _refreshDemoUI();
+  if (_isDemo() && walletConnected) {
+    _refreshDemoUI();
+  } else if (walletConnected) {
+    _refreshOnchainUI();
+  }
 }
 
 /* ── Error parser ── */

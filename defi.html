@@ -201,11 +201,11 @@
       </div>
       <div class="mini-stat fade-up d2">
         <div class="mini-stat-label">Staked Value</div>
-        <div class="mini-stat-val" id="stakedValue" style="color:var(--green)">—</div>
+        <div class="mini-stat-val" id="miniStakedValue" style="color:var(--green)">—</div>
       </div>
       <div class="mini-stat fade-up d3">
         <div class="mini-stat-label">Earned Rewards</div>
-        <div class="mini-stat-val" id="earnedRewards" style="color:var(--cyan)">—</div>
+        <div class="mini-stat-val" id="miniEarnedRewards" style="color:var(--cyan)">—</div>
       </div>
       <div class="mini-stat fade-up d4">
         <div class="mini-stat-label">Pool TVL</div>
@@ -405,6 +405,10 @@
               <div style="display:flex;justify-content:space-between;margin-bottom:8px">
                 <span style="color:var(--muted)">Pending Rewards</span>
                 <span style="color:var(--lavender);font-weight:700"><span id="earnedRewards">—</span></span>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:0">
+                <span style="color:var(--muted)">Unbonding</span>
+                <span style="color:var(--yellow);font-weight:700"><span id="unbondingDisplay">—</span></span>
               </div>
             </div>
 
@@ -920,9 +924,10 @@ async function setStakeMaxPct(pct) {
 function _startDemoRewardAccrual() {
   setInterval(() => {
     if (!walletConnected || !_demo || _demo.staked <= 0) return;
-    _demo.rewards += _demo.staked * 0.12 / 365 / (24 * 120); /* per 30s */
-    const er = document.getElementById('earnedRewards');
-    if (er) er.textContent = _demo.rewards.toFixed(4) + ' NOVA';
+    _demo.rewards += _demo.staked * 0.12 / 365 / (24 * 120);
+    document.querySelectorAll('#earnedRewards, #miniEarnedRewards').forEach(el => {
+      el.textContent = _demo.rewards.toFixed(4) + ' NOVA';
+    });
   }, 30000);
 }
 
