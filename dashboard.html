@@ -120,19 +120,19 @@
 </div>
 
 <!-- PAGE HEADER -->
-<div class="page-header">
+<div class="page-header" style="padding-bottom:36px">
   <div class="container">
-    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap">
       <div>
-        <span class="section-label">📊 Live Analytics</span>
-        <h1 class="section-title" style="margin-bottom:8px">Protocol Dashboard</h1>
-        <p style="color:var(--muted);font-size:0.875rem">
-          <span class="network-dot"></span>Arc Testnet · Updated just now
+        <span class="section-label">Live Analytics</span>
+        <h1 class="section-title" style="margin-bottom:8px;font-size:clamp(1.8rem,3.5vw,2.8rem)">Protocol <span class="grad-text">Dashboard</span></h1>
+        <p style="color:var(--muted);font-size:0.875rem;display:flex;align-items:center;gap:8px">
+          <span class="network-dot"></span>Arc Testnet · Real-time data
         </p>
       </div>
-      <div style="display:flex;gap:10px">
-        <button class="btn btn-ghost btn-sm" onclick="refreshData()">🔄 Refresh</button>
-        <select style="background:var(--card);border:1px solid var(--border);color:var(--text-2);padding:6px 12px;border-radius:8px;font-size:0.8rem;font-family:inherit;outline:none;cursor:pointer">
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn btn-ghost btn-sm" onclick="refreshData()" style="border-radius:10px">↺ Refresh</button>
+        <select style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--text-2);padding:8px 14px;border-radius:10px;font-size:0.8rem;font-family:inherit;outline:none;cursor:pointer;transition:border-color 0.2s" onmouseover="this.style.borderColor='rgba(139,92,246,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)'">
           <option>Last 7 days</option>
           <option>Last 30 days</option>
           <option>All time</option>

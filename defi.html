@@ -16,28 +16,32 @@
 <style>
 .defi-layout{
   display:grid;
-  grid-template-columns:420px 1fr;
+  grid-template-columns:460px 1fr;
   gap:24px;
   align-items:flex-start;
 }
 
 .tab-bar{
-  display:flex; gap:6px;
-  background:rgba(255,255,255,0.04);
-  border:1px solid var(--border);
-  border-radius:12px; padding:6px;
+  display:flex; gap:4px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:14px; padding:5px;
   margin-bottom:24px;
+  backdrop-filter:blur(10px);
 }
 .tab-btn{
-  flex:1; padding:9px 16px; border-radius:8px;
+  flex:1; padding:10px 16px; border-radius:10px;
   border:1px solid transparent;
-  background:none; color:var(--text-2);
+  background:none; color:var(--muted);
   font-size:0.875rem; font-weight:600;
-  cursor:pointer; transition:all 0.2s; font-family:inherit;
+  cursor:pointer; transition:all 0.22s cubic-bezier(.22,1,.36,1); font-family:inherit;
+  letter-spacing:-0.01em;
 }
+.tab-btn:hover{ color:var(--text-2); background:rgba(255,255,255,.04); }
 .tab-btn.active{
-  background:rgba(139,92,246,0.15); color:var(--lavender);
-  border-color:rgba(139,92,246,0.3);
+  background:rgba(139,92,246,.15); color:var(--lavender);
+  border-color:rgba(139,92,246,.28);
+  box-shadow:0 0 16px rgba(124,58,237,.16), inset 0 1px 0 rgba(255,255,255,.06);
 }
 
 .swap-card{
@@ -192,13 +196,31 @@ input[type=number] { -moz-appearance:textfield; }
 </div>
 
 <!-- PAGE HEADER -->
-<div class="page-header">
+<div class="page-header" style="padding-bottom:36px">
   <div class="container">
-    <span class="section-label">🔄 DeFi Hub</span>
-    <h1 class="section-title" style="margin-bottom:8px">Trade & Earn on <span class="grad-text">Arc Nova</span></h1>
-    <p style="color:var(--text-2);font-size:1rem;max-width:480px;line-height:1.7">
-      Swap tokens, stake for rewards, and earn yield — all powered by Arc Network's stablecoin-native infrastructure.
-    </p>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap">
+      <div>
+        <span class="section-label">DeFi Hub</span>
+        <h1 class="section-title" style="margin-bottom:8px;font-size:clamp(1.8rem,3.5vw,2.8rem)">Trade & Earn on <span class="grad-text">Arc Nova</span></h1>
+        <p style="color:var(--muted);font-size:0.9rem;max-width:440px;line-height:1.7">
+          Swap, stake, and earn yield — real on-chain settlement on Arc Network.
+        </p>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <div style="text-align:center;padding:14px 20px;background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.18);border-radius:14px;min-width:90px">
+          <div style="font-size:1.25rem;font-weight:900;color:var(--lavender);letter-spacing:-0.03em;font-variant-numeric:tabular-nums" id="hdr-nova-price">$0.001</div>
+          <div style="font-size:0.65rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-top:3px">NOVA Price</div>
+        </div>
+        <div style="text-align:center;padding:14px 20px;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.16);border-radius:14px;min-width:90px">
+          <div style="font-size:1.25rem;font-weight:900;color:var(--green);letter-spacing:-0.03em;font-variant-numeric:tabular-nums" id="stake-info-apy">—</div>
+          <div style="font-size:0.65rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-top:3px">Stake APY</div>
+        </div>
+        <div style="text-align:center;padding:14px 20px;background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.14);border-radius:14px;min-width:90px">
+          <div style="font-size:1.25rem;font-weight:900;color:var(--cyan);letter-spacing:-0.03em;font-variant-numeric:tabular-nums" data-live="pool-tvl">—</div>
+          <div style="font-size:0.65rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-top:3px">Pool TVL</div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -206,23 +228,35 @@ input[type=number] { -moz-appearance:textfield; }
 <div style="position:relative;z-index:1;padding-bottom:80px">
   <div class="container">
 
-    <!-- Mini stats bar -->
-    <div class="grid-4" style="margin-bottom:32px">
-      <div class="mini-stat fade-up d1">
-        <div class="mini-stat-label">Your Balance</div>
-        <div class="mini-stat-val" id="userBalance" style="color:var(--lavender)">—</div>
+    <!-- Portfolio stats bar -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px">
+      <div class="mini-stat fade-up d1" style="display:flex;align-items:center;gap:12px">
+        <div style="width:36px;height:36px;border-radius:10px;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">👛</div>
+        <div>
+          <div class="mini-stat-label">Your Balance</div>
+          <div class="mini-stat-val" id="userBalance" style="color:var(--lavender)">—</div>
+        </div>
       </div>
-      <div class="mini-stat fade-up d2">
-        <div class="mini-stat-label">Staked Value</div>
-        <div class="mini-stat-val" id="miniStakedValue" style="color:var(--green)">—</div>
+      <div class="mini-stat fade-up d2" style="display:flex;align-items:center;gap:12px">
+        <div style="width:36px;height:36px;border-radius:10px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.18);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">💎</div>
+        <div>
+          <div class="mini-stat-label">Staked</div>
+          <div class="mini-stat-val" id="miniStakedValue" style="color:var(--green)">—</div>
+        </div>
       </div>
-      <div class="mini-stat fade-up d3">
-        <div class="mini-stat-label">Earned Rewards</div>
-        <div class="mini-stat-val" id="miniEarnedRewards" style="color:var(--cyan)">—</div>
+      <div class="mini-stat fade-up d3" style="display:flex;align-items:center;gap:12px">
+        <div style="width:36px;height:36px;border-radius:10px;background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.16);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">🎁</div>
+        <div>
+          <div class="mini-stat-label">Rewards</div>
+          <div class="mini-stat-val" id="miniEarnedRewards" style="color:var(--cyan)">—</div>
+        </div>
       </div>
-      <div class="mini-stat fade-up d4">
-        <div class="mini-stat-label">Pool TVL</div>
-        <div class="mini-stat-val" data-live="pool-tvl" style="color:var(--yellow)">—</div>
+      <div class="mini-stat fade-up d4" style="display:flex;align-items:center;gap:12px">
+        <div style="width:36px;height:36px;border-radius:10px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.16);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">🌊</div>
+        <div>
+          <div class="mini-stat-label">Pool TVL</div>
+          <div class="mini-stat-val" data-live="pool-tvl" style="color:var(--yellow)">—</div>
+        </div>
       </div>
     </div>
 
@@ -238,10 +272,10 @@ input[type=number] { -moz-appearance:textfield; }
       <!-- ═══════════ SWAP ═══════════ -->
       <div id="panel-swap" class="defi-layout">
         <!-- SWAP WIDGET -->
-        <div class="swap-card">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
-            <div style="font-weight:800;font-size:1rem">Swap Tokens</div>
-            <button style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem" title="Settings" onclick="showToast('Settings coming soon','info')">⚙️</button>
+        <div class="swap-card glass-panel">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px">
+            <div style="font-weight:900;font-size:1.05rem;letter-spacing:-0.02em">Swap Tokens</div>
+            <button style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);color:var(--muted);cursor:pointer;font-size:1rem;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;transition:all 0.2s" title="Settings" onclick="showToast('Settings coming soon','info')" onmouseover="this.style.borderColor='rgba(139,92,246,.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,.08)'">⚙️</button>
           </div>
 
           <!-- FROM -->
@@ -282,37 +316,39 @@ input[type=number] { -moz-appearance:textfield; }
           </div>
 
           <!-- Swap Info -->
-          <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:14px;margin:16px 0;font-size:0.82rem">
-            <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-              <span style="color:var(--muted)">Rate</span>
-              <span style="color:var(--text)"><span id="swapRateLabel">1 NOVA =</span> <span id="swapRate">—</span> USDC</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-              <span style="color:var(--muted)">Price Impact</span>
-              <span style="color:var(--green)">0.08%</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-              <span style="color:var(--muted)">Slippage Tolerance</span>
-              <span style="color:var(--text)">0.5%</span>
-            </div>
-            <div style="display:flex;justify-content:space-between">
-              <span style="color:var(--muted)">Est. Gas</span>
-              <span style="color:var(--text)">~0.01 USDC</span>
+          <div style="border-radius:12px;overflow:hidden;margin:14px 0">
+            <div style="background:rgba(255,255,255,.028);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px 16px;font-size:0.82rem">
+              <div style="display:flex;justify-content:space-between;margin-bottom:7px">
+                <span style="color:var(--muted)">Rate</span>
+                <span style="color:var(--text);font-weight:600;font-variant-numeric:tabular-nums"><span id="swapRateLabel">1 NOVA =</span> <span id="swapRate">—</span> USDC</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:7px">
+                <span style="color:var(--muted)">Price Impact</span>
+                <span class="val-green">0.08%</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:7px">
+                <span style="color:var(--muted)">Slippage</span>
+                <span style="color:var(--text-2);font-weight:600">0.5%</span>
+              </div>
+              <div style="display:flex;justify-content:space-between">
+                <span style="color:var(--muted)">Est. Gas</span>
+                <span style="color:var(--text-2);font-weight:600">~0.01 USDC</span>
+              </div>
             </div>
           </div>
 
-          <button class="btn btn-primary" style="width:100%;padding:14px" onclick="doSwap()">
-            Swap NOVA ↔ USDC
+          <button class="btn btn-primary btn-glow" style="width:100%;padding:15px;font-size:1rem;font-weight:800;letter-spacing:-0.01em;border-radius:14px" onclick="doSwap()">
+            Swap Now
           </button>
-          <button class="btn btn-ghost" style="width:100%;padding:10px;margin-top:8px;font-size:0.82rem" onclick="doFaucet()">
-            🚰 Claim 1,000 NOVA from Faucet (Testnet)
+          <button class="btn btn-ghost" style="width:100%;padding:10px;margin-top:8px;font-size:0.82rem;border-radius:12px" onclick="doFaucet()">
+            🚰 Get 1,000 NOVA from Faucet
           </button>
         </div>
 
         <!-- RIGHT: Token prices + recent swaps -->
-        <div style="display:flex;flex-direction:column;gap:20px">
-          <div class="card">
-            <div style="font-weight:700;margin-bottom:16px">Token Prices</div>
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div class="card glass-panel">
+            <div style="font-weight:800;margin-bottom:18px;font-size:0.9rem;letter-spacing:-0.01em">Token Prices</div>
             <div style="display:flex;flex-direction:column;gap:12px">
               <div style="display:flex;align-items:center;justify-content:space-between">
                 <div style="display:flex;align-items:center;gap:10px">
@@ -348,20 +384,23 @@ input[type=number] { -moz-appearance:textfield; }
               </div>
             </div>
           </div>
-          <div class="card">
-            <div style="font-weight:700;margin-bottom:14px">Recent Swaps</div>
-            <div style="display:flex;flex-direction:column;gap:10px;font-size:0.84rem">
-              <div style="display:flex;justify-content:space-between;color:var(--text-2)">
-                <span>100 ARC → 247 USDC</span><span style="color:var(--muted)">4s ago</span>
+          <div class="card glass-panel">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+              <div style="font-weight:800;font-size:0.9rem;letter-spacing:-0.01em">Recent Swaps</div>
+              <span style="display:inline-flex;align-items:center;gap:5px;font-size:0.68rem;color:var(--green);font-weight:700"><span class="live-dot"></span>Live</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:2px;font-size:0.82rem">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:8px;transition:background 0.15s" onmouseover="this.style.background='rgba(255,255,255,.03)'" onmouseout="this.style.background='transparent'">
+                <span style="color:var(--text-2)"><span style="color:var(--lavender);font-weight:700">100</span> NOVA → <span style="color:var(--green);font-weight:700">247</span> USDC</span><span style="color:var(--muted);font-size:0.75rem">4s</span>
               </div>
-              <div style="display:flex;justify-content:space-between;color:var(--text-2)">
-                <span>500 USDT → 202 ARC</span><span style="color:var(--muted)">22s ago</span>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:8px;transition:background 0.15s" onmouseover="this.style.background='rgba(255,255,255,.03)'" onmouseout="this.style.background='transparent'">
+                <span style="color:var(--text-2)"><span style="color:var(--green);font-weight:700">500</span> USDC → <span style="color:var(--lavender);font-weight:700">500K</span> NOVA</span><span style="color:var(--muted);font-size:0.75rem">22s</span>
               </div>
-              <div style="display:flex;justify-content:space-between;color:var(--text-2)">
-                <span>500 USDC → 202.4 ARC</span><span style="color:var(--muted)">1m ago</span>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:8px;transition:background 0.15s" onmouseover="this.style.background='rgba(255,255,255,.03)'" onmouseout="this.style.background='transparent'">
+                <span style="color:var(--text-2)"><span style="color:var(--lavender);font-weight:700">250</span> NOVA → <span style="color:var(--green);font-weight:700">0.25</span> USDC</span><span style="color:var(--muted);font-size:0.75rem">1m</span>
               </div>
-              <div style="display:flex;justify-content:space-between;color:var(--text-2)">
-                <span>1,000 ARC → 2,470 USDC</span><span style="color:var(--muted)">2m ago</span>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:8px;transition:background 0.15s" onmouseover="this.style.background='rgba(255,255,255,.03)'" onmouseout="this.style.background='transparent'">
+                <span style="color:var(--text-2)"><span style="color:var(--green);font-weight:700">1,000</span> USDC → <span style="color:var(--lavender);font-weight:700">1M</span> NOVA</span><span style="color:var(--muted);font-size:0.75rem">2m</span>
               </div>
             </div>
           </div>
@@ -370,12 +409,13 @@ input[type=number] { -moz-appearance:textfield; }
 
       <!-- ═══════════ STAKE ═══════════ -->
       <div id="panel-stake" style="display:none">
-        <div style="margin-bottom:20px;padding:18px 20px;background:rgba(139,92,246,0.07);border:1px solid rgba(139,92,246,0.2);border-radius:12px;font-size:0.875rem;color:var(--text-2)">
-          💎 Stake your NOVA tokens to earn protocol rewards. Unstake at any time with a 24-hour unbonding period.
+        <div style="margin-bottom:24px;padding:16px 20px;background:linear-gradient(135deg,rgba(139,92,246,.07),rgba(99,102,241,.04));border:1px solid rgba(139,92,246,.22);border-radius:14px;font-size:0.85rem;color:var(--text-2);display:flex;align-items:center;gap:12px">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.28);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">💎</div>
+          <div>Stake NOVA to earn <strong style="color:var(--lavender)" id="stake-banner-apy">~12.4%</strong> APY. Unstake anytime — tokens unlock after a 24-hour unbonding period.</div>
         </div>
         <div class="defi-layout">
-          <div class="swap-card">
-            <div style="font-weight:800;font-size:1rem;margin-bottom:20px">Stake NOVA</div>
+          <div class="swap-card glass-panel">
+            <div style="font-weight:900;font-size:1.05rem;margin-bottom:22px;letter-spacing:-0.02em">Stake NOVA</div>
 
             <!-- STAKE -->
             <div class="swap-box" style="margin-bottom:12px">
@@ -415,30 +455,30 @@ input[type=number] { -moz-appearance:textfield; }
               </div>
             </div>
 
-            <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:16px;font-size:0.82rem">
-              <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-                <span style="color:var(--muted)">Current APY</span><span id="stake-info-apy" style="color:var(--green);font-weight:800">—</span>
+            <div style="background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px;margin-bottom:16px;font-size:0.82rem">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)">
+                <span style="color:var(--muted)">Current APY</span><span class="val-green" id="stake-info-apy-card">—</span>
               </div>
-              <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-                <span style="color:var(--muted)">Unbonding Period</span><span>24 hours</span>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)">
+                <span style="color:var(--muted)">Unbonding Period</span><span style="color:var(--text-2);font-weight:600">24 hours</span>
               </div>
-              <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)">
                 <span style="color:var(--muted)">Pending Rewards</span>
-                <span style="color:var(--lavender);font-weight:700"><span id="earnedRewards">—</span></span>
+                <span class="val-purple"><span id="earnedRewards">—</span></span>
               </div>
-              <div style="display:flex;justify-content:space-between;margin-bottom:0">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0">
                 <span style="color:var(--muted)">Unbonding</span>
-                <span style="color:var(--yellow);font-weight:700"><span id="unbondingDisplay">—</span></span>
+                <span style="color:var(--yellow);font-weight:700;font-size:0.78rem"><span id="unbondingDisplay">—</span></span>
               </div>
             </div>
 
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-              <button class="btn btn-primary" style="padding:12px" onclick="doStake()">Stake NOVA</button>
-              <button class="btn btn-outline" style="padding:12px" onclick="doUnstake()">Unstake</button>
+              <button class="btn btn-primary btn-glow" style="padding:13px;font-weight:800;border-radius:12px" onclick="doStake()">Stake NOVA</button>
+              <button class="btn btn-outline" style="padding:13px;font-weight:700;border-radius:12px" onclick="doUnstake()">Unstake</button>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-              <button class="btn btn-ghost" style="padding:12px" onclick="doClaim()">Claim Rewards</button>
-              <button class="btn btn-ghost" style="padding:12px" onclick="doWithdraw()">Withdraw</button>
+              <button class="btn btn-ghost" style="padding:11px;font-size:0.82rem;border-radius:12px" onclick="doClaim()">Claim Rewards</button>
+              <button class="btn btn-ghost" style="padding:11px;font-size:0.82rem;border-radius:12px" onclick="doWithdraw()">Withdraw</button>
             </div>
           </div>
           <div>
@@ -517,8 +557,9 @@ input[type=number] { -moz-appearance:textfield; }
 
       <!-- ═══════════ EARN ═══════════ -->
       <div id="panel-earn" style="display:none">
-        <div style="margin-bottom:20px;padding:18px 20px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.18);border-radius:12px;font-size:0.875rem;color:var(--text-2)">
-          💰 Deposit assets into yield vaults and earn automated returns. Strategies are auto-compounded for maximum APY.
+        <div style="margin-bottom:24px;padding:16px 20px;background:linear-gradient(135deg,rgba(16,185,129,.06),rgba(34,211,238,.03));border:1px solid rgba(16,185,129,.2);border-radius:14px;font-size:0.85rem;color:var(--text-2);display:flex;align-items:center;gap:12px">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.25);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">💰</div>
+          <div>Deposit assets into yield vaults. Strategies are <strong style="color:var(--green)">auto-compounded</strong> for maximum APY with smart rebalancing.</div>
         </div>
         <div style="display:flex;flex-direction:column;gap:16px">
 

@@ -261,7 +261,10 @@ function _set(id, txt) { const e = document.getElementById(id); if (e) e.textCon
 
 function _updateDeFiStats() {
   const b = DEFI_BASE;
-  _set('stake-info-apy', _j(b.stakeApy).toFixed(1) + '%');
+  const apyTxt = _j(b.stakeApy).toFixed(1) + '%';
+  _set('stake-info-apy',      apyTxt);   /* page header  */
+  _set('stake-info-apy-card', apyTxt);   /* stake card   */
+  _set('stake-banner-apy',    '~' + apyTxt); /* banner    */
   _set('p1-apy',   _j(b.p1Apy).toFixed(1) + '%');
   _set('p1-staked', _fmtM(_j(b.p1Staked)));
   _set('p2-apy',   _j(b.p2Apy).toFixed(1) + '%');
