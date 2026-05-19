@@ -387,12 +387,27 @@ async function _loadBalances() {
     if (isDeployed(CONTRACT_ADDRESSES.STAKING)) {
       const sc   = new ethers.Contract(CONTRACT_ADDRESSES.STAKING, STAKING_ABI, ethersProvider);
       const info = await sc.getUserInfo(activeAccount);
-      const staked  = parseFloat(ethers.utils.formatEther(info[0])).toFixed(2);
-      const pending = parseFloat(ethers.utils.formatEther(info[1])).toFixed(4);
-      const sv = document.getElementById('stakedValue');
-      const er = document.getElementById('earnedRewards');
-      if (sv) sv.textContent = staked + ' NOVA';
-      if (er) er.textContent = pending + ' NOVA';
+      const staked    = parseFloat(ethers.utils.formatEther(info[0]));
+      const pending   = parseFloat(ethers.utils.formatEther(info[1]));
+      const unbonding = parseFloat(ethers.utils.formatEther(info[2]));
+      const unbondEnd = info[3].toNumber();
+      /* update both the stake-card and mini-stat bar elements */
+      document.querySelectorAll('#stakedValue, #miniStakedValue').forEach(el => {
+        el.textContent = staked > 0 ? staked.toFixed(2) + ' NOVA' : '—';
+      });
+      document.querySelectorAll('#earnedRewards, #miniEarnedRewards').forEach(el => {
+        el.textContent = pending > 0 ? pending.toFixed(4) + ' NOVA' : '—';
+      });
+      const unb = document.getElementById('unbondingDisplay');
+      if (unb) {
+        if (unbonding > 0) {
+          const now  = Math.floor(Date.now() / 1000);
+          const left = unbondEnd > now
+            ? Math.ceil((unbondEnd - now) / 3600) + 'h left'
+            : 'ready to withdraw';
+          unb.textContent = unbonding.toFixed(2) + ' NOVA (' + left + ')';
+        } else { unb.textContent = '—'; }
+      }
     }
   } catch (e) {
     console.warn('Balance load:', e.message);
