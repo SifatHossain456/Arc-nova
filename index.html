@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="assets/css/styles.css">
 <style>
 /* ── Base ── */
-body { background:#05050f; }
+body { background:#040412; }
 .ticker-bar { display:none; }
 
 /* ── Hero ── */
@@ -49,14 +49,15 @@ body { background:#05050f; }
   gap: 8px;
   padding: 6px 16px;
   border-radius: 100px;
-  background: rgba(124,58,237,.1);
-  border: 1px solid rgba(124,58,237,.32);
+  background: rgba(124,58,237,.11);
+  border: 1px solid rgba(124,58,237,.35);
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #a78bfa;
   margin-bottom: 28px;
+  box-shadow: 0 0 28px rgba(124,58,237,.22), inset 0 1px 0 rgba(255,255,255,.07);
 }
 .badge-live-dot {
   width: 6px; height: 6px;
@@ -176,17 +177,18 @@ body { background:#05050f; }
 }
 .hstat:first-child { padding-left: 0; border-left: none; }
 .hstat-num {
-  font-size: 1.9rem;
+  font-size: 1.95rem;
   font-weight: 900;
   color: #fff;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.045em;
   margin-bottom: 5px;
   display: block;
+  font-variant-numeric: tabular-nums;
 }
 .hstat-lbl {
   font-size: 0.68rem;
-  color: rgba(248,250,252,.3);
-  font-weight: 500;
+  color: rgba(248,250,252,.35);
+  font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -311,16 +313,18 @@ body { background:#05050f; }
 /* ── Steps ── */
 .step-card {
   background: rgba(255,255,255,.025);
-  border: 1px solid rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.06);
   border-radius: 20px;
   padding: 40px 32px;
   text-align: center;
   transition: all .28s cubic-bezier(.22,1,.36,1);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
 }
 .step-card:hover {
-  transform: scale(1.025);
-  border-color: rgba(139,92,246,.32);
-  background: rgba(124,58,237,.05);
+  transform: scale(1.025) translateY(-3px);
+  border-color: rgba(139,92,246,.36);
+  background: rgba(124,58,237,.06);
+  box-shadow: 0 20px 56px rgba(124,58,237,.14), inset 0 1px 0 rgba(168,85,247,.15);
 }
 .step-num {
   width: 54px;

@@ -43,20 +43,7 @@ const BASE_CSS = `
 .d4{ transition-delay:0.32s !important; }
 .d5{ transition-delay:0.41s !important; }
 
-/* ── Animated gradient text ── */
-@keyframes gradShift {
-  0%  { background-position:0%   50%; }
-  50% { background-position:100% 50%; }
-  100%{ background-position:0%   50%; }
-}
-.grad-text {
-  background: linear-gradient(135deg, #c084fc 0%, #818cf8 30%, #22d3ee 65%, #c084fc 100%);
-  background-size: 260% 260%;
-  animation: gradShift 5s ease infinite;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
+/* gradShift keyframe and .grad-text are defined in styles.css */
 
 /* ── Badge dot pulse ── */
 @keyframes pulseDot {
@@ -74,27 +61,27 @@ const BASE_CSS = `
 
 /* ── Card mouse-glow spotlight ── */
 .card,.feat-card,.stat-card,.eco-card,.swap-card,
-.launchpad-card,.launch-card,.chart-card,.earn-card,.pool-card {
+.launchpad-card,.launch-card,.chart-card,.earn-card,.pool-card,.glass-panel {
   position:relative;
 }
 .card::after,.feat-card::after,.stat-card::after,.eco-card::after,
 .swap-card::after,.launchpad-card::after,.launch-card::after,
-.chart-card::after,.earn-card::after,.pool-card::after {
+.chart-card::after,.earn-card::after,.pool-card::after,.glass-panel::after {
   content:'';
   position:absolute; inset:0; border-radius:inherit;
   background:radial-gradient(
-    620px circle at var(--gx,50%) var(--gy,50%),
-    rgba(139,92,246,.16), transparent 60%
+    580px circle at var(--gx,50%) var(--gy,50%),
+    rgba(139,92,246,.14), transparent 60%
   );
-  opacity:0; transition:opacity .4s; pointer-events:none; z-index:0;
+  opacity:0; transition:opacity .35s; pointer-events:none; z-index:0;
 }
 .card:hover::after,.feat-card:hover::after,.stat-card:hover::after,
 .eco-card:hover::after,.swap-card:hover::after,.launchpad-card:hover::after,
 .launch-card:hover::after,.chart-card:hover::after,
-.earn-card:hover::after,.pool-card:hover::after { opacity:1; }
+.earn-card:hover::after,.pool-card:hover::after,.glass-panel:hover::after { opacity:1; }
 .card>*,.feat-card>*,.stat-card>*,.eco-card>*,
 .swap-card>*,.launchpad-card>*,.launch-card>*,
-.chart-card>*,.earn-card>*,.pool-card>* { position:relative; z-index:1; }
+.chart-card>*,.earn-card>*,.pool-card>*,.glass-panel>* { position:relative; z-index:1; }
 
 /* ── Button ripple ── */
 @keyframes ripple { to{ transform:scale(4); opacity:0; } }
@@ -270,7 +257,7 @@ function onReady() {
   /* Mouse-following card glow */
   document.addEventListener('mousemove', e => {
     document.querySelectorAll(
-      '.card,.feat-card,.stat-card,.eco-card,.swap-card,.launchpad-card,.launch-card,.chart-card,.earn-card,.pool-card'
+      '.card,.feat-card,.stat-card,.eco-card,.swap-card,.launchpad-card,.launch-card,.chart-card,.earn-card,.pool-card,.glass-panel'
     ).forEach(card => {
       const r = card.getBoundingClientRect();
       if (e.clientX < r.left-220 || e.clientX > r.right+220) return;
@@ -285,7 +272,7 @@ function onReady() {
       const r = card.getBoundingClientRect();
       const x = (e.clientX-r.left)/r.width  - .5;
       const y = (e.clientY-r.top) /r.height - .5;
-      card.style.transform = `perspective(650px) rotateX(${-y*6}deg) rotateY(${x*6}deg) translateY(-4px)`;
+      card.style.transform = `perspective(700px) rotateX(${-y*4}deg) rotateY(${x*4}deg) translateY(-3px)`;
     });
     card.addEventListener('mouseleave', () => { card.style.transform = ''; });
   });
