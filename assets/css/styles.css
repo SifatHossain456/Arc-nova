@@ -149,21 +149,21 @@ body::after {
   background: rgba(255,255,255,.048);
   border: 1px solid rgba(255,255,255,.078);
   border-radius: var(--radius-lg); padding: 24px;
-  transition: all 0.25s;
+  transition: all 0.25s cubic-bezier(.22,1,.36,1);
   backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
 }
-.card:hover { border-color: var(--border-purple); background: rgba(255,255,255,.078); }
+.card:hover { border-color: var(--border-purple); background: rgba(255,255,255,.078); transform: translateY(-2px) scale(1.015); box-shadow: 0 12px 40px rgba(124,58,237,.12); }
 
 .stat-card {
   background: rgba(255,255,255,.048);
   border: 1px solid rgba(255,255,255,.078);
   border-radius: var(--radius-lg); padding: 22px 24px;
-  transition: all 0.25s;
+  transition: all 0.25s cubic-bezier(.22,1,.36,1);
   backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
 }
 .stat-card:hover {
-  border-color: var(--border-purple); transform: translateY(-3px);
-  box-shadow: 0 16px 48px rgba(124,58,237,.14);
+  border-color: var(--border-purple); transform: scale(1.02) translateY(-2px);
+  box-shadow: 0 16px 48px rgba(124,58,237,.18);
 }
 .stat-label {
   font-size: 0.74rem; color: var(--muted); font-weight: 600;
@@ -354,8 +354,19 @@ tbody tr:hover td { background:rgba(255,255,255,.03); color:var(--text); }
 .footer-bottom { border-top:1px solid var(--border); padding-top:24px; display:flex; align-items:center; justify-content:space-between; color:var(--muted); font-size:0.78rem; }
 
 /* ── PAGE HEADER ── */
-.page-header { padding:100px 0 48px; position:relative; z-index:1; }
+.page-header { padding:100px 0 48px; position:relative; z-index:1; overflow:hidden; }
 .page-header { padding-top:136px !important; }
+.page-header::before {
+  content:'';
+  position:absolute; inset:0; pointer-events:none; z-index:0;
+  background-image:
+    linear-gradient(rgba(124,58,237,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124,58,237,.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 90% 100% at 50% 0%, black 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 100% at 50% 0%, black 30%, transparent 100%);
+}
+.page-header > * { position:relative; z-index:1; }
 
 /* ── DIVIDER ── */
 .divider { height:1px; background:var(--border); margin:28px 0; }

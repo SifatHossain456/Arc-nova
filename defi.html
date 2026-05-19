@@ -45,7 +45,9 @@
   border:1px solid var(--border);
   border-radius:var(--radius-xl);
   padding:24px;
+  transition:border-color 0.25s;
 }
+.swap-card:hover{ border-color:rgba(139,92,246,0.25); }
 
 .swap-arrow{
   display:flex; justify-content:center; margin:-4px 0; position:relative; z-index:1;
@@ -73,9 +75,9 @@
   padding:20px 22px;
   display:flex; align-items:center;
   justify-content:space-between; gap:16px;
-  transition:all 0.2s;
+  transition:all 0.22s cubic-bezier(.22,1,.36,1);
 }
-.pool-card:hover{ border-color:var(--border-purple); background:var(--card-hover); }
+.pool-card:hover{ border-color:var(--border-purple); background:var(--card-hover); transform:scale(1.025) translateY(-2px); box-shadow:0 12px 40px rgba(124,58,237,.14); }
 
 .pool-tokens{
   display:flex; align-items:center; gap:-4px;
@@ -95,9 +97,9 @@
 .earn-card{
   background:var(--card); border:1px solid var(--border);
   border-radius:var(--radius-lg); padding:22px 24px;
-  transition:all 0.2s;
+  transition:all 0.22s cubic-bezier(.22,1,.36,1);
 }
-.earn-card:hover{ border-color:var(--border-purple); }
+.earn-card:hover{ border-color:var(--border-purple); transform:translateY(-2px) scale(1.015); box-shadow:0 12px 36px rgba(124,58,237,.12); }
 
 .positions-card{
   background:var(--card); border:1px solid var(--border);
@@ -106,6 +108,12 @@
 
 .mini-stat{
   background:rgba(255,255,255,0.04); border-radius:10px; padding:14px 16px;
+  border:1px solid rgba(255,255,255,0.06);
+  transition:all 0.22s cubic-bezier(.22,1,.36,1);
+}
+.mini-stat:hover{
+  border-color:rgba(139,92,246,0.3); transform:scale(1.025) translateY(-1px);
+  box-shadow:0 8px 28px rgba(124,58,237,.10);
 }
 .mini-stat-label{ font-size:0.72rem; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:6px; }
 .mini-stat-val{ font-size:1.1rem; font-weight:800; }

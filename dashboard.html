@@ -18,6 +18,12 @@
 .chart-card{
   background:var(--card); border:1px solid var(--border);
   border-radius:var(--radius-lg); padding:24px;
+  transition:all 0.22s cubic-bezier(.22,1,.36,1);
+}
+.chart-card:hover{
+  border-color:var(--border-purple);
+  transform:scale(1.015) translateY(-2px);
+  box-shadow:0 12px 40px rgba(124,58,237,.12);
 }
 .chart-title{ font-weight:700; font-size:0.95rem; margin-bottom:4px; }
 .chart-sub{ font-size:0.78rem; color:var(--muted); margin-bottom:20px; }
@@ -39,9 +45,11 @@
 }
 .tx-row{
   display:flex; align-items:center; justify-content:space-between;
-  padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.04);
-  font-size:0.84rem;
+  padding:12px 8px; margin:0 -8px; border-bottom:1px solid rgba(255,255,255,0.04);
+  font-size:0.84rem; border-radius:8px;
+  transition:background 0.2s;
 }
+.tx-row:hover{ background:rgba(139,92,246,0.06); border-bottom-color:transparent; }
 .tx-row:last-child{ border-bottom:none; }
 .tx-type{
   padding:2px 8px; border-radius:6px; font-size:0.72rem; font-weight:700;
@@ -445,6 +453,5 @@ function refreshData(){
 }
 </script>
 <script src="assets/js/animations.js"></script>
-<script src="assets/js/livedata.js"></script>
 </body>
 </html>

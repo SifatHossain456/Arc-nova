@@ -17,9 +17,9 @@
 .launch-card{
   background:var(--card); border:1px solid var(--border);
   border-radius:var(--radius-xl); overflow:hidden;
-  transition:all 0.25s;
+  transition:all 0.25s cubic-bezier(.22,1,.36,1);
 }
-.launch-card:hover{ border-color:var(--border-purple); transform:translateY(-3px); }
+.launch-card:hover{ border-color:var(--border-purple); transform:scale(1.025) translateY(-3px); box-shadow:0 16px 48px rgba(124,58,237,.16); }
 
 .launch-banner{
   height:120px; display:flex; align-items:center; justify-content:center;
@@ -81,7 +81,21 @@
   border:1px solid rgba(124,58,237,0.22);
   border-radius:var(--radius-xl); padding:40px;
   text-align:center;
+  transition:all 0.25s cubic-bezier(.22,1,.36,1);
+  position:relative; overflow:hidden;
 }
+.apply-card::before{
+  content:'';
+  position:absolute; inset:0; pointer-events:none;
+  background-image:
+    linear-gradient(rgba(124,58,237,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124,58,237,.04) 1px, transparent 1px);
+  background-size:32px 32px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 0%,black 40%,transparent 100%);
+  -webkit-mask-image:radial-gradient(ellipse 80% 80% at 50% 0%,black 40%,transparent 100%);
+}
+.apply-card > *{ position:relative; z-index:1; }
+.apply-card:hover{ border-color:rgba(124,58,237,0.45); box-shadow:0 16px 60px rgba(124,58,237,.2); }
 </style>
 </head>
 <body>
@@ -580,6 +594,5 @@ function applyProject() {
 /* Countdowns are started by app.js DOMContentLoaded — no duplicate init needed here */
 </script>
 <script src="assets/js/animations.js"></script>
-<script src="assets/js/livedata.js"></script>
 </body>
 </html>
