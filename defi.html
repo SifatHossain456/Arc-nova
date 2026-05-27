@@ -84,7 +84,7 @@
 .pool-card:hover{ border-color:var(--border-purple); background:var(--card-hover); transform:scale(1.025) translateY(-2px); box-shadow:0 12px 40px rgba(124,58,237,.14); }
 
 .pool-tokens{
-  display:flex; align-items:center; gap:-4px;
+  display:flex; align-items:center;
 }
 .pool-token-icon{
   width:32px; height:32px; border-radius:50%;
@@ -144,16 +144,16 @@ input[type=number] { -moz-appearance:textfield; }
     <li><a href="dashboard.html">Dashboard</a></li>
     <li><a href="launchpad.html">Launchpad</a></li>
     <li><a href="defi.html" class="active">DeFi</a></li>
-    <li><a href="https://docs.arc.network/" target="_blank">Docs ↗</a></li>
+    <li><a href="https://docs.arc.network/" target="_blank" rel="noopener noreferrer">Docs ↗</a></li>
   </ul>
   <div class="nav-right">
     <span class="badge-testnet">Testnet</span>
     <div class="notif-wrapper">
-      <button class="notif-btn" onclick="toggleNotifPanel();renderNotifications()">🔔<span class="notif-badge">3</span></button>
-      <div class="notif-panel" id="notifPanel"></div>
+      <button class="notif-btn" onclick="toggleNotifPanel();renderNotifications()" aria-label="Notifications" type="button">🔔<span class="notif-badge" aria-label="3 unread">3</span></button>
+      <div class="notif-panel" id="notifPanel" role="status" aria-live="polite"></div>
     </div>
-    <button class="btn btn-primary" onclick="connectWallet()" id="walletBtn">Connect Wallet</button>
-    <button class="hamburger" onclick="toggleMobileNav()" id="hamburgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    <button class="btn btn-primary" onclick="connectWallet()" id="walletBtn" type="button">Connect Wallet</button>
+    <button class="hamburger" onclick="toggleMobileNav()" id="hamburgerBtn" aria-label="Open menu" type="button"><span></span><span></span><span></span></button>
   </div>
 </nav>
 
@@ -162,18 +162,18 @@ input[type=number] { -moz-appearance:textfield; }
 <div class="mobile-nav" id="mobileNav">
   <div class="mobile-nav-header">
     <a href="index.html" class="nav-logo"><div class="nav-logo-icon">N</div>Arc Nova</a>
-    <button class="mobile-nav-close" onclick="toggleMobileNav()">✕</button>
+    <button class="mobile-nav-close" onclick="toggleMobileNav()" type="button" aria-label="Close menu">✕</button>
   </div>
   <ul class="mobile-nav-links">
     <li><a href="index.html">🏠 Home</a></li>
     <li><a href="dashboard.html">📊 Dashboard</a></li>
     <li><a href="launchpad.html">🚀 Launchpad</a></li>
     <li><a href="defi.html">🔄 DeFi</a></li>
-    <li><a href="https://docs.arc.network/" target="_blank">📄 Docs ↗</a></li>
+    <li><a href="https://docs.arc.network/" target="_blank" rel="noopener noreferrer">📄 Docs ↗</a></li>
   </ul>
   <div class="mobile-nav-footer">
     <span class="badge-testnet">Testnet</span>
-    <button class="btn btn-primary" style="width:100%" onclick="connectWallet();toggleMobileNav()">Connect Wallet</button>
+    <button class="btn btn-primary" style="width:100%" onclick="connectWallet();toggleMobileNav()" type="button">Connect Wallet</button>
   </div>
 </div>
 
@@ -262,11 +262,11 @@ input[type=number] { -moz-appearance:textfield; }
 
     <!-- TAB BAR -->
     <div id="defi-tabs">
-      <div class="tab-bar">
-        <button class="tab-btn" data-tab="swap" onclick="switchTab('swap',this)">🔄 Swap</button>
-        <button class="tab-btn" data-tab="stake" onclick="switchTab('stake',this)">💎 Stake</button>
-        <button class="tab-btn" data-tab="earn" onclick="switchTab('earn',this)">💰 Earn</button>
-        <button class="tab-btn" data-tab="pools" onclick="switchTab('pools',this)">🌊 Pools</button>
+      <div class="tab-bar" role="tablist" aria-label="DeFi sections">
+        <button class="tab-btn" role="tab" aria-controls="panel-swap" data-tab="swap" onclick="switchTab('swap',this)" type="button">🔄 Swap</button>
+        <button class="tab-btn" role="tab" aria-controls="panel-stake" data-tab="stake" onclick="switchTab('stake',this)" type="button">💎 Stake</button>
+        <button class="tab-btn" role="tab" aria-controls="panel-earn" data-tab="earn" onclick="switchTab('earn',this)" type="button">💰 Earn</button>
+        <button class="tab-btn" role="tab" aria-controls="panel-pools" data-tab="pools" onclick="switchTab('pools',this)" type="button">🌊 Pools</button>
       </div>
 
       <!-- ═══════════ SWAP ═══════════ -->
@@ -286,7 +286,7 @@ input[type=number] { -moz-appearance:textfield; }
                 <div class="token-dot" style="background:rgba(124,58,237,0.3);color:#a78bfa">N</div>
                 NOVA ▾
               </button>
-              <input type="number" class="amount-input" id="fromAmount" placeholder="0.00" oninput="calcSwap()">
+              <input type="number" class="amount-input" id="fromAmount" placeholder="0.00" oninput="calcSwap()" aria-label="Amount to swap" min="0">
             </div>
             <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:0.78rem;color:var(--muted)">
               <span>Balance: <span id="fromBal">—</span> <button onclick="setFromMax()" style="background:none;border:none;color:var(--lavender);cursor:pointer;font-size:0.72rem;font-weight:700;padding:0 4px">MAX</button></span>
@@ -307,7 +307,7 @@ input[type=number] { -moz-appearance:textfield; }
                 <div class="token-dot" style="background:rgba(34,211,238,0.2);color:#22d3ee">U</div>
                 USDC ▾
               </button>
-              <input type="number" class="amount-input" id="toAmount" placeholder="0.00" readonly style="opacity:0.7">
+              <input type="number" class="amount-input" id="toAmount" placeholder="0.00" readonly style="opacity:0.7" aria-label="Amount you receive" aria-readonly="true">
             </div>
             <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:0.78rem;color:var(--muted)">
               <span>Balance: <span id="toBal">—</span></span>
@@ -337,10 +337,10 @@ input[type=number] { -moz-appearance:textfield; }
             </div>
           </div>
 
-          <button class="btn btn-primary btn-glow" style="width:100%;padding:15px;font-size:1rem;font-weight:800;letter-spacing:-0.01em;border-radius:14px" onclick="doSwap()">
+          <button class="btn btn-primary btn-glow" id="swapBtn" style="width:100%;padding:15px;font-size:1rem;font-weight:800;letter-spacing:-0.01em;border-radius:14px" onclick="doSwap()" type="button">
             Swap Now
           </button>
-          <button class="btn btn-ghost" style="width:100%;padding:10px;margin-top:8px;font-size:0.82rem;border-radius:12px" onclick="doFaucet()">
+          <button class="btn btn-ghost" id="faucetBtn" style="width:100%;padding:10px;margin-top:8px;font-size:0.82rem;border-radius:12px" onclick="doFaucet()" type="button">
             🚰 Get 1,000 NOVA from Faucet
           </button>
         </div>
@@ -424,7 +424,7 @@ input[type=number] { -moz-appearance:textfield; }
                 <div class="token-btn" style="cursor:default">
                   <div class="token-dot" style="background:rgba(124,58,237,0.3);color:#a78bfa">N</div>NOVA
                 </div>
-                <input type="number" class="amount-input" id="stakeAmount" placeholder="0.00">
+                <input type="number" class="amount-input" id="stakeAmount" placeholder="0.00" aria-label="Amount to stake in NOVA" min="0">
               </div>
               <div style="display:flex;justify-content:space-between;margin-top:10px">
                 <span style="font-size:0.78rem;color:var(--muted)">Balance: <span class="balance-nova">—</span></span>
@@ -443,7 +443,7 @@ input[type=number] { -moz-appearance:textfield; }
                 <div class="token-btn" style="cursor:default">
                   <div class="token-dot" style="background:rgba(124,58,237,0.3);color:#a78bfa">N</div>NOVA
                 </div>
-                <input type="number" class="amount-input" id="unstakeAmount" placeholder="0.00">
+                <input type="number" class="amount-input" id="unstakeAmount" placeholder="0.00" aria-label="Amount to unstake in NOVA" min="0">
               </div>
               <div style="display:flex;justify-content:space-between;margin-top:10px">
                 <span style="font-size:0.78rem;color:var(--muted)">Staked: <span id="stakedValue">—</span></span>
@@ -473,12 +473,12 @@ input[type=number] { -moz-appearance:textfield; }
             </div>
 
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-              <button class="btn btn-primary btn-glow" style="padding:13px;font-weight:800;border-radius:12px" onclick="doStake()">Stake NOVA</button>
-              <button class="btn btn-outline" style="padding:13px;font-weight:700;border-radius:12px" onclick="doUnstake()">Unstake</button>
+              <button class="btn btn-primary btn-glow" id="stakeBtn" style="padding:13px;font-weight:800;border-radius:12px" onclick="doStake()" type="button">Stake NOVA</button>
+              <button class="btn btn-outline" id="unstakeBtn" style="padding:13px;font-weight:700;border-radius:12px" onclick="doUnstake()" type="button">Unstake</button>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-              <button class="btn btn-ghost" style="padding:11px;font-size:0.82rem;border-radius:12px" onclick="doClaim()">Claim Rewards</button>
-              <button class="btn btn-ghost" style="padding:11px;font-size:0.82rem;border-radius:12px" onclick="doWithdraw()">Withdraw</button>
+              <button class="btn btn-ghost" style="padding:11px;font-size:0.82rem;border-radius:12px" onclick="doClaim()" type="button">Claim Rewards</button>
+              <button class="btn btn-ghost" style="padding:11px;font-size:0.82rem;border-radius:12px" onclick="doWithdraw()" type="button">Withdraw</button>
             </div>
           </div>
           <div>
@@ -750,44 +750,44 @@ input[type=number] { -moz-appearance:textfield; }
   <div class="container">
     <div class="footer-bottom" style="border-top:none;padding-top:0">
       <div>© 2026 Arc Nova. Built on Arc Network.</div>
-      <div style="display:flex;gap:16px">
-        <a href="index.html" style="color:var(--muted);text-decoration:none" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--muted)'">Home</a>
-        <a href="dashboard.html" style="color:var(--muted);text-decoration:none" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--muted)'">Dashboard</a>
-        <a href="launchpad.html" style="color:var(--muted);text-decoration:none" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--muted)'">Launchpad</a>
+      <div style="display:flex;gap:16px" class="footer-social">
+        <a href="index.html">Home</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="launchpad.html">Launchpad</a>
       </div>
     </div>
   </div>
 </footer>
 
 <!-- Token Selector Modal -->
-<div class="modal-overlay" id="tokenModal">
+<div class="modal-overlay" id="tokenModal" role="dialog" aria-modal="true" aria-labelledby="tokenModalTitle">
   <div class="modal-box">
     <div class="modal-header">
-      <span class="modal-title">Select Token</span>
-      <button class="modal-close" onclick="closeTokenModal()">✕</button>
+      <span class="modal-title" id="tokenModalTitle">Select Token</span>
+      <button class="modal-close" onclick="closeTokenModal()" type="button" aria-label="Close token selector">✕</button>
     </div>
     <div class="modal-body">
-      <input class="token-search" id="tokenSearch" placeholder="Search by name or symbol..." oninput="renderTokenList(this.value)">
-      <div class="token-list" id="tokenList"></div>
+      <input class="token-search" id="tokenSearch" placeholder="Search by name or symbol..." oninput="renderTokenList(this.value)" aria-label="Search tokens by name or symbol" autocomplete="off">
+      <div class="token-list" id="tokenList" role="listbox" aria-label="Available tokens"></div>
     </div>
   </div>
 </div>
 
 <!-- Confirm Modal -->
-<div class="modal-overlay" id="confirmModal">
+<div class="modal-overlay" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
   <div class="modal-box">
     <div class="modal-header">
       <span class="modal-title" id="confirmTitle">Confirm Swap</span>
-      <button class="modal-close" onclick="closeConfirmModal()">✕</button>
+      <button class="modal-close" onclick="closeConfirmModal()" type="button" aria-label="Close confirmation">✕</button>
     </div>
     <div class="modal-body">
       <div id="confirmDetails"></div>
-      <div style="margin-top:20px;padding:12px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:10px;font-size:0.8rem;color:var(--yellow);line-height:1.6">
+      <div style="margin-top:20px;padding:12px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:10px;font-size:0.8rem;color:var(--yellow);line-height:1.6" role="note">
         ⚠️ Output is estimated. You will receive at least the minimum amount or the transaction will revert.
       </div>
       <div style="display:flex;gap:10px;margin-top:16px">
-        <button class="btn btn-ghost" style="flex:1" onclick="closeConfirmModal()">Cancel</button>
-        <button class="btn btn-primary" style="flex:2" id="confirmBtn">Confirm</button>
+        <button class="btn btn-ghost" style="flex:1" onclick="closeConfirmModal()" type="button">Cancel</button>
+        <button class="btn btn-primary" style="flex:2" id="confirmBtn" type="button">Confirm</button>
       </div>
     </div>
   </div>
@@ -809,8 +809,12 @@ const TOKEN_USD = { NOVA: 0.001, USDC: 1.0, ARC: 2.47, USDT: 1.0 };
 
 /* ── Tab switcher ── */
 function switchTab(name, btn) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.remove('active');
+    b.setAttribute('aria-selected', 'false');
+  });
   btn.classList.add('active');
+  btn.setAttribute('aria-selected', 'true');
   ['swap','stake','earn','pools'].forEach(p => {
     const el = document.getElementById('panel-' + p);
     if (el) el.style.display = p === name ? 'block' : 'none';
@@ -881,12 +885,13 @@ async function _updateSwapRate() {
 async function doSwap() {
   if (!walletConnected) { showToast('Connect your wallet first', 'error'); openWalletModal(); return; }
   const amt = parseFloat(document.getElementById('fromAmount').value);
-  if (!amt || amt <= 0) { showToast('Enter an amount to swap', 'error'); return; }
+  if (!amt || amt <= 0) { showToast('Enter a positive amount to swap', 'error'); return; }
   if (fromSym === toSym) { showToast('Select different tokens', 'error'); return; }
   if (fromSym !== 'NOVA' && fromSym !== 'USDC') { showToast('Only NOVA ↔ USDC swaps are available', 'info'); return; }
   if (toSym   !== 'NOVA' && toSym   !== 'USDC') { showToast('Only NOVA ↔ USDC swaps are available', 'info'); return; }
 
   const outAmt = document.getElementById('toAmount').value || '...';
+  const swapBtn = document.getElementById('swapBtn');
   showConfirmModal('Confirm Swap', [
     ['You Pay',     `${amt} ${fromSym}`,      'var(--text)'],
     ['You Receive', `~${outAmt} ${toSym}`,    'var(--green)'],
@@ -894,7 +899,9 @@ async function doSwap() {
     ['Slippage',    '0.5%',                   'var(--text-2)'],
     ['Gas',         '~0.01 USDC',             'var(--muted)'],
   ], async () => {
+    if (swapBtn) { swapBtn.disabled = true; swapBtn.textContent = 'Swapping…'; }
     await executeSwap(fromSym, toSym, amt, 0.5);
+    if (swapBtn) { swapBtn.disabled = false; swapBtn.textContent = 'Swap Now'; }
     if (document.getElementById('fromAmount')) document.getElementById('fromAmount').value = '';
     if (document.getElementById('toAmount'))   document.getElementById('toAmount').value   = '';
     _updateUSD();
@@ -925,12 +932,15 @@ async function doStake() {
   if (!walletConnected) { showToast('Connect wallet first', 'error'); openWalletModal(); return; }
   const amtEl = document.getElementById('stakeAmount');
   const amt   = parseFloat(amtEl?.value);
-  if (!amt || amt <= 0) { showToast('Enter amount to stake', 'error'); return; }
+  if (!amt || amt <= 0) { showToast('Enter a positive amount to stake', 'error'); return; }
+  const stakeBtn = document.getElementById('stakeBtn');
   showConfirmModal('Confirm Stake', [
     ['Amount',           `${amt} NOVA`,  'var(--text)'],
     ['Unbonding Period', '24 hours',     'var(--text-2)'],
   ], async () => {
+    if (stakeBtn) { stakeBtn.disabled = true; stakeBtn.textContent = 'Staking…'; }
     await executeStake(String(amt));
+    if (stakeBtn) { stakeBtn.disabled = false; stakeBtn.textContent = 'Stake NOVA'; }
     if (amtEl) amtEl.value = '';
   });
 }

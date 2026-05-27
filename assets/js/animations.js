@@ -254,15 +254,23 @@ function onReady() {
     onScroll();
   }
 
-  /* Mouse-following card glow */
+  /* Mouse-following card glow (throttled to rAF to avoid per-pixel repaints) */
+  let _rafPending = false;
+  let _lastMx = 0, _lastMy = 0;
   document.addEventListener('mousemove', e => {
-    document.querySelectorAll(
-      '.card,.feat-card,.stat-card,.eco-card,.swap-card,.launchpad-card,.launch-card,.chart-card,.earn-card,.pool-card,.glass-panel'
-    ).forEach(card => {
-      const r = card.getBoundingClientRect();
-      if (e.clientX < r.left-220 || e.clientX > r.right+220) return;
-      card.style.setProperty('--gx', ((e.clientX-r.left)/r.width*100).toFixed(1)+'%');
-      card.style.setProperty('--gy', ((e.clientY-r.top)/r.height*100).toFixed(1)+'%');
+    _lastMx = e.clientX; _lastMy = e.clientY;
+    if (_rafPending) return;
+    _rafPending = true;
+    requestAnimationFrame(() => {
+      _rafPending = false;
+      document.querySelectorAll(
+        '.card,.feat-card,.stat-card,.eco-card,.swap-card,.launchpad-card,.launch-card,.chart-card,.earn-card,.pool-card,.glass-panel'
+      ).forEach(card => {
+        const r = card.getBoundingClientRect();
+        if (_lastMx < r.left-220 || _lastMx > r.right+220) return;
+        card.style.setProperty('--gx', ((_lastMx-r.left)/r.width*100).toFixed(1)+'%');
+        card.style.setProperty('--gy', ((_lastMy-r.top)/r.height*100).toFixed(1)+'%');
+      });
     });
   }, {passive:true});
 

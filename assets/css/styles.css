@@ -376,6 +376,8 @@ tbody tr:hover td { background:rgba(255,255,255,.03); color:var(--text); }
 .footer-links a { text-decoration:none; color:var(--text-2); font-size:0.875rem; transition:color 0.2s; }
 .footer-links a:hover { color:var(--lavender); }
 .footer-bottom { border-top:1px solid var(--border); padding-top:24px; display:flex; align-items:center; justify-content:space-between; color:var(--muted); font-size:0.78rem; }
+.footer-social a { color:rgba(248,250,252,.35); text-decoration:none; font-size:0.875rem; font-weight:600; transition:color .2s; }
+.footer-social a:hover { color:var(--lavender); }
 
 /* ── PAGE HEADER ── */
 .page-header { padding:100px 0 48px; position:relative; z-index:1; overflow:hidden; }
