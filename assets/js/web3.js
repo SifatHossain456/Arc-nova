@@ -150,6 +150,7 @@ async function claimFaucet() {
       _demo.nova += 1000;
       _demo.lastFaucet = Math.floor(Date.now() / 1000);
     }, 'Claimed 1,000 NOVA!');
+    window.ArcPoints?.award('faucet');
     return;
   }
 
@@ -169,6 +170,7 @@ async function claimFaucet() {
     txPending(tx.hash);
     await tx.wait();
     txSuccess('Claimed 1,000 NOVA!');
+    window.ArcPoints?.award('faucet');
   } catch (err) { txError(_parseErr(err)); }
 }
 
@@ -189,6 +191,7 @@ async function executeSwap(fromSym, toSym, amountIn, slippagePct = 0.5) {
       if (fromSym === 'NOVA') { _demo.nova -= amountIn; _demo.usdc += amtOut; }
       else                    { _demo.usdc -= amountIn; _demo.nova += amtOut; }
     }, `Swapped ${amountIn} ${fromSym} → ${amtOut.toFixed(4)} ${toSym}`);
+    window.ArcPoints?.award('swap');
     return;
   }
 
@@ -217,6 +220,7 @@ async function executeSwap(fromSym, toSym, amountIn, slippagePct = 0.5) {
     txPending(tx.hash);
     await tx.wait();
     txSuccess(`Swapped ${amountIn} ${fromSym} → ${toSym}`);
+    window.ArcPoints?.award('swap');
   } catch (err) { txError(_parseErr(err)); }
 }
 
@@ -234,6 +238,7 @@ async function executeStake(amountStr) {
       _demo.nova  -= amount;
       _demo.staked += amount;
     }, `Staked ${amount} NOVA! Earning ~12% APY`);
+    window.ArcPoints?.award('stake');
     return;
   }
 
@@ -248,6 +253,7 @@ async function executeStake(amountStr) {
     txPending(tx.hash);
     await tx.wait();
     txSuccess(`Staked ${amount} NOVA successfully!`);
+    window.ArcPoints?.award('stake');
     _refreshOnchainUI();
   } catch (err) { txError(_parseErr(err)); }
 }
@@ -265,6 +271,7 @@ async function executeUnstake(amountStr) {
       _demo.staked    -= amount;
       _demo.unbonding += amount;
     }, `Unstake requested! Tokens unlock in 24h.`);
+    window.ArcPoints?.award('unstake');
     return;
   }
 
@@ -276,6 +283,7 @@ async function executeUnstake(amountStr) {
     txPending(tx.hash);
     await tx.wait();
     txSuccess('Unstake requested! Tokens unlock after 24h.');
+    window.ArcPoints?.award('unstake');
     _refreshOnchainUI();
   } catch (err) { txError(_parseErr(err)); }
 }
@@ -334,6 +342,7 @@ async function executeClaim() {
       _demo.nova    += _demo.rewards;
       _demo.rewards  = 0;
     }, `Claimed ${_demo.rewards.toFixed(4)} NOVA rewards!`);
+    window.ArcPoints?.award('claim_rewards');
     return;
   }
 
@@ -351,6 +360,7 @@ async function executeClaim() {
     txPending(tx.hash);
     await tx.wait();
     txSuccess('Staking rewards claimed!');
+    window.ArcPoints?.award('claim_rewards');
     _refreshOnchainUI();
   } catch (err) { txError(_parseErr(err)); }
 }

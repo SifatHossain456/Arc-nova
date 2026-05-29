@@ -722,6 +722,99 @@ body { background:#040412; }
 </section>
 
 <!-- ══════════════════════════════════════════════════════════
+     AIRDROP / XP
+══════════════════════════════════════════════════════════ -->
+<section class="section" style="background:rgba(245,158,11,.02);border-top:1px solid rgba(245,158,11,.10);border-bottom:1px solid rgba(245,158,11,.10)">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:48px">
+      <span class="section-label" style="background:rgba(245,158,11,.10);border-color:rgba(245,158,11,.28);color:#fbbf24">🪂 NOVA Airdrop</span>
+      <h2 class="section-h fade-up" style="text-align:center;margin:16px auto 0">Earn your <span class="grad-text">NOVA allocation</span></h2>
+      <p class="section-sub fade-up d1" style="text-align:center;margin:14px auto 0;max-width:540px">
+        Arc Nova is preparing for mainnet. Early testnet participants who accumulate XP will receive a guaranteed <strong style="color:#fbbf24">NOVA token allocation</strong> at launch. Snapshot date TBA — start earning now.
+      </p>
+    </div>
+
+    <!-- Tier cards -->
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:48px" class="fade-up d2">
+      <div class="card" style="text-align:center;padding:18px 12px;border-color:rgba(205,127,50,.2)">
+        <div style="font-size:1.6rem;margin-bottom:8px">🥉</div>
+        <div style="font-weight:800;font-size:.85rem;color:#cd7f32;margin-bottom:4px">Bronze</div>
+        <div style="font-size:.72rem;color:var(--muted);margin-bottom:8px">0 – 249 XP</div>
+        <div style="font-size:.76rem;font-weight:800;color:var(--text)">0.5%<br><span style="font-weight:400;color:var(--muted)">allocation</span></div>
+      </div>
+      <div class="card" style="text-align:center;padding:18px 12px;border-color:rgba(148,163,184,.2)">
+        <div style="font-size:1.6rem;margin-bottom:8px">🥈</div>
+        <div style="font-weight:800;font-size:.85rem;color:#94a3b8;margin-bottom:4px">Silver</div>
+        <div style="font-size:.72rem;color:var(--muted);margin-bottom:8px">250 – 799 XP</div>
+        <div style="font-size:.76rem;font-weight:800;color:var(--text)">1%<br><span style="font-weight:400;color:var(--muted)">allocation</span></div>
+      </div>
+      <div class="card" style="text-align:center;padding:18px 12px;border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.04)">
+        <div style="font-size:1.6rem;margin-bottom:8px">🥇</div>
+        <div style="font-weight:800;font-size:.85rem;color:#f59e0b;margin-bottom:4px">Gold</div>
+        <div style="font-size:.72rem;color:var(--muted);margin-bottom:8px">800 – 1,999 XP</div>
+        <div style="font-size:.76rem;font-weight:800;color:var(--text)">2%<br><span style="font-weight:400;color:var(--muted)">allocation</span></div>
+      </div>
+      <div class="card" style="text-align:center;padding:18px 12px;border-color:rgba(226,232,240,.15)">
+        <div style="font-size:1.6rem;margin-bottom:8px">🏆</div>
+        <div style="font-weight:800;font-size:.85rem;color:#e2e8f0;margin-bottom:4px">Platinum</div>
+        <div style="font-size:.72rem;color:var(--muted);margin-bottom:8px">2,000 – 4,999 XP</div>
+        <div style="font-size:.76rem;font-weight:800;color:var(--text)">4%<br><span style="font-weight:400;color:var(--muted)">allocation</span></div>
+      </div>
+      <div class="card" style="text-align:center;padding:18px 12px;border-color:rgba(34,211,238,.28);background:rgba(34,211,238,.04)">
+        <div style="font-size:1.6rem;margin-bottom:8px">💎</div>
+        <div style="font-weight:800;font-size:.85rem;color:#22d3ee;margin-bottom:4px">Diamond</div>
+        <div style="font-size:.72rem;color:var(--muted);margin-bottom:8px">5,000+ XP</div>
+        <div style="font-size:.76rem;font-weight:800;color:var(--text)">8%<br><span style="font-weight:400;color:var(--muted)">allocation</span></div>
+      </div>
+    </div>
+
+    <!-- Connected user's XP card (hidden until wallet connected) -->
+    <div id="airXpCard" style="display:none;max-width:480px;margin:0 auto 36px">
+      <div class="glass-panel" style="padding:22px;text-align:center">
+        <div style="font-size:.7rem;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px">Your Progress</div>
+        <div style="font-size:2.4rem;font-weight:900;letter-spacing:-.03em;margin-bottom:4px" data-xp>0</div>
+        <div style="font-size:.8rem;font-weight:700;margin-bottom:12px" data-xp-tier style="color:#cd7f32">🥉 Bronze</div>
+        <div class="xp-bar-wrap"><div class="xp-bar-fill" style="width:0%"></div></div>
+        <div style="font-size:.72rem;color:var(--muted);margin-top:8px" data-xp-next></div>
+        <div style="display:flex;justify-content:center;gap:24px;margin-top:16px;font-size:.8rem">
+          <div style="text-align:center"><div style="font-weight:800;color:var(--text)" data-xp-rank>#—</div><div style="color:var(--muted)">Rank</div></div>
+          <div style="text-align:center"><div style="font-weight:800;color:var(--text)" data-xp-streak>0 days</div><div style="color:var(--muted)">Streak</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- How to earn XP -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:40px" class="fade-up d3">
+      <div style="text-align:center;padding:16px 12px;border-radius:14px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06)">
+        <div style="font-size:1.4rem;margin-bottom:8px">🔗</div>
+        <div style="font-weight:700;font-size:.82rem;color:var(--text);margin-bottom:4px">Connect Wallet</div>
+        <div style="font-size:.72rem;color:#a78bfa;font-weight:800">+50 XP</div>
+      </div>
+      <div style="text-align:center;padding:16px 12px;border-radius:14px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06)">
+        <div style="font-size:1.4rem;margin-bottom:8px">🔄</div>
+        <div style="font-weight:700;font-size:.82rem;color:var(--text);margin-bottom:4px">Swap Tokens</div>
+        <div style="font-size:.72rem;color:#a78bfa;font-weight:800">+25 XP each</div>
+      </div>
+      <div style="text-align:center;padding:16px 12px;border-radius:14px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06)">
+        <div style="font-size:1.4rem;margin-bottom:8px">🏦</div>
+        <div style="font-weight:700;font-size:.82rem;color:var(--text);margin-bottom:4px">Stake NOVA</div>
+        <div style="font-size:.72rem;color:#a78bfa;font-weight:800">+40 XP each</div>
+      </div>
+      <div style="text-align:center;padding:16px 12px;border-radius:14px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06)">
+        <div style="font-size:1.4rem;margin-bottom:8px">📅</div>
+        <div style="font-weight:700;font-size:.82rem;color:var(--text);margin-bottom:4px">Daily Check-in</div>
+        <div style="font-size:.72rem;color:#a78bfa;font-weight:800">+15 XP / day</div>
+      </div>
+    </div>
+
+    <div style="text-align:center">
+      <div style="font-size:.85rem;color:var(--muted);margin-bottom:16px">Connect your wallet to track your XP and secure your allocation</div>
+      <button onclick="openWalletModal()" class="btn btn-primary btn-lg" id="airCtaBtn">Start Earning XP →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
      CTA
 ══════════════════════════════════════════════════════════ -->
 <section class="section">
@@ -806,5 +899,6 @@ body { background:#040412; }
 <script src="assets/js/app.js"></script>
 <script src="assets/js/animations.js"></script>
 <script src="assets/js/livedata.js"></script>
+<script src="assets/js/points.js"></script>
 </body>
 </html>

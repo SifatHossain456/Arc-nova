@@ -314,6 +314,51 @@
       </div>
     </div>
 
+    <!-- XP Leaderboard + Quests -->
+    <div class="grid-2" style="margin-bottom:24px">
+      <!-- Leaderboard -->
+      <div class="glass-panel fade-up d1" style="padding:22px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <div>
+            <div style="font-weight:800;font-size:.95rem;color:var(--text);letter-spacing:-.01em">XP Leaderboard</div>
+            <div style="font-size:.72rem;color:var(--muted);margin-top:2px">Early adopter rankings</div>
+          </div>
+          <span style="font-size:.68rem;font-weight:700;padding:3px 10px;border-radius:100px;background:rgba(245,158,11,.10);border:1px solid rgba(245,158,11,.25);color:#fbbf24">🪂 Airdrop</span>
+        </div>
+        <div id="xpLeaderboard" style="min-height:180px"></div>
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.05);font-size:.75rem;color:var(--muted);text-align:center">
+          Your rank: <strong style="color:var(--lavender)" data-xp-rank>#—</strong> · <strong style="color:var(--text)" data-xp>0</strong> XP · Tier: <strong data-xp-tier>🥉 Bronze</strong>
+        </div>
+      </div>
+
+      <!-- Your Activity + Quests -->
+      <div class="glass-panel fade-up d2" style="padding:22px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <div>
+            <div style="font-weight:800;font-size:.95rem;color:var(--text);letter-spacing:-.01em">Your Activity</div>
+            <div style="font-size:.72rem;color:var(--muted);margin-top:2px">Daily quests &amp; XP</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:1.6rem;font-weight:900;letter-spacing:-.03em;color:var(--text);line-height:1" data-xp>0</div>
+            <div style="font-size:.68rem;color:var(--muted);margin-top:2px">total XP</div>
+          </div>
+        </div>
+        <div class="xp-bar-wrap"><div class="xp-bar-fill" style="width:0%"></div></div>
+        <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:.72rem;color:var(--muted)">
+          <span data-xp-tier>🥉 Bronze</span>
+          <span data-xp-next></span>
+        </div>
+        <div style="display:flex;gap:16px;margin:16px 0 4px;padding:12px;background:rgba(255,255,255,.02);border-radius:10px;border:1px solid rgba(255,255,255,.05)">
+          <div style="text-align:center;flex:1"><div style="font-weight:800;font-size:.95rem;color:var(--text)" data-xp-streak>0 days</div><div style="font-size:.7rem;color:var(--muted)">Streak</div></div>
+          <div style="width:1px;background:rgba(255,255,255,.06)"></div>
+          <div style="text-align:center;flex:1"><div style="font-weight:800;font-size:.95rem;color:var(--text)" data-xp-rank>#—</div><div style="font-size:.7rem;color:var(--muted)">Rank</div></div>
+        </div>
+        <div style="font-size:.72rem;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;margin-top:14px">Daily Quests</div>
+        <div id="xpQuests"></div>
+        <a href="defi.html" class="btn btn-primary" style="width:100%;margin-top:16px;border-radius:12px;font-size:.84rem;text-decoration:none;justify-content:center">Go Earn XP →</a>
+      </div>
+    </div>
+
     <!-- Network Info -->
     <div class="grid-3" style="padding-bottom:60px">
       <div class="stat-card fade-up d1">
@@ -454,5 +499,6 @@ function refreshData(){
 }
 </script>
 <script src="assets/js/animations.js"></script>
+<script src="assets/js/points.js"></script>
 </body>
 </html>

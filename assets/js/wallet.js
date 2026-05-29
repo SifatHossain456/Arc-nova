@@ -513,6 +513,7 @@ async function _connect(uuid) {
 
     closeWalletModal();
     showToast('Wallet connected! Welcome to Arc Nova 🎉', 'success');
+    document.dispatchEvent(new CustomEvent('arcWalletConnected'));
     await _loadBalances();
     if (typeof initDemoBalances === 'function') initDemoBalances();
 
