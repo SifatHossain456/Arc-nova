@@ -9,6 +9,34 @@
 (function () {
 'use strict';
 
+/* ── Skeleton loading CSS ── */
+(function _injectSkeletonCSS() {
+  if (document.getElementById('arcSkeletonCSS')) return;
+  const s = document.createElement('style');
+  s.id = 'arcSkeletonCSS';
+  s.textContent = `
+@keyframes skeletonShimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+.data-loading {
+  background: linear-gradient(90deg, rgba(255,255,255,.04) 25%, rgba(139,92,246,.10) 50%, rgba(255,255,255,.04) 75%);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.8s ease infinite;
+  border-radius: 6px;
+  color: transparent !important;
+  min-width: 48px; display: inline-block;
+  pointer-events: none; user-select: none;
+}
+@keyframes liveFlash {
+  0%   { color: #a78bfa; }
+  100% { color: inherit; }
+}
+.live-updated { animation: liveFlash .5s ease; }
+  `;
+  document.head.appendChild(s);
+})();
+
 const RPC       = 'https://rpc.testnet.arc.network';
 const COINGECKO = 'https://api.coingecko.com/api/v3/simple/price?ids=ethereum,bitcoin&vs_currencies=usd&include_24hr_change=true';
 
@@ -49,13 +77,14 @@ function flash(el) {
   el.classList.add('live-updated');
 }
 
-/* null → shows '—',  real value → animates */
+/* null → shows '—',  real value → animates + removes skeleton */
 function setLive(selector, val, opts) {
   document.querySelectorAll(selector).forEach(el => {
     if (val === null || val === undefined) {
-      el.textContent = '—';
+      if (!el.classList.contains('data-loading')) el.textContent = '—';
       return;
     }
+    el.classList.remove('data-loading');
     const prev = parseFloat(el.dataset.lv || '0') || 0;
     el.dataset.lv = val;
     animNum(el, prev, val, opts);
@@ -257,7 +286,11 @@ function _fmtM(v) {
   if (v >= 1e3) return '$' + (v / 1e3).toFixed(1) + 'K';
   return '$' + Math.round(v);
 }
-function _set(id, txt) { const e = document.getElementById(id); if (e) e.textContent = txt; }
+function _set(id, txt) {
+  const e = document.getElementById(id);
+  if (!e) return;
+  if (e.textContent !== txt) { e.textContent = txt; flash(e); }
+}
 
 function _updateDeFiStats() {
   const b = DEFI_BASE;
@@ -324,6 +357,12 @@ function init() {
   setLive('[data-live="hero-users"]', null, {});
   setLive('[data-live="pool-tvl"]',   null, {});
   setLive('[data-live="projects"]',   null, {});
+
+  /* Apply skeleton shimmer to real-data targets while waiting for chain */
+  ['[data-live="block"]','[data-live="staked"]',
+   '[data-live="pool-nova"]','[data-live="pool-usdc"]'].forEach(sel => {
+    document.querySelectorAll(sel).forEach(el => el.classList.add('data-loading'));
+  });
 
   clearStatChanges();
   clearProtocols();

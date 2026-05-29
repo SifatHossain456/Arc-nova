@@ -1,27 +1,71 @@
 /* Arc Nova — Shared UI helpers */
 /* NOTE: walletConnected / activeAccount / activeSigner live in wallet.js  */
 
-/* ── TOAST ── */
-function showToast(msg, type = 'info') {
-  const existing = document.querySelector('.arc-toast');
-  if (existing) existing.remove();
+/* ── TOAST STACK ── */
+(function _initToastCSS() {
+  const s = document.createElement('style');
+  s.textContent = `
+@keyframes toastIn  { from{ opacity:0; transform:translateY(10px) scale(.95) } to{ opacity:1; transform:none } }
+@keyframes toastOut { to  { opacity:0; transform:translateY(8px)  scale(.95) } }
+@keyframes toastBar { from{ transform-origin:left; transform:scaleX(1) } to{ transform-origin:left; transform:scaleX(0) } }
+@keyframes slideDown { from{ opacity:0; transform:translateY(-8px) } to{ opacity:1; transform:none } }
+#arcToastContainer > * { pointer-events:all; }
+  `;
+  document.head.appendChild(s);
+})();
 
-  const colors = { success:'#10b981', error:'#ef4444', info:'#8b5cf6' };
+function showToast(msg, type = 'info', duration = 3800) {
+  const T = {
+    success: { icon:'✓', color:'#10b981', border:'rgba(16,185,129,.30)', left:'#10b981'  },
+    error:   { icon:'✕', color:'#f87171', border:'rgba(239,68,68,.30)',  left:'#ef4444'  },
+    info:    { icon:'ℹ', color:'#a78bfa', border:'rgba(139,92,246,.28)', left:'#8b5cf6' },
+  };
+  const c = T[type] || T.info;
+
+  let box = document.getElementById('arcToastContainer');
+  if (!box) {
+    box = document.createElement('div');
+    box.id = 'arcToastContainer';
+    Object.assign(box.style, {
+      position:'fixed', bottom:'24px', right:'24px', zIndex:'9999',
+      display:'flex', flexDirection:'column-reverse', gap:'8px',
+      width:'320px', maxWidth:'calc(100vw - 32px)', pointerEvents:'none',
+    });
+    document.body.appendChild(box);
+  }
+  /* Max 4 visible */
+  while (box.children.length >= 4) box.firstChild.remove();
+
   const toast = document.createElement('div');
-  toast.className = 'arc-toast';
-  toast.textContent = msg;
   Object.assign(toast.style, {
-    position:'fixed', bottom:'24px', right:'24px', zIndex:'9999',
-    padding:'12px 20px', borderRadius:'10px',
-    background:'rgba(14,14,36,0.95)', backdropFilter:'blur(12px)',
-    border:`1px solid ${colors[type]}44`,
-    color: colors[type], fontSize:'0.875rem', fontWeight:'600',
-    boxShadow:`0 0 24px ${colors[type]}22`,
-    animation:'fadeUp 0.3s ease both',
+    padding:'11px 14px 13px 14px',
+    borderRadius:'12px',
+    background:'rgba(6,6,22,.97)',
+    backdropFilter:'blur(24px)',
+    border:`1px solid ${c.border}`,
+    borderLeft:`3px solid ${c.left}`,
+    display:'flex', alignItems:'flex-start', gap:'9px',
+    animation:'toastIn .24s cubic-bezier(.22,1,.36,1) both',
     fontFamily:'Inter,sans-serif',
+    position:'relative', overflow:'hidden',
+    boxShadow:'0 8px 32px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.04)',
   });
-  document.body.appendChild(toast);
-  setTimeout(() => toast.remove(), 3500);
+  toast.innerHTML = `
+    <span style="font-size:.85rem;font-weight:900;color:${c.color};flex-shrink:0;margin-top:1px">${c.icon}</span>
+    <span style="flex:1;font-size:.84rem;font-weight:500;color:rgba(240,244,255,.88);line-height:1.5">${msg}</span>
+    <button style="background:none;border:none;color:rgba(255,255,255,.22);cursor:pointer;font-size:.85rem;padding:0;flex-shrink:0;line-height:1;margin-top:1px;transition:color .15s"
+      onmouseover="this.style.color='rgba(255,255,255,.6)'" onmouseout="this.style.color='rgba(255,255,255,.22)'"
+      onclick="clearTimeout(this._t);this.closest('[id]').remove()">✕</button>
+    <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:${c.left};opacity:.55;transform-origin:left;animation:toastBar ${duration}ms linear both"></div>
+  `;
+  box.appendChild(toast);
+
+  const btn = toast.querySelector('button');
+  btn._t = setTimeout(() => {
+    toast.style.animation = 'toastOut .18s ease both';
+    setTimeout(() => toast.remove(), 180);
+  }, duration);
+  btn.addEventListener('click', () => clearTimeout(btn._t));
 }
 
 /* ── COUNTER ANIMATION ── */
@@ -244,6 +288,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     startCountdown(targetMs, el.id);
   });
+});
+
+/* ── KEYBOARD SHORTCUTS ── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (typeof closeWalletModal  === 'function') closeWalletModal();
+    if (typeof closeTxModal      === 'function') closeTxModal();
+    if (typeof closeAccountModal === 'function') closeAccountModal();
+    if (typeof closeTokenModal   === 'function') closeTokenModal();
+    if (typeof closeConfirmModal === 'function') closeConfirmModal();
+    const mobileNav = document.getElementById('mobileNav');
+    if (mobileNav?.classList.contains('open')) toggleMobileNav?.();
+  }
 });
 
 /* Close panels on outside click */

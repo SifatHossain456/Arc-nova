@@ -850,6 +850,39 @@ function _updateUSD() {
   if (tUsd) tUsd.textContent = (toAmt   * (TOKEN_USD[toSym]   || 0)).toFixed(2);
 }
 
+/* ── Smart swap button state ── */
+function _syncSwapBtn() {
+  const btn = document.getElementById('swapBtn');
+  if (!btn) return;
+  const amt = parseFloat(document.getElementById('fromAmount')?.value) || 0;
+  const toVal = document.getElementById('toAmount')?.value || '';
+
+  if (!walletConnected) {
+    btn.disabled = false;
+    btn.textContent = 'Connect Wallet';
+    btn.style.opacity = '1';
+    btn.onclick = () => { openWalletModal(); };
+    return;
+  }
+  btn.onclick = doSwap;
+
+  if (!amt || amt <= 0) {
+    btn.disabled = true;
+    btn.textContent = 'Enter an amount';
+    btn.style.opacity = '0.5';
+    return;
+  }
+  if (!toVal) {
+    btn.disabled = true;
+    btn.textContent = 'Getting price…';
+    btn.style.opacity = '0.65';
+    return;
+  }
+  btn.disabled = false;
+  btn.textContent = 'Swap Now';
+  btn.style.opacity = '1';
+}
+
 /* ── Live quote (debounced 350ms) ── */
 async function calcSwap() {
   clearTimeout(_quoteTimer);
@@ -858,8 +891,10 @@ async function calcSwap() {
     const toInp = document.getElementById('toAmount');
     if (toInp) toInp.value = '';
     _updateUSD();
+    _syncSwapBtn();
     return;
   }
+  _syncSwapBtn(); /* show "Getting price…" while waiting */
   _quoteTimer = setTimeout(async () => {
     const out = await getSwapQuote(fromSym, toSym, amt);
     const toInp = document.getElementById('toAmount');
@@ -867,6 +902,7 @@ async function calcSwap() {
     const rateEl = document.getElementById('swapRate');
     if (rateEl && out) rateEl.textContent = (parseFloat(out) / amt).toFixed(6);
     _updateUSD();
+    _syncSwapBtn();
   }, 350);
 }
 
@@ -899,12 +935,12 @@ async function doSwap() {
     ['Slippage',    '0.5%',                   'var(--text-2)'],
     ['Gas',         '~0.01 USDC',             'var(--muted)'],
   ], async () => {
-    if (swapBtn) { swapBtn.disabled = true; swapBtn.textContent = 'Swapping…'; }
+    if (swapBtn) { swapBtn.disabled = true; swapBtn.textContent = 'Swapping…'; swapBtn.style.opacity = '0.7'; }
     await executeSwap(fromSym, toSym, amt, 0.5);
-    if (swapBtn) { swapBtn.disabled = false; swapBtn.textContent = 'Swap Now'; }
     if (document.getElementById('fromAmount')) document.getElementById('fromAmount').value = '';
     if (document.getElementById('toAmount'))   document.getElementById('toAmount').value   = '';
     _updateUSD();
+    _syncSwapBtn();
   });
 }
 
@@ -1050,6 +1086,7 @@ document.addEventListener('DOMContentLoaded', () => {
   switchTab('swap', document.querySelector('.tab-btn'));
   _updateSwapRate();
   _startDemoRewardAccrual();
+  _syncSwapBtn();
 });
 </script>
 <script src="assets/js/animations.js"></script>

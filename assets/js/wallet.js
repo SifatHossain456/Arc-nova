@@ -140,6 +140,32 @@ function _injectWalletCSS() {
   font-size: 1.4rem;
 }
 
+/* ── Wrong-network banner ── */
+#arcNetworkBanner {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 99999;
+  display: none; align-items: center; justify-content: center; gap: 10px;
+  padding: 9px 16px;
+  background: linear-gradient(90deg, rgba(245,158,11,.14), rgba(239,68,68,.10), rgba(245,158,11,.14));
+  border-bottom: 1px solid rgba(245,158,11,.35);
+  backdrop-filter: blur(12px);
+  font-family: Inter, sans-serif; font-size: 0.82rem; font-weight: 600;
+  color: rgba(253,230,138,.95);
+  animation: slideDown .25s cubic-bezier(.22,1,.36,1) both;
+}
+#arcNetworkBanner.visible { display: flex; }
+#arcNetworkBanner .net-banner-icon { font-size: 1rem; flex-shrink: 0; }
+#arcNetworkBanner .net-banner-msg { flex: 1; text-align: center; }
+#arcNetworkBanner .net-banner-btn {
+  padding: 5px 14px; border-radius: 8px;
+  background: rgba(245,158,11,.22); border: 1px solid rgba(245,158,11,.45);
+  color: #fcd34d; font-size: 0.76rem; font-weight: 800; cursor: pointer;
+  font-family: inherit; transition: all .18s; flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+#arcNetworkBanner .net-banner-btn:hover {
+  background: rgba(245,158,11,.35); border-color: rgba(245,158,11,.65);
+}
+
 /* ── Net badge ── */
 .net-badge {
   display: inline-flex; align-items: center; gap: 5px;
@@ -181,6 +207,44 @@ function _injectWalletCSS() {
 }
   `;
   document.head.appendChild(s);
+}
+
+/* ── Wrong-network banner ── */
+function _injectNetworkBanner() {
+  if (document.getElementById('arcNetworkBanner')) return;
+  const el = document.createElement('div');
+  el.id = 'arcNetworkBanner';
+  el.innerHTML = `
+    <span class="net-banner-icon">⚠️</span>
+    <span class="net-banner-msg">You are connected to the wrong network. Please switch to <strong>Arc Testnet</strong>.</span>
+    <button class="net-banner-btn" onclick="switchToArcNetwork()">Switch Network</button>
+  `;
+  document.body.prepend(el);
+}
+
+function _showNetworkBanner(show) {
+  _injectNetworkBanner();
+  const el = document.getElementById('arcNetworkBanner');
+  if (!el) return;
+  if (show) {
+    el.classList.add('visible');
+    /* push body down so banner doesn't cover nav */
+    document.body.style.paddingTop = (document.body.style.paddingTop ? '' : '0');
+  } else {
+    el.classList.remove('visible');
+  }
+}
+
+async function switchToArcNetwork() {
+  if (!activeProvider) return;
+  try {
+    await _switchToArc(activeProvider);
+    _showNetworkBanner(false);
+    showToast('Switched to Arc Testnet', 'success');
+    await _loadBalances();
+  } catch (err) {
+    showToast('Network switch failed: ' + (err.message?.slice(0, 50) || 'Unknown'), 'error');
+  }
 }
 
 /* ── Inject wallet modal HTML into <body> ── */
@@ -459,7 +523,14 @@ async function _connect(uuid) {
       _updateNavUI();
       _loadBalances();
     });
-    prov.on('chainChanged', () => window.location.reload());
+    prov.on('chainChanged', chainId => {
+      _showNetworkBanner(chainId !== ARC_CHAIN_HEX);
+      if (chainId === ARC_CHAIN_HEX) {
+        ethersProvider = new ethers.providers.Web3Provider(prov, 'any');
+        activeSigner   = ethersProvider.getSigner();
+        _loadBalances();
+      }
+    });
 
   } catch (err) {
     _renderWalletList();
@@ -477,6 +548,11 @@ async function _activateProvider(prov, account) {
   walletConnected = true;
   _saveSession(account);
   _updateNavUI();
+  /* Check current chain and show banner if wrong */
+  try {
+    const chainId = await prov.request({ method: 'eth_chainId' });
+    _showNetworkBanner(chainId !== ARC_CHAIN_HEX);
+  } catch {}
 }
 
 /* ── Switch to / add Arc Testnet ── */
@@ -543,7 +619,14 @@ async function _tryRestoreSession() {
               _updateNavUI();
               _loadBalances();
             });
-            w.provider.on('chainChanged', () => window.location.reload());
+            w.provider.on('chainChanged', chainId => {
+              _showNetworkBanner(chainId !== ARC_CHAIN_HEX);
+              if (chainId === ARC_CHAIN_HEX) {
+                ethersProvider = new ethers.providers.Web3Provider(w.provider, 'any');
+                activeSigner   = ethersProvider.getSigner();
+                _loadBalances();
+              }
+            });
             return;
           }
         } catch {}
