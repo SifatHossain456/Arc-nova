@@ -425,6 +425,10 @@ body { background:#040412; }
   max-width: 520px;
 }
 
+/* ── Airdrop section responsive grids ── */
+.arc-tier-grid  { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:48px; }
+.arc-earn-grid  { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:40px; }
+
 /* ── Responsive ── */
 @media(max-width:900px) {
   .hero-arc-wrap { display: none; }
@@ -432,10 +436,14 @@ body { background:#040412; }
   .hstat { min-width: 50%; padding: 12px 0 0; border: none; }
   .cta-banner { padding: 48px 24px; }
   .eco-grid { grid-template-columns: 1fr !important; }
+  .arc-tier-grid { grid-template-columns: repeat(3,1fr); }
+  .arc-earn-grid { grid-template-columns: repeat(2,1fr); }
 }
 @media(max-width:600px) {
   .hero-title { font-size: 2.4rem; }
   .hero { padding-bottom: 260px; }
+  .arc-tier-grid { grid-template-columns: repeat(2,1fr); }
+  .arc-earn-grid { grid-template-columns: repeat(2,1fr); }
 }
 </style>
 </head>
@@ -735,7 +743,7 @@ body { background:#040412; }
     </div>
 
     <!-- Tier cards -->
-    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:48px" class="fade-up d2">
+    <div class="arc-tier-grid fade-up d2">
       <div class="card" style="text-align:center;padding:18px 12px;border-color:rgba(205,127,50,.2)">
         <div style="font-size:1.6rem;margin-bottom:8px">🥉</div>
         <div style="font-weight:800;font-size:.85rem;color:#cd7f32;margin-bottom:4px">Bronze</div>
@@ -784,7 +792,7 @@ body { background:#040412; }
     </div>
 
     <!-- How to earn XP -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:40px" class="fade-up d3">
+    <div class="arc-earn-grid fade-up d3">
       <div style="text-align:center;padding:16px 12px;border-radius:14px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06)">
         <div style="font-size:1.4rem;margin-bottom:8px">🔗</div>
         <div style="font-weight:700;font-size:.82rem;color:var(--text);margin-bottom:4px">Connect Wallet</div>
