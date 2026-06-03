@@ -153,11 +153,11 @@ document.head.appendChild(styleEl);
    2.  AURORA BLOBS
 ═══════════════════════════════════════════════════════════════════════════ */
 const BLOBS = [
-  { w:950, h:850, top:'-22%', left:'44%',  anim:'arcBlob1 36s ease-in-out infinite',           color:'radial-gradient(ellipse,rgba(124,58,237,.92) 0%,transparent 70%)',  op:.22 },
-  { w:720, h:720, top:'18%',  left:'-16%', anim:'arcBlob2 48s ease-in-out infinite',           color:'radial-gradient(ellipse,rgba(99,102,241,.88) 0%,transparent 70%)',  op:.18 },
-  { w:620, h:620, top:'54%',  left:'64%',  anim:'arcBlob3 31s ease-in-out infinite',           color:'radial-gradient(ellipse,rgba(34,211,238,.82) 0%,transparent 70%)',  op:.15 },
-  { w:460, h:460, top:'80%',  left:'24%',  anim:'arcBlob4 40s ease-in-out infinite alternate', color:'radial-gradient(ellipse,rgba(139,92,246,.82) 0%,transparent 70%)',  op:.14 },
-  { w:390, h:390, top:'-6%',  left:'14%',  anim:'arcBlob2 55s ease-in-out infinite reverse',   color:'radial-gradient(ellipse,rgba(59,130,246,.78) 0%,transparent 70%)',  op:.13 },
+  { w:950, h:850, top:'-22%', left:'44%',  anim:'arcBlob1 36s ease-in-out infinite',           color:'radial-gradient(ellipse,rgba(124,58,237,.92) 0%,transparent 70%)',  op:.09 },
+  { w:720, h:720, top:'18%',  left:'-16%', anim:'arcBlob2 48s ease-in-out infinite',           color:'radial-gradient(ellipse,rgba(99,102,241,.88) 0%,transparent 70%)',  op:.07 },
+  { w:620, h:620, top:'54%',  left:'64%',  anim:'arcBlob3 31s ease-in-out infinite',           color:'radial-gradient(ellipse,rgba(34,211,238,.82) 0%,transparent 70%)',  op:.05 },
+  { w:460, h:460, top:'80%',  left:'24%',  anim:'arcBlob4 40s ease-in-out infinite alternate', color:'radial-gradient(ellipse,rgba(139,92,246,.82) 0%,transparent 70%)',  op:.05 },
+  { w:390, h:390, top:'-6%',  left:'14%',  anim:'arcBlob2 55s ease-in-out infinite reverse',   color:'radial-gradient(ellipse,rgba(59,130,246,.78) 0%,transparent 70%)',  op:.04 },
 ];
 
 const auroraDiv = document.createElement('div');
