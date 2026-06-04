@@ -54,9 +54,9 @@ const BASE_CSS = `
 
 /* ── Nav scroll glass ── */
 .nav.nav-scrolled {
-  background: rgba(3,3,16,.97);
-  box-shadow: 0 1px 0 rgba(139,92,246,.25), 0 8px 48px rgba(0,0,0,.55);
-  border-bottom-color: rgba(139,92,246,.20);
+  background: rgba(13,14,15,.97);
+  box-shadow: 0 1px 0 rgba(139,92,246,.18), 0 4px 24px rgba(0,0,0,.45);
+  border-bottom-color: rgba(139,92,246,.16);
 }
 
 /* ── Card mouse-glow spotlight ── */

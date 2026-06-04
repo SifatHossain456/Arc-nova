@@ -188,12 +188,11 @@ body::after {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 5px 14px; border-radius: 100px;
   font-size: 0.72rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
-  background: rgba(139,92,246,.12); border: 1px solid rgba(139,92,246,.30);
+  background: rgba(139,92,246,.10); border: 1px solid rgba(139,92,246,.28);
   color: var(--lavender); margin-bottom: 18px;
-  transition: box-shadow 0.3s, transform 0.25s;
-  box-shadow: 0 0 22px rgba(139,92,246,.22), inset 0 1px 0 rgba(255,255,255,.06);
+  transition: border-color 0.2s, transform 0.2s;
 }
-.section-label:hover { box-shadow: 0 0 36px rgba(139,92,246,.38), inset 0 1px 0 rgba(255,255,255,.08); transform: translateY(-1px); }
+.section-label:hover { border-color: rgba(139,92,246,.50); transform: translateY(-1px); }
 
 .section-title {
   font-size: clamp(2rem, 4.5vw, 3.2rem);
@@ -382,8 +381,8 @@ tbody tr:hover td { background:rgba(255,255,255,.03); color:var(--text); }
 .page-header::after {
   content:'';
   position:absolute; top:-60px; left:50%; transform:translateX(-50%);
-  width:700px; height:300px;
-  background:radial-gradient(ellipse, rgba(124,58,237,.18) 0%, transparent 70%);
+  width:600px; height:240px;
+  background:radial-gradient(ellipse, rgba(124,58,237,.08) 0%, transparent 70%);
   pointer-events:none; z-index:0;
 }
 .page-header > * { position:relative; z-index:1; }
@@ -683,12 +682,12 @@ tbody tr:hover td { background:rgba(255,255,255,.03); color:var(--text); }
 /* ── GRADIENT BORDER BUTTON — special CTA ── */
 .btn-glow {
   background: linear-gradient(135deg, #a855f7, #7c3aed);
-  box-shadow: 0 0 32px rgba(168,85,247,.5), 0 4px 20px rgba(124,58,237,.3);
+  box-shadow: 0 2px 12px rgba(124,58,237,.3);
   color: white;
 }
 .btn-glow:hover {
-  box-shadow: 0 0 52px rgba(168,85,247,.7), 0 8px 32px rgba(124,58,237,.4);
-  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(124,58,237,.45);
+  transform: translateY(-1px);
 }
 
 /* ── SECTION DIVIDER LINE ── */

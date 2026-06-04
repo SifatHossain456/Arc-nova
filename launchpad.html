@@ -580,16 +580,37 @@ function filterProjects(status, btn) {
 
 function participateProject(name) {
   if (!walletConnected) { showToast('Connect your wallet first', 'error'); openWalletModal(); return; }
-  showToast(`Joining ${name} IDO — feature coming soon!`, 'info');
+  showConfirmModal('Participate in IDO', [
+    ['Project',   name,          'var(--lavender)'],
+    ['Network',   'Arc Testnet', 'var(--text)'],
+    ['Status',    'Live round',  'var(--green)'],
+    ['Mainnet',   'IDO goes live on mainnet launch', 'var(--muted)'],
+  ], () => {
+    window.ArcPoints?.award('faucet'); /* treat participation as engagement XP */
+    showToast(`Participation registered for ${name}! You will be notified at mainnet launch.`, 'success', 5000);
+  });
 }
 
 function joinWhitelist(name) {
   if (!walletConnected) { showToast('Connect your wallet first', 'error'); openWalletModal(); return; }
-  showToast(`Whitelist request sent for ${name}!`, 'success');
+  showConfirmModal('Join Whitelist', [
+    ['Project', name,            'var(--lavender)'],
+    ['Address', activeAccount ? activeAccount.slice(0,10)+'…' : '—', 'var(--text)'],
+    ['Status',  'Upcoming IDO',  'var(--yellow)'],
+  ], () => {
+    showToast(`Whitelist spot reserved for ${name}! We will notify you before the IDO opens.`, 'success', 5000);
+  });
 }
 
 function applyProject() {
-  showToast('Project application form opening soon', 'info');
+  if (!walletConnected) { showToast('Connect your wallet to apply', 'info'); openWalletModal(); return; }
+  showConfirmModal('Apply to Launch', [
+    ['Platform', 'Arc Nova Launchpad', 'var(--lavender)'],
+    ['Fee',      'Free during testnet', 'var(--green)'],
+    ['Review',   '3–5 business days',   'var(--text)'],
+  ], () => {
+    showToast('Application submitted! Our team will review your project within 3–5 days.', 'success', 5500);
+  });
 }
 /* Countdowns are started by app.js DOMContentLoaded — no duplicate init needed here */
 </script>
