@@ -315,6 +315,27 @@ input[type=number] { -moz-appearance:textfield; }
             </div>
           </div>
 
+          <!-- Swap Route Visualizer -->
+          <div class="swap-route" id="swapRouteViz">
+            <div class="swap-route-node">
+              <div class="token-dot" style="width:22px;height:22px;font-size:.7rem;background:rgba(139,92,246,.18);color:#a78bfa;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;flex-shrink:0">N</div>
+              <span id="routeFrom">NOVA</span>
+            </div>
+            <div class="swap-route-line">
+              <div class="swap-route-dot"></div>
+            </div>
+            <div class="swap-route-node" style="color:var(--muted);font-size:.72rem">
+              ArcPool
+            </div>
+            <div class="swap-route-line">
+              <div class="swap-route-dot" style="animation-delay:.6s"></div>
+            </div>
+            <div class="swap-route-node">
+              <div class="token-dot" style="width:22px;height:22px;font-size:.7rem;background:rgba(34,211,238,.15);color:#22d3ee;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;flex-shrink:0">U</div>
+              <span id="routeTo">USDC</span>
+            </div>
+          </div>
+
           <!-- Swap Info -->
           <div style="border-radius:12px;overflow:hidden;margin:14px 0">
             <div style="background:rgba(255,255,255,.028);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px 16px;font-size:0.82rem">
@@ -865,6 +886,8 @@ function swapTokens() {
   const fb = document.getElementById('fromBal');
   const tb = document.getElementById('toBal');
   if (fb && tb) { const t = fb.textContent; fb.textContent = tb.textContent; tb.textContent = t; }
+  const rf = document.getElementById('routeFrom'); const rt = document.getElementById('routeTo');
+  if (rf) rf.textContent = fromSym; if (rt) rt.textContent = toSym;
   _updateSwapRate();
   _updateUSD();
 }
@@ -1150,6 +1173,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <script src="assets/js/animations.js"></script>
 <script src="assets/js/points.js"></script>
 <script src="assets/js/nova-effects.js"></script>
+<script src="assets/js/arc-live.js"></script>
 <script>
 // defi-page sparkline — renders after layout paints
 document.addEventListener('DOMContentLoaded', () => {

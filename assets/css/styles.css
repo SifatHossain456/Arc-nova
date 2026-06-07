@@ -711,6 +711,193 @@ tbody tr:hover td { background: rgba(139,92,246,.06); color: var(--text); }
    NovaFX — Effects Engine CSS
 ══════════════════════════════════════════════════════════ */
 
+/* ── Arc Live flash animation ── */
+@keyframes arcLiveFlash {
+  0%   { color: #c084fc; }
+  100% { color: inherit; }
+}
+.arc-live-flash { animation: arcLiveFlash .6s ease-out; }
+
+/* ── Arc status dot pulse ── */
+.arc-status-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--green); display: inline-block; flex-shrink: 0;
+}
+@keyframes arcStatusPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(16,185,129,.6); }
+  70%  { box-shadow: 0 0 0 7px rgba(16,185,129,0); }
+  100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+}
+.arc-status-pulse { animation: arcStatusPulse .8s ease-out; }
+
+/* ── Yield Calculator ── */
+.yield-calc-wrap {
+  background: rgba(22,22,28,.92);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 20px;
+  padding: 36px 40px;
+}
+.yield-slider {
+  -webkit-appearance: none;
+  width: 100%; height: 6px;
+  border-radius: 3px;
+  background: rgba(255,255,255,.1);
+  outline: none;
+  margin: 12px 0 6px;
+  cursor: pointer;
+}
+.yield-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--lavender);
+  box-shadow: 0 0 12px rgba(139,92,246,.5);
+  cursor: pointer;
+}
+.yield-result-box {
+  background: linear-gradient(135deg, rgba(139,92,246,.1), rgba(99,102,241,.06));
+  border: 1px solid rgba(139,92,246,.22);
+  border-radius: 16px;
+  padding: 24px 28px;
+  text-align: center;
+  transition: all .25s;
+}
+.yield-result-num {
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: var(--green);
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+/* ── Swap Route Visualizer ── */
+.swap-route {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 14px 16px;
+  background: rgba(255,255,255,.025);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 12px;
+  margin: 12px 0;
+  overflow: hidden;
+  position: relative;
+}
+.swap-route-node {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.swap-route-line {
+  flex: 1;
+  height: 2px;
+  background: rgba(255,255,255,.1);
+  position: relative;
+  margin: 0 8px;
+  overflow: hidden;
+  border-radius: 1px;
+}
+.swap-route-dot {
+  position: absolute;
+  top: 50%; transform: translateY(-50%);
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--lavender);
+  box-shadow: 0 0 8px rgba(139,92,246,.8);
+  animation: routeDot 1.8s ease-in-out infinite;
+}
+@keyframes routeDot {
+  0%   { left: -8px; opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+
+/* ── Arc Network Stats card ── */
+.arc-net-stat {
+  text-align: center;
+  padding: 18px 16px;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 14px;
+  flex: 1;
+}
+.arc-net-stat-val {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: var(--text);
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 5px;
+}
+.arc-net-stat-lbl {
+  font-size: 0.65rem;
+  color: var(--muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ── Arc Live Stats Strip ── */
+.arc-live-strip {
+  background: rgba(16,185,129,.04);
+  border: 1px solid rgba(16,185,129,.14);
+  border-radius: 18px;
+  padding: 20px 28px;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+.arc-live-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  min-width: 130px;
+}
+.arc-live-stats {
+  display: flex;
+  gap: 0;
+  flex: 1;
+  flex-wrap: wrap;
+}
+.arc-live-stats .arc-net-stat {
+  border-radius: 0;
+  border-right: none;
+  border-top: none;
+  border-bottom: none;
+  border-left: 1px solid rgba(255,255,255,.06);
+  background: transparent;
+  padding: 4px 20px;
+  flex: unset;
+  min-width: 110px;
+}
+.arc-live-stats .arc-net-stat:first-child { border-left: none; }
+.arc-live-stats .arc-net-stat-val { font-size: 1rem; }
+@media (max-width: 700px) {
+  .arc-live-strip { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .arc-live-stats { gap: 0; width: 100%; }
+  .arc-live-stats .arc-net-stat { padding: 8px 14px; }
+}
+
+/* ── Yield Calculator grid result ── */
+.yield-result-box {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+@media (max-width: 600px) {
+  .yield-result-box { grid-template-columns: repeat(2, 1fr); }
+  .yield-calc-wrap { padding: 24px 20px; }
+}
+
 /* ── Activity Feed ── */
 .nfx-act-wrap {
   display: flex;

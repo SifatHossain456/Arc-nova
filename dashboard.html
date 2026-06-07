@@ -169,6 +169,32 @@
       </div>
     </div>
 
+    <!-- Arc Live Chain Stats -->
+    <div class="arc-live-strip fade-up" style="margin-bottom:24px">
+      <div class="arc-live-header">
+        <span class="arc-status-dot"></span>
+        <span style="font-weight:800;font-size:.88rem;color:#fff;letter-spacing:-.01em">Arc Testnet</span>
+      </div>
+      <div class="arc-live-stats">
+        <div class="arc-net-stat">
+          <div class="arc-net-stat-val" data-arc-block>—</div>
+          <div class="arc-net-stat-lbl">Block Height</div>
+        </div>
+        <div class="arc-net-stat">
+          <div class="arc-net-stat-val" data-arc-blocktime>—</div>
+          <div class="arc-net-stat-lbl">Block Time</div>
+        </div>
+        <div class="arc-net-stat">
+          <div class="arc-net-stat-val" data-arc-status style="color:var(--muted)">Connecting…</div>
+          <div class="arc-net-stat-lbl">Network</div>
+        </div>
+        <div class="arc-net-stat">
+          <div class="arc-net-stat-val">5042002</div>
+          <div class="arc-net-stat-lbl">Chain ID</div>
+        </div>
+      </div>
+    </div>
+
     <div class="grid-2" style="margin-bottom:24px">
       <!-- TVL Chart -->
       <div class="chart-card fade-up d1">
@@ -433,5 +459,6 @@ function refreshData(){
 <script src="assets/js/animations.js"></script>
 <script src="assets/js/points.js"></script>
 <script src="assets/js/nova-effects.js"></script>
+<script src="assets/js/arc-live.js"></script>
 </body>
 </html>
