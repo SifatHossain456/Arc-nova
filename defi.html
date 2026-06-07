@@ -415,71 +415,97 @@ input[type=number] { -moz-appearance:textfield; }
         </div>
         <div class="defi-layout">
           <div class="swap-card glass-panel">
-            <div style="font-weight:900;font-size:1.05rem;margin-bottom:22px;letter-spacing:-0.02em">Stake NOVA</div>
 
-            <!-- STAKE -->
-            <div class="swap-box" style="margin-bottom:12px">
-              <div class="swap-label">Amount to Stake</div>
-              <div class="swap-row">
-                <div class="token-btn" style="cursor:default">
-                  <div class="token-dot" style="background:rgba(124,58,237,0.3);color:#a78bfa">N</div>NOVA
-                </div>
-                <input type="number" class="amount-input" id="stakeAmount" placeholder="0.00" aria-label="Amount to stake in NOVA" min="0">
-              </div>
-              <div style="display:flex;justify-content:space-between;margin-top:10px">
-                <span style="font-size:0.78rem;color:var(--muted)">Balance: <span class="balance-nova">—</span></span>
-                <div style="display:flex;gap:6px">
-                  <button class="btn btn-sm" style="padding:3px 8px;font-size:0.7rem;background:rgba(139,92,246,0.12);color:var(--lavender);border:1px solid rgba(139,92,246,0.25)" onclick="setStakeMaxPct(0.25)">25%</button>
-                  <button class="btn btn-sm" style="padding:3px 8px;font-size:0.7rem;background:rgba(139,92,246,0.12);color:var(--lavender);border:1px solid rgba(139,92,246,0.25)" onclick="setStakeMaxPct(0.5)">50%</button>
-                  <button class="btn btn-sm" style="padding:3px 8px;font-size:0.7rem;background:rgba(139,92,246,0.12);color:var(--lavender);border:1px solid rgba(139,92,246,0.25)" onclick="setStakeMaxPct(1)">MAX</button>
-                </div>
-              </div>
+            <!-- Inner stake sub-tabs -->
+            <div style="display:flex;gap:2px;background:rgba(255,255,255,.05);border-radius:10px;padding:3px;margin-bottom:20px">
+              <button id="stkTab-stake" onclick="switchStakeTab('stake')" type="button"
+                style="flex:1;padding:8px;border-radius:8px;border:none;cursor:pointer;font-size:0.85rem;font-weight:700;transition:all .18s;background:var(--lavender);color:#0d0e0f">
+                Stake
+              </button>
+              <button id="stkTab-unstake" onclick="switchStakeTab('unstake')" type="button"
+                style="flex:1;padding:8px;border-radius:8px;border:none;cursor:pointer;font-size:0.85rem;font-weight:700;transition:all .18s;background:transparent;color:var(--muted)">
+                Unstake
+              </button>
+              <button id="stkTab-claim" onclick="switchStakeTab('claim')" type="button"
+                style="flex:1;padding:8px;border-radius:8px;border:none;cursor:pointer;font-size:0.85rem;font-weight:700;transition:all .18s;background:transparent;color:var(--muted)">
+                Claim
+              </button>
             </div>
 
-            <!-- UNSTAKE -->
-            <div class="swap-box" style="margin-bottom:12px">
-              <div class="swap-label">Amount to Unstake</div>
-              <div class="swap-row">
-                <div class="token-btn" style="cursor:default">
-                  <div class="token-dot" style="background:rgba(124,58,237,0.3);color:#a78bfa">N</div>NOVA
+            <!-- STAKE panel -->
+            <div id="stkPanel-stake">
+              <div class="swap-box" style="margin-bottom:12px">
+                <div class="swap-label">You stake</div>
+                <div class="swap-row">
+                  <div class="token-btn" style="cursor:default">
+                    <div class="token-dot" style="background:rgba(124,58,237,0.3);color:#a78bfa">N</div>NOVA
+                  </div>
+                  <input type="number" class="amount-input" id="stakeAmount" placeholder="0.00" aria-label="Amount to stake in NOVA" min="0">
                 </div>
-                <input type="number" class="amount-input" id="unstakeAmount" placeholder="0.00" aria-label="Amount to unstake in NOVA" min="0">
+                <div style="display:flex;justify-content:space-between;margin-top:10px">
+                  <span style="font-size:0.78rem;color:var(--muted)">Balance: <span class="balance-nova">—</span></span>
+                  <div style="display:flex;gap:6px">
+                    <button class="btn btn-sm" style="padding:3px 8px;font-size:0.7rem;background:rgba(139,92,246,0.12);color:var(--lavender);border:1px solid rgba(139,92,246,0.25)" onclick="setStakeMaxPct(0.25)">25%</button>
+                    <button class="btn btn-sm" style="padding:3px 8px;font-size:0.7rem;background:rgba(139,92,246,0.12);color:var(--lavender);border:1px solid rgba(139,92,246,0.25)" onclick="setStakeMaxPct(0.5)">50%</button>
+                    <button class="btn btn-sm" style="padding:3px 8px;font-size:0.7rem;background:rgba(139,92,246,0.12);color:var(--lavender);border:1px solid rgba(139,92,246,0.25)" onclick="setStakeMaxPct(1)">MAX</button>
+                  </div>
+                </div>
               </div>
-              <div style="display:flex;justify-content:space-between;margin-top:10px">
-                <span style="font-size:0.78rem;color:var(--muted)">Staked: <span id="stakedValue">—</span></span>
-                <div style="display:flex;gap:6px">
-                  <button class="btn btn-sm" style="padding:3px 8px;font-size:0.7rem;background:rgba(139,92,246,0.12);color:var(--lavender);border:1px solid rgba(139,92,246,0.25)" onclick="setUnstakeMaxPct(0.25)">25%</button>
-                  <button class="btn btn-sm" style="padding:3px 8px;font-size:0.7rem;background:rgba(139,92,246,0.12);color:var(--lavender);border:1px solid rgba(139,92,246,0.25)" onclick="setUnstakeMaxPct(0.5)">50%</button>
-                  <button class="btn btn-sm" style="padding:3px 8px;font-size:0.7rem;background:rgba(139,92,246,0.12);color:var(--lavender);border:1px solid rgba(139,92,246,0.25)" onclick="setUnstakeMaxPct(1)">MAX</button>
+              <!-- Reward estimate -->
+              <div style="background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.18);border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:0.82rem;display:flex;justify-content:space-between;align-items:center">
+                <span style="color:var(--muted)">You earn (est. 1y)</span>
+                <span style="color:var(--green);font-weight:700" id="stakeEstReward">— NOVA</span>
+              </div>
+              <button class="btn btn-primary btn-glow" id="stakeBtn" style="width:100%;padding:14px;font-weight:800;font-size:1rem;border-radius:12px" onclick="doStake()" type="button">Stake NOVA</button>
+            </div>
+
+            <!-- UNSTAKE panel -->
+            <div id="stkPanel-unstake" style="display:none">
+              <div class="swap-box" style="margin-bottom:12px">
+                <div class="swap-label">You unstake</div>
+                <div class="swap-row">
+                  <div class="token-btn" style="cursor:default">
+                    <div class="token-dot" style="background:rgba(124,58,237,0.3);color:#a78bfa">N</div>NOVA
+                  </div>
+                  <input type="number" class="amount-input" id="unstakeAmount" placeholder="0.00" aria-label="Amount to unstake in NOVA" min="0">
                 </div>
+                <div style="display:flex;justify-content:space-between;margin-top:10px">
+                  <span style="font-size:0.78rem;color:var(--muted)">Staked: <span id="stakedValue">—</span></span>
+                  <div style="display:flex;gap:6px">
+                    <button class="btn btn-sm" style="padding:3px 8px;font-size:0.7rem;background:rgba(139,92,246,0.12);color:var(--lavender);border:1px solid rgba(139,92,246,0.25)" onclick="setUnstakeMaxPct(0.25)">25%</button>
+                    <button class="btn btn-sm" style="padding:3px 8px;font-size:0.7rem;background:rgba(139,92,246,0.12);color:var(--lavender);border:1px solid rgba(139,92,246,0.25)" onclick="setUnstakeMaxPct(0.5)">50%</button>
+                    <button class="btn btn-sm" style="padding:3px 8px;font-size:0.7rem;background:rgba(139,92,246,0.12);color:var(--lavender);border:1px solid rgba(139,92,246,0.25)" onclick="setUnstakeMaxPct(1)">MAX</button>
+                  </div>
+                </div>
+              </div>
+              <div style="background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:0.82rem;display:flex;justify-content:space-between;align-items:center">
+                <span style="color:var(--muted)">Unbonding period</span>
+                <span style="color:var(--text-2);font-weight:600">24 hours</span>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <button class="btn btn-outline" id="unstakeBtn" style="padding:14px;font-weight:700;border-radius:12px" onclick="doUnstake()" type="button">Unstake</button>
+                <button class="btn btn-ghost" style="padding:14px;font-size:0.85rem;border-radius:12px" onclick="doWithdraw()" type="button">Withdraw</button>
               </div>
             </div>
 
-            <div style="background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px;margin-bottom:16px;font-size:0.82rem">
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)">
-                <span style="color:var(--muted)">Current APY</span><span class="val-green" id="stake-info-apy-card">—</span>
+            <!-- CLAIM panel -->
+            <div id="stkPanel-claim" style="display:none">
+              <div style="background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px;margin-bottom:16px">
+                <div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Pending Rewards</div>
+                <div style="font-size:2rem;font-weight:900;color:var(--green);letter-spacing:-0.03em"><span id="earnedRewards">—</span> <span style="font-size:1rem;font-weight:600;color:var(--muted)">NOVA</span></div>
               </div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)">
-                <span style="color:var(--muted)">Unbonding Period</span><span style="color:var(--text-2);font-weight:600">24 hours</span>
+              <div style="background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px;margin-bottom:16px;font-size:0.82rem">
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)">
+                  <span style="color:var(--muted)">Current APY</span><span class="val-green" id="stake-info-apy-card">—</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0">
+                  <span style="color:var(--muted)">Unbonding queue</span>
+                  <span style="color:var(--yellow);font-weight:700;font-size:0.78rem"><span id="unbondingDisplay">—</span></span>
+                </div>
               </div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)">
-                <span style="color:var(--muted)">Pending Rewards</span>
-                <span class="val-purple"><span id="earnedRewards">—</span></span>
-              </div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0">
-                <span style="color:var(--muted)">Unbonding</span>
-                <span style="color:var(--yellow);font-weight:700;font-size:0.78rem"><span id="unbondingDisplay">—</span></span>
-              </div>
+              <button class="btn btn-primary btn-glow" style="width:100%;padding:14px;font-weight:800;font-size:1rem;border-radius:12px" onclick="doClaim()" type="button">Claim Rewards</button>
             </div>
 
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-              <button class="btn btn-primary btn-glow" id="stakeBtn" style="padding:13px;font-weight:800;border-radius:12px" onclick="doStake()" type="button">Stake NOVA</button>
-              <button class="btn btn-outline" id="unstakeBtn" style="padding:13px;font-weight:700;border-radius:12px" onclick="doUnstake()" type="button">Unstake</button>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-              <button class="btn btn-ghost" style="padding:11px;font-size:0.82rem;border-radius:12px" onclick="doClaim()" type="button">Claim Rewards</button>
-              <button class="btn btn-ghost" style="padding:11px;font-size:0.82rem;border-radius:12px" onclick="doWithdraw()" type="button">Withdraw</button>
-            </div>
           </div>
           <div>
             <div style="font-weight:700;margin-bottom:14px">Staking Pools</div>
@@ -962,6 +988,35 @@ async function setFromMax() {
     calcSwap();
   } catch { showToast('Could not read balance', 'error'); }
 }
+
+/* ── Stake inner sub-tabs ── */
+function switchStakeTab(tab) {
+  ['stake','unstake','claim'].forEach(t => {
+    const btn = document.getElementById('stkTab-' + t);
+    const panel = document.getElementById('stkPanel-' + t);
+    const active = t === tab;
+    if (btn) {
+      btn.style.background = active ? 'var(--lavender)' : 'transparent';
+      btn.style.color = active ? '#0d0e0f' : 'var(--muted)';
+    }
+    if (panel) panel.style.display = active ? '' : 'none';
+  });
+}
+
+/* ── Stake estimate (1-year reward preview) ── */
+function _updateStakeEstimate() {
+  const inp = document.getElementById('stakeAmount');
+  const out = document.getElementById('stakeEstReward');
+  if (!inp || !out) return;
+  const amt = parseFloat(inp.value);
+  if (!amt || amt <= 0) { out.textContent = '— NOVA'; return; }
+  const apy = 0.125;
+  out.textContent = (amt * apy).toFixed(4) + ' NOVA';
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const si = document.getElementById('stakeAmount');
+  if (si) si.addEventListener('input', _updateStakeEstimate);
+});
 
 /* ── Stake tab ── */
 async function doStake() {
