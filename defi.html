@@ -345,65 +345,38 @@ input[type=number] { -moz-appearance:textfield; }
           </button>
         </div>
 
-        <!-- RIGHT: Token prices + recent swaps -->
+        <!-- RIGHT: NOVA price chart + live activity -->
         <div style="display:flex;flex-direction:column;gap:16px">
-          <div class="card glass-panel">
-            <div style="font-weight:800;margin-bottom:18px;font-size:0.9rem;letter-spacing:-0.01em">Token Prices</div>
-            <div style="display:flex;flex-direction:column;gap:12px">
-              <div style="display:flex;align-items:center;justify-content:space-between">
-                <div style="display:flex;align-items:center;gap:10px">
-                  <div class="token-dot" style="background:rgba(124,58,237,0.25);color:#a78bfa;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900">A</div>
-                  <div><div style="font-weight:700">ARC</div><div style="font-size:0.75rem;color:var(--muted)">Arc Network</div></div>
-                </div>
-                <div style="text-align:right">
-                  <div style="font-weight:800">—</div>
-                  <div style="font-size:0.78rem;color:var(--muted)">—</div>
+
+          <!-- NOVA Price + Sparkline -->
+          <div class="card glass-panel" style="padding:20px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div class="token-dot" style="background:rgba(124,58,237,.25);color:#a78bfa;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;flex-shrink:0">N</div>
+                <div>
+                  <div style="font-weight:800;font-size:0.9rem">NOVA / USDC</div>
+                  <div style="font-size:0.7rem;color:var(--muted)">Arc Testnet</div>
                 </div>
               </div>
-              <div class="divider" style="margin:4px 0"></div>
-              <div style="display:flex;align-items:center;justify-content:space-between">
-                <div style="display:flex;align-items:center;gap:10px">
-                  <div class="token-dot" style="background:rgba(16,185,129,0.2);color:#10b981;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900">T</div>
-                  <div><div style="font-weight:700">USDT</div><div style="font-size:0.75rem;color:var(--muted)">Tether</div></div>
-                </div>
-                <div style="text-align:right">
-                  <div style="font-weight:800">$1.00</div>
-                  <div style="font-size:0.78rem;color:var(--muted)">Stable</div>
-                </div>
-              </div>
-              <div class="divider" style="margin:4px 0"></div>
-              <div style="display:flex;align-items:center;justify-content:space-between">
-                <div style="display:flex;align-items:center;gap:10px">
-                  <div class="token-dot" style="background:rgba(16,185,129,0.2);color:#10b981;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900">U</div>
-                  <div><div style="font-weight:700">USDC</div><div style="font-size:0.75rem;color:var(--muted)">USD Coin</div></div>
-                </div>
-                <div style="text-align:right">
-                  <div style="font-weight:800">$1.00</div>
-                  <div style="font-size:0.78rem;color:var(--muted)">Stable</div>
-                </div>
+              <div style="text-align:right">
+                <div style="font-weight:900;font-size:1.05rem" id="defiNovaPriceVal">$0.0847</div>
+                <div style="font-size:0.72rem;font-weight:700;color:var(--green)" id="novaDefiSparkline_pct">+2.34%</div>
               </div>
             </div>
+            <div class="nfx-sparkline-wrap" id="novaDefiSparkline" style="height:60px;margin:10px 0 0"></div>
           </div>
-          <div class="card glass-panel">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-              <div style="font-weight:800;font-size:0.9rem;letter-spacing:-0.01em">Recent Swaps</div>
-              <span style="display:inline-flex;align-items:center;gap:5px;font-size:0.68rem;color:var(--green);font-weight:700"><span class="live-dot"></span>Live</span>
-            </div>
-            <div style="display:flex;flex-direction:column;gap:2px;font-size:0.82rem">
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:8px;transition:background 0.15s" onmouseover="this.style.background='rgba(255,255,255,.03)'" onmouseout="this.style.background='transparent'">
-                <span style="color:var(--text-2)"><span style="color:var(--lavender);font-weight:700">100</span> NOVA → <span style="color:var(--green);font-weight:700">247</span> USDC</span><span style="color:var(--muted);font-size:0.75rem">4s</span>
-              </div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:8px;transition:background 0.15s" onmouseover="this.style.background='rgba(255,255,255,.03)'" onmouseout="this.style.background='transparent'">
-                <span style="color:var(--text-2)"><span style="color:var(--green);font-weight:700">500</span> USDC → <span style="color:var(--lavender);font-weight:700">500K</span> NOVA</span><span style="color:var(--muted);font-size:0.75rem">22s</span>
-              </div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:8px;transition:background 0.15s" onmouseover="this.style.background='rgba(255,255,255,.03)'" onmouseout="this.style.background='transparent'">
-                <span style="color:var(--text-2)"><span style="color:var(--lavender);font-weight:700">250</span> NOVA → <span style="color:var(--green);font-weight:700">0.25</span> USDC</span><span style="color:var(--muted);font-size:0.75rem">1m</span>
-              </div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:8px;transition:background 0.15s" onmouseover="this.style.background='rgba(255,255,255,.03)'" onmouseout="this.style.background='transparent'">
-                <span style="color:var(--text-2)"><span style="color:var(--green);font-weight:700">1,000</span> USDC → <span style="color:var(--lavender);font-weight:700">1M</span> NOVA</span><span style="color:var(--muted);font-size:0.75rem">2m</span>
+
+          <!-- Live Activity Feed -->
+          <div class="nfx-feed-card" style="flex:1">
+            <div class="nfx-feed-header">
+              <div class="nfx-feed-title">Live Activity</div>
+              <div class="nfx-live-badge">
+                <div class="nfx-live-dot"></div>Live
               </div>
             </div>
+            <div id="novaActivityFeed" class="nfx-act-wrap"></div>
           </div>
+
         </div>
       </div>
 
@@ -1146,5 +1119,20 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 <script src="assets/js/animations.js"></script>
 <script src="assets/js/points.js"></script>
+<script src="assets/js/nova-effects.js"></script>
+<script>
+// defi-page sparkline — renders after layout paints
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    const prices = NovaFX.fakePrices(48, 0.0847, 0.055);
+    NovaFX.sparkline('novaDefiSparkline', prices);
+    // update pct badge for defi page
+    const up  = prices[prices.length-1] >= prices[0];
+    const pct = (((prices[prices.length-1]-prices[0])/prices[0])*100).toFixed(2);
+    const el  = document.getElementById('novaDefiSparkline_pct');
+    if (el) { el.textContent = (up?'+':'')+pct+'%'; el.style.color = up?'var(--green)':'var(--red)'; }
+  }, 350);
+});
+</script>
 </body>
 </html>

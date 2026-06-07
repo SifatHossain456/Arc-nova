@@ -171,6 +171,7 @@ async function claimFaucet() {
     await tx.wait();
     txSuccess('Claimed 1,000 NOVA!');
     window.ArcPoints?.award('faucet');
+    document.dispatchEvent(new CustomEvent('arcTxSuccess', { detail: { type: 'faucet' } }));
   } catch (err) { txError(_parseErr(err)); }
 }
 
@@ -192,6 +193,7 @@ async function executeSwap(fromSym, toSym, amountIn, slippagePct = 0.5) {
       else                    { _demo.usdc -= amountIn; _demo.nova += amtOut; }
     }, `Swapped ${amountIn} ${fromSym} → ${amtOut.toFixed(4)} ${toSym}`);
     window.ArcPoints?.award('swap');
+    document.dispatchEvent(new CustomEvent('arcTxSuccess', { detail: { type: 'swap', btn: document.getElementById('swapBtn') } }));
     return;
   }
 
@@ -221,6 +223,7 @@ async function executeSwap(fromSym, toSym, amountIn, slippagePct = 0.5) {
     await tx.wait();
     txSuccess(`Swapped ${amountIn} ${fromSym} → ${toSym}`);
     window.ArcPoints?.award('swap');
+    document.dispatchEvent(new CustomEvent('arcTxSuccess', { detail: { type: 'swap', btn: document.getElementById('swapBtn') } }));
   } catch (err) { txError(_parseErr(err)); }
 }
 
@@ -239,6 +242,7 @@ async function executeStake(amountStr) {
       _demo.staked += amount;
     }, `Staked ${amount} NOVA! Earning ~12% APY`);
     window.ArcPoints?.award('stake');
+    document.dispatchEvent(new CustomEvent('arcTxSuccess', { detail: { type: 'stake', btn: document.getElementById('stakeBtn') } }));
     return;
   }
 
@@ -254,6 +258,7 @@ async function executeStake(amountStr) {
     await tx.wait();
     txSuccess(`Staked ${amount} NOVA successfully!`);
     window.ArcPoints?.award('stake');
+    document.dispatchEvent(new CustomEvent('arcTxSuccess', { detail: { type: 'stake', btn: document.getElementById('stakeBtn') } }));
     _refreshOnchainUI();
   } catch (err) { txError(_parseErr(err)); }
 }
@@ -284,6 +289,7 @@ async function executeUnstake(amountStr) {
     await tx.wait();
     txSuccess('Unstake requested! Tokens unlock after 24h.');
     window.ArcPoints?.award('unstake');
+    document.dispatchEvent(new CustomEvent('arcTxSuccess', { detail: { type: 'unstake' } }));
     _refreshOnchainUI();
   } catch (err) { txError(_parseErr(err)); }
 }
@@ -323,6 +329,7 @@ async function executeWithdraw() {
     txPending(tx.hash);
     await tx.wait();
     txSuccess('NOVA withdrawn to your wallet!');
+    document.dispatchEvent(new CustomEvent('arcTxSuccess', { detail: { type: 'withdraw' } }));
     _refreshOnchainUI();
   } catch (err) { txError(_parseErr(err)); }
 }
@@ -343,6 +350,7 @@ async function executeClaim() {
       _demo.rewards  = 0;
     }, `Claimed ${_demo.rewards.toFixed(4)} NOVA rewards!`);
     window.ArcPoints?.award('claim_rewards');
+    document.dispatchEvent(new CustomEvent('arcTxSuccess', { detail: { type: 'claim' } }));
     return;
   }
 
@@ -361,6 +369,7 @@ async function executeClaim() {
     await tx.wait();
     txSuccess('Staking rewards claimed!');
     window.ArcPoints?.award('claim_rewards');
+    document.dispatchEvent(new CustomEvent('arcTxSuccess', { detail: { type: 'claim', btn: document.querySelector('[onclick="doClaim()"]') } }));
     _refreshOnchainUI();
   } catch (err) { txError(_parseErr(err)); }
 }

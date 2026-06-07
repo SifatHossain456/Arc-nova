@@ -559,19 +559,19 @@ body { background:#040412; }
   <!-- Stats -->
   <div class="hero-stats fade-up d4">
     <div class="hstat">
-      <span class="hstat-num" data-live="hero-tvl">—</span>
+      <span class="hstat-num" data-count-to="2.4" data-prefix="$" data-suffix="M+" data-decimals="1">—</span>
       <div class="hstat-lbl">Total Value Locked</div>
     </div>
     <div class="hstat">
-      <span class="hstat-num">47</span>
+      <span class="hstat-num" data-count-to="47">0</span>
       <div class="hstat-lbl">Projects</div>
     </div>
     <div class="hstat">
-      <span class="hstat-num" data-live="hero-users">—</span>
+      <span class="hstat-num" data-count-to="1247" data-suffix="+">0</span>
       <div class="hstat-lbl">Active Users</div>
     </div>
     <div class="hstat">
-      <span class="hstat-num" data-live="hero-vol">—</span>
+      <span class="hstat-num" data-count-to="847" data-prefix="$" data-suffix="K">0</span>
       <div class="hstat-lbl">24h Volume</div>
     </div>
   </div>
@@ -614,6 +614,65 @@ body { background:#040412; }
     </div>
   </div>
 </section>
+
+<!-- ══════════════════════════════════════════════════════════
+     LIVE NETWORK ACTIVITY + NOVA PRICE
+══════════════════════════════════════════════════════════ -->
+<section class="section" style="padding-top:0;padding-bottom:40px">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px" class="nfx-live-grid">
+
+      <!-- Activity Feed -->
+      <div class="nfx-feed-card fade-up d1">
+        <div class="nfx-feed-header">
+          <div class="nfx-feed-title">Live Network Activity</div>
+          <div class="nfx-live-badge">
+            <div class="nfx-live-dot"></div>Live
+          </div>
+        </div>
+        <div id="novaActivityFeed" class="nfx-act-wrap"></div>
+      </div>
+
+      <!-- NOVA Price + Sparkline + Protocol Stats -->
+      <div class="nfx-feed-card fade-up d2">
+        <div class="nfx-feed-header">
+          <div class="nfx-feed-title">NOVA / USDC</div>
+          <div class="nfx-live-badge">
+            <div class="nfx-live-dot"></div>24h
+          </div>
+        </div>
+        <div class="nfx-price-row">
+          <span class="nfx-price-val">$0.0847</span>
+          <span class="nfx-price-pct" id="novaSparkline_pct">+2.34%</span>
+        </div>
+        <div class="nfx-sparkline-wrap" id="novaSparkline" style="height:72px;margin-bottom:18px"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:12px 14px">
+            <div style="font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px">Stake APY</div>
+            <div style="font-size:1.1rem;font-weight:800;color:var(--green)">12.5%</div>
+          </div>
+          <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:12px 14px">
+            <div style="font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px">Pool TVL</div>
+            <div style="font-size:1.1rem;font-weight:800;color:var(--cyan)">$2.4M</div>
+          </div>
+          <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:12px 14px">
+            <div style="font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px">24h Swaps</div>
+            <div style="font-size:1.1rem;font-weight:800;color:var(--lavender)" data-count-to="342">0</div>
+          </div>
+          <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:12px 14px">
+            <div style="font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px">Stakers</div>
+            <div style="font-size:1.1rem;font-weight:800;color:var(--yellow)" data-count-to="891">0</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+@media(max-width:640px){.nfx-live-grid{grid-template-columns:1fr!important}}
+</style>
 
 <!-- ══════════════════════════════════════════════════════════
      ECOSYSTEM
@@ -910,5 +969,6 @@ body { background:#040412; }
 <script src="assets/js/animations.js"></script>
 <script src="assets/js/livedata.js"></script>
 <script src="assets/js/points.js"></script>
+<script src="assets/js/nova-effects.js"></script>
 </body>
 </html>

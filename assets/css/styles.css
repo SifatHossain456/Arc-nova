@@ -713,3 +713,205 @@ tbody tr:hover td { background: rgba(139,92,246,.06); color: var(--text); }
 .pill-badge.up::before { content: '↑'; }
 .pill-badge.down { background: rgba(239,68,68,.1); border-color: rgba(239,68,68,.25); color: var(--red); }
 .pill-badge.down::before { content: '↓'; }
+
+/* ══════════════════════════════════════════════════════════
+   NovaFX — Effects Engine CSS
+══════════════════════════════════════════════════════════ */
+
+/* ── Activity Feed ── */
+.nfx-act-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow: hidden;
+}
+.nfx-act-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(255,255,255,.045);
+  font-size: 0.8rem;
+}
+.nfx-act-row:last-child { border-bottom: none; }
+.nfx-act-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.nfx-act-body { flex: 1; min-width: 0; }
+.nfx-act-addr {
+  color: var(--lavender);
+  font-weight: 700;
+  font-size: 0.78rem;
+}
+.nfx-act-txt { color: var(--text-2); }
+.nfx-act-age {
+  color: var(--muted);
+  font-size: 0.72rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Achievement Toast ── */
+.nfx-ach {
+  position: fixed;
+  right: 24px;
+  z-index: 99998;
+  background: rgba(18,18,24,.97);
+  border: 1px solid rgba(139,92,246,.45);
+  border-radius: 14px;
+  padding: 14px 18px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  min-width: 270px;
+  max-width: 310px;
+  box-shadow: 0 8px 40px rgba(0,0,0,.5), 0 0 0 1px rgba(139,92,246,.08);
+  transform: translateX(calc(100% + 32px));
+  transition: transform .42s cubic-bezier(.22,1,.36,1);
+  overflow: hidden;
+}
+.nfx-ach-show { transform: translateX(0); }
+.nfx-ach-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.nfx-ach-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.02em;
+  margin-bottom: 3px;
+}
+.nfx-ach-desc {
+  font-size: 0.76rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.nfx-ach-bar {
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(90deg, var(--lavender), var(--cyan));
+  transform-origin: left;
+  animation: nfxBarShrink 4s linear forwards;
+}
+@keyframes nfxBarShrink {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}
+
+/* ── Sparkline container ── */
+.nfx-sparkline-wrap {
+  width: 100%;
+  height: 44px;
+  margin: 10px 0 6px;
+}
+
+/* ── Try Demo floating button ── */
+.nfx-try-demo {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 24px;
+  background: linear-gradient(135deg, #7c3aed, #6366f1);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  box-shadow: 0 4px 24px rgba(124,58,237,.55), 0 2px 8px rgba(0,0,0,.4);
+  transition: all .22s cubic-bezier(.22,1,.36,1);
+  white-space: nowrap;
+}
+.nfx-try-demo:hover {
+  transform: translateX(-50%) scale(1.06);
+  box-shadow: 0 6px 32px rgba(124,58,237,.7), 0 2px 8px rgba(0,0,0,.4);
+}
+.nfx-demo-pulse {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  animation: nfxDemoPulse 1.8s ease infinite;
+  flex-shrink: 0;
+}
+@keyframes nfxDemoPulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: .55; transform: scale(1.4); }
+}
+/* hide on defi page when wallet already connected */
+.wallet-connected .nfx-try-demo { display: none; }
+
+/* ── Sparkline price row ── */
+.nfx-price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+  font-size: 0.78rem;
+}
+.nfx-price-val {
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+.nfx-price-pct {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 100px;
+  background: rgba(16,185,129,.12);
+  border: 1px solid rgba(16,185,129,.25);
+  color: var(--green);
+}
+
+/* ── Live feed card ── */
+.nfx-feed-card {
+  background: rgba(22,22,28,.92);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 16px;
+  padding: 20px 22px;
+}
+.nfx-feed-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.nfx-feed-title {
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+.nfx-live-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--green);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.nfx-live-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: nfxLiveDot 1.6s ease infinite;
+}
+@keyframes nfxLiveDot {
+  0%,100% { opacity: 1; }
+  50%      { opacity: .3; }
+}
