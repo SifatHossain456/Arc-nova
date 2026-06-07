@@ -149,7 +149,7 @@ input[type=number] { -moz-appearance:textfield; }
   <div class="nav-right">
     <span class="badge-testnet">Testnet</span>
     <div class="notif-wrapper">
-      <button class="notif-btn" onclick="toggleNotifPanel();renderNotifications()" aria-label="Notifications" type="button">🔔<span class="notif-badge" aria-label="3 unread">3</span></button>
+      <button class="notif-btn" onclick="toggleNotifPanel();renderNotifications()" aria-label="Notifications" type="button">🔔<span class="notif-badge" style="display:none">0</span></button>
       <div class="notif-panel" id="notifPanel" role="status" aria-live="polite"></div>
     </div>
     <button class="btn btn-primary" onclick="connectWallet()" id="walletBtn" type="button">Connect Wallet</button>

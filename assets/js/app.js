@@ -207,35 +207,47 @@ function startCountdown(targetMs, containerId) {
 
 /* ── NOTIFICATIONS ── */
 const _notifs = [
-  { text:'ArcVault raise is 97% full — act fast!',  time:'2m ago',  color:'var(--red)' },
-  { text:'NovaLend whitelist is now open',           time:'14m ago', color:'var(--lavender)' },
-  { text:'Your NOVA stake is earning 12% APY',       time:'1h ago',  color:'var(--green)' },
 ];
 
 function toggleNotifPanel() {
   document.getElementById('notifPanel')?.classList.toggle('show');
 }
 
+function _updateNotifBadge() {
+  document.querySelectorAll('.notif-badge').forEach(b => {
+    b.textContent = _notifs.length;
+    b.style.display = _notifs.length ? '' : 'none';
+  });
+}
+
+function addNotif(text, color) {
+  _notifs.unshift({ text, time: 'just now', color: color || 'var(--lavender)' });
+  if (_notifs.length > 10) _notifs.pop();
+  _updateNotifBadge();
+}
+
 function renderNotifications() {
   const panel = document.getElementById('notifPanel');
   if (!panel) return;
+  const inner = _notifs.length
+    ? _notifs.map(n => `
+        <div class="notif-item" style="display:flex;gap:10px;align-items:flex-start">
+          <div class="notif-dot" style="background:${n.color};margin-top:6px"></div>
+          <div>
+            <div style="font-weight:600;color:var(--text);font-size:0.83rem;margin-bottom:2px">${n.text}</div>
+            <div style="color:var(--muted);font-size:0.74rem">${n.time}</div>
+          </div>
+        </div>`).join('')
+    : `<div style="padding:24px;text-align:center;color:var(--muted);font-size:0.82rem">No notifications yet</div>`;
   panel.innerHTML = `
     <div class="notif-panel-header">
       <span>Notifications</span>
-      <span style="color:var(--red);font-size:0.72rem;font-weight:700">${_notifs.length} new</span>
+      ${_notifs.length ? `<span style="color:var(--red);font-size:0.72rem;font-weight:700">${_notifs.length} new</span>` : ''}
     </div>
-    ${_notifs.map(n => `
-      <div class="notif-item" style="display:flex;gap:10px;align-items:flex-start">
-        <div class="notif-dot" style="background:${n.color};margin-top:6px"></div>
-        <div>
-          <div style="font-weight:600;color:var(--text);font-size:0.83rem;margin-bottom:2px">${n.text}</div>
-          <div style="color:var(--muted);font-size:0.74rem">${n.time}</div>
-        </div>
-      </div>
-    `).join('')}
-    <div style="padding:10px 16px;text-align:center;border-top:1px solid var(--border)">
-      <a href="#" style="font-size:0.78rem;color:var(--lavender);font-weight:700;text-decoration:none">Mark all read</a>
-    </div>`;
+    ${inner}
+    ${_notifs.length ? `<div style="padding:10px 16px;text-align:center;border-top:1px solid var(--border)">
+      <a href="#" onclick="_notifs.length=0;_updateNotifBadge();renderNotifications();return false" style="font-size:0.78rem;color:var(--lavender);font-weight:700;text-decoration:none">Mark all read</a>
+    </div>` : ''}`;
 }
 
 /* ── CHART HELPERS ── */
@@ -273,6 +285,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* Init notifications */
   renderNotifications();
+  _updateNotifBadge();
+
+  /* Real notifications from tx events */
+  const _txMsgs = {
+    swap:    ['Swap completed on Arc Testnet', 'var(--lavender)'],
+    stake:   ['NOVA staked successfully',      'var(--green)'],
+    unstake: ['NOVA unstaked',                 'var(--green)'],
+    claim:   ['Rewards claimed',               'var(--green)'],
+    faucet:  ['Faucet: 1,000 NOVA received',   'var(--cyan)'],
+    withdraw:['Withdrawal complete',           'var(--green)'],
+  };
+  document.addEventListener('arcTxSuccess', e => {
+    const [msg, col] = _txMsgs[e.detail?.type] || ['Transaction confirmed', 'var(--green)'];
+    addNotif(msg, col);
+    renderNotifications();
+  });
 
   /* Start countdowns — keyed by absolute timestamp stored in sessionStorage
      so refreshing the page doesn't reset the timer */
