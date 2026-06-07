@@ -345,12 +345,12 @@ input[type=number] { -moz-appearance:textfield; }
           </button>
         </div>
 
-        <!-- RIGHT: NOVA price chart + live activity -->
+        <!-- RIGHT: Protocol info -->
         <div style="display:flex;flex-direction:column;gap:16px">
 
-          <!-- NOVA Price + Sparkline -->
+          <!-- NOVA / USDC price card -->
           <div class="card glass-panel" style="padding:20px">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
               <div style="display:flex;align-items:center;gap:8px">
                 <div class="token-dot" style="background:rgba(124,58,237,.25);color:#a78bfa;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;flex-shrink:0">N</div>
                 <div>
@@ -360,21 +360,51 @@ input[type=number] { -moz-appearance:textfield; }
               </div>
               <div style="text-align:right">
                 <div style="font-weight:900;font-size:1.05rem" id="defiNovaPriceVal">—</div>
-                <div style="font-size:0.72rem;font-weight:700;color:var(--muted)" id="novaDefiSparkline_pct">24h</div>
+                <div style="font-size:0.72rem;color:var(--muted)">Live rate</div>
               </div>
             </div>
-            <div class="nfx-sparkline-wrap" id="novaDefiSparkline" style="height:60px;margin:10px 0 0"></div>
+            <div style="display:flex;flex-direction:column;gap:10px;font-size:0.82rem">
+              <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)">
+                <span style="color:var(--muted)">Stake APY</span>
+                <span style="color:var(--green);font-weight:700" data-live="stake-apy">—</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)">
+                <span style="color:var(--muted)">Pool TVL</span>
+                <span style="color:var(--cyan);font-weight:700" data-live="pool-tvl">—</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:8px 0">
+                <span style="color:var(--muted)">Network</span>
+                <span style="color:var(--lavender);font-weight:700">Arc Testnet</span>
+              </div>
+            </div>
           </div>
 
-          <!-- Live Activity Feed -->
-          <div class="nfx-feed-card" style="flex:1">
-            <div class="nfx-feed-header">
-              <div class="nfx-feed-title">Live Activity</div>
-              <div class="nfx-live-badge">
-                <div class="nfx-live-dot"></div>Live
+          <!-- Token info -->
+          <div class="card glass-panel">
+            <div style="font-weight:800;margin-bottom:16px;font-size:0.9rem">Tokens</div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="token-dot" style="background:rgba(124,58,237,0.25);color:#a78bfa;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900">N</div>
+                  <div><div style="font-weight:700">NOVA</div><div style="font-size:0.75rem;color:var(--muted)">Arc Nova Token</div></div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font-weight:800" id="novaPriceRight">—</div>
+                  <div style="font-size:0.78rem;color:var(--muted)">Testnet</div>
+                </div>
+              </div>
+              <div class="divider" style="margin:4px 0"></div>
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="token-dot" style="background:rgba(16,185,129,0.2);color:#10b981;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900">U</div>
+                  <div><div style="font-weight:700">USDC</div><div style="font-size:0.75rem;color:var(--muted)">USD Coin</div></div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font-weight:800">$1.00</div>
+                  <div style="font-size:0.78rem;color:var(--muted)">Stable</div>
+                </div>
               </div>
             </div>
-            <div id="novaActivityFeed" class="nfx-act-wrap"></div>
           </div>
 
         </div>
