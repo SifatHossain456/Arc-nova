@@ -223,7 +223,6 @@ const NovaFX = (() => {
   ───────────────────────────────────────────────────────────────── */
   document.addEventListener('DOMContentLoaded', () => {
     initCounters();
-    initTryDemo();
 
     // Render sparkline after layout paints
     setTimeout(() => {
