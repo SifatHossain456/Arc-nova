@@ -29,17 +29,7 @@ const ACHIEVEMENTS = [
   { id:'xp1000',   icon:'🎖', title:'Centurion',      action:'_xp',            n:1000 },
 ];
 
-const FAKE_BOARD = [
-  { addr:'0x4F2a…8B3C', xp:14280 }, { addr:'0x9E1b…2D4F', xp:11940 },
-  { addr:'0x7C8d…A1E2', xp:9820  }, { addr:'0xB3F5…C6D8', xp:8560  },
-  { addr:'0x2A9e…F4B7', xp:7340  }, { addr:'0x6D1c…9E3A', xp:6180  },
-  { addr:'0xE4B8…3F2C', xp:5240  }, { addr:'0x1F7a…D5E9', xp:4390  },
-  { addr:'0x8C3d…7A4B', xp:3720  }, { addr:'0xA2E6…1C8F', xp:3100  },
-  { addr:'0x5B9f…4D2E', xp:2650  }, { addr:'0x3E7c…8A1D', xp:2210  },
-  { addr:'0xD4A1…6B3F', xp:1890  }, { addr:'0x7F2e…C9D4', xp:1560  },
-  { addr:'0x9B5a…2E7C', xp:1340  }, { addr:'0xC1D8…5F3A', xp:1100  },
-  { addr:'0x4E3b…A8D1', xp:920   }, { addr:'0x8A7f…3C6E', xp:780   },
-];
+const FAKE_BOARD = [];
 
 function _load() {
   try {
@@ -166,6 +156,11 @@ function renderLeaderboard(state) {
       <span class="lb-xp">${u.xp.toLocaleString()} <span style="font-size:.7rem;color:var(--muted)">XP</span></span>
     </div>`;
   };
+
+  if (board.length === 0 || (board.length === 1 && board[0].isMe && board[0].xp === 0)) {
+    el.innerHTML = '<div style="text-align:center;padding:24px;color:var(--muted);font-size:0.85rem">No activity yet — be the first to earn XP!</div>';
+    return;
+  }
 
   el.innerHTML = top3.map(row).join('')
     + (gap ? '<div class="lb-sep">· · ·</div>' : '')
