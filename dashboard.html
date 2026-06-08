@@ -196,26 +196,34 @@
     </div>
 
     <div class="grid-2" style="margin-bottom:24px">
-      <!-- TVL Chart -->
+      <!-- Transaction Breakdown Chart -->
       <div class="chart-card fade-up d1">
-        <div class="chart-title">TVL Over Time</div>
-        <div class="chart-sub">Total Value Locked — Last 30 days</div>
-        <div style="height:220px">
-          <canvas id="tvlChart"></canvas>
+        <div class="chart-title">Your Transactions</div>
+        <div class="chart-sub">Activity breakdown — all time</div>
+        <div style="height:220px;position:relative">
+          <canvas id="txChart"></canvas>
+          <div id="txEmptyState" style="display:none;position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px">
+            <div style="font-size:2rem">🔗</div>
+            <div style="font-size:.82rem;color:var(--muted)">Connect wallet & start trading to see activity</div>
+          </div>
         </div>
       </div>
-      <!-- Volume Chart -->
+      <!-- XP Breakdown Chart -->
       <div class="chart-card fade-up d2">
-        <div class="chart-title">Daily Volume</div>
-        <div class="chart-sub">Swap + Stake volume — Last 14 days</div>
-        <div style="height:220px">
-          <canvas id="volChart"></canvas>
+        <div class="chart-title">XP Earned by Activity</div>
+        <div class="chart-sub">How you earned your XP</div>
+        <div style="height:220px;position:relative">
+          <canvas id="xpBreakChart"></canvas>
+          <div id="xpEmptyState" style="display:none;position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px">
+            <div style="font-size:2rem">📈</div>
+            <div style="font-size:.82rem;color:var(--muted)">Complete actions to see your XP breakdown</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="grid-2" style="margin-bottom:24px">
-      <!-- Top Protocols Table -->
+    <!-- Top Protocols Table -->
+    <div style="margin-bottom:24px">
       <div>
         <div style="font-weight:700;margin-bottom:14px;font-size:0.95rem">Top Protocols by TVL</div>
         <div class="table-wrap">
@@ -269,7 +277,6 @@
           </table>
         </div>
       </div>
-
     </div>
 
     <!-- XP Leaderboard + Quests -->
@@ -317,24 +324,6 @@
       </div>
     </div>
 
-    <!-- Network Info -->
-    <div class="grid-3" style="padding-bottom:60px">
-      <div class="stat-card fade-up d1">
-        <div class="stat-label"><span class="live-dot"></span>Arc Testnet Block</div>
-        <div class="stat-value" data-live="block">#1,847,293</div>
-        <div style="margin-top:8px;font-size:0.78rem;color:var(--muted)">~2s avg block time</div>
-      </div>
-      <div class="stat-card fade-up d2">
-        <div class="stat-label">Gas Price</div>
-        <div class="stat-value" data-live="gas">0.001 <span style="font-size:1rem;color:var(--muted)">ARC</span></div>
-        <div class="stat-change up">Very Low</div>
-      </div>
-      <div class="stat-card fade-up d3">
-        <div class="stat-label">Total Projects</div>
-        <div class="stat-value" data-live="projects">—</div>
-        <div class="stat-change">—</div>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -359,102 +348,91 @@
 <script src="assets/js/app.js"></script>
 <script src="assets/js/livedata.js"></script>
 <script>
-/* ── CHARTS ── */
-const labels30 = Array.from({length:30},(_,i)=>{
-  const d=new Date(); d.setDate(d.getDate()-29+i);
-  return d.toLocaleDateString('en',{month:'short',day:'numeric'});
-});
+/* ── CHARTS — real localStorage data only ── */
 
-const tvlData = [18,19,21,20,22,24,23,25,27,26,28,30,29,31,33,32,34,35,34,36,38,37,39,40,39,41,42,41,43,42.7];
+function buildCharts() {
+  const s = (() => {
+    try { return JSON.parse(localStorage.getItem('arcnova_xp_v2') || '{}'); }
+    catch { return {}; }
+  })();
+  const c = s.counts || {};
 
-const tvlCtx = document.getElementById('tvlChart').getContext('2d');
-const tvlGrad = tvlCtx.createLinearGradient(0, 0, 0, 220);
-tvlGrad.addColorStop(0, 'rgba(168,85,247,0.22)');
-tvlGrad.addColorStop(0.6, 'rgba(139,92,246,0.06)');
-tvlGrad.addColorStop(1, 'rgba(139,92,246,0.00)');
+  /* ── Chart 1: Transaction Breakdown ── */
+  const txLabels = ['Swaps', 'Stakes', 'Unstakes', 'Claims', 'Faucet'];
+  const txData   = [c.swap||0, c.stake||0, c.unstake||0, c.claim_rewards||0, c.faucet||0];
+  const txColors = ['rgba(139,92,246,.8)','rgba(16,185,129,.8)','rgba(34,211,238,.8)','rgba(245,158,11,.8)','rgba(99,102,241,.8)'];
 
-window.arcTVLChart = new Chart(document.getElementById('tvlChart'), {
-  type:'line',
-  data:{
-    labels:labels30,
-    datasets:[{
-      label:'TVL ($M)',
-      data:tvlData,
-      borderColor:'#a78bfa',
-      borderWidth:2,
-      fill:true,
-      backgroundColor:tvlGrad,
-      pointRadius:0,
-      pointHoverRadius:4,
-      pointHoverBackgroundColor:'#a78bfa',
-      tension:0.4
-    }]
-  },
-  options:{
-    responsive:true, maintainAspectRatio:false,
-    plugins:{legend:{display:false}, tooltip:{
-      backgroundColor:'rgba(10,10,28,0.96)',
-      borderColor:'rgba(168,85,247,0.35)',
-      borderWidth:1,
-      titleColor:'#c084fc',
-      bodyColor:'#f8fafc',
-      padding:10,
-      callbacks:{label:ctx=>`$${ctx.raw}M TVL`}
-    }},
-    scales:{
-      x:{grid:{color:'rgba(255,255,255,0.03)'},ticks:{color:'#64748b',font:{size:10},maxTicksLimit:6}},
-      y:{grid:{color:'rgba(255,255,255,0.03)'},ticks:{color:'#64748b',font:{size:10},callback:v=>`$${v}M`}}
-    }
+  const txEmpty = txData.every(v => v === 0);
+  const txEmptyEl = document.getElementById('txEmptyState');
+
+  if (txEmpty) {
+    if (txEmptyEl) txEmptyEl.style.display = 'flex';
+  } else {
+    if (txEmptyEl) txEmptyEl.style.display = 'none';
+    const txCtx = document.getElementById('txChart');
+    if (txCtx) new Chart(txCtx, {
+      type: 'bar',
+      data: { labels: txLabels, datasets: [{ data: txData, backgroundColor: txColors, borderRadius: 8, borderSkipped: false }] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: {
+          backgroundColor: 'rgba(10,10,28,.96)', borderColor: 'rgba(139,92,246,.35)', borderWidth: 1,
+          titleColor: '#c084fc', bodyColor: '#f8fafc', padding: 10,
+          callbacks: { label: ctx => `${ctx.raw} transaction${ctx.raw !== 1 ? 's' : ''}` }
+        }},
+        scales: {
+          x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 11 } } },
+          y: { grid: { color: 'rgba(255,255,255,.03)' }, ticks: { color: '#64748b', font: { size: 11 }, stepSize: 1 } }
+        }
+      }
+    });
   }
-});
 
-const volLabels = Array.from({length:14},(_,i)=>{
-  const d=new Date(); d.setDate(d.getDate()-13+i);
-  return d.toLocaleDateString('en',{month:'short',day:'numeric'});
-});
-const volData = [4.2,5.1,3.8,6.7,7.2,5.4,8.1,6.9,7.4,9.2,7.8,8.5,8.0,8.3];
+  /* ── Chart 2: XP Breakdown by activity ── */
+  const xpByAct = {
+    'Swap (+25)':   (c.swap||0) * 25,
+    'Stake (+40)':  (c.stake||0) * 40,
+    'Claim (+20)':  (c.claim_rewards||0) * 20,
+    'Faucet (+5)':  (c.faucet||0) * 5,
+    'Connect (+50)': s.xp > 0 ? 50 : 0,
+  };
+  const xpLabels = Object.keys(xpByAct).filter(k => xpByAct[k] > 0);
+  const xpData   = xpLabels.map(k => xpByAct[k]);
+  const xpColors = ['#a78bfa','#10b981','#f59e0b','#22d3ee','#818cf8'];
+  const xpEmpty  = xpData.length === 0;
+  const xpEmptyEl = document.getElementById('xpEmptyState');
 
-const volCtx = document.getElementById('volChart').getContext('2d');
-const volBarGrad = volCtx.createLinearGradient(0, 0, 0, 220);
-volBarGrad.addColorStop(0, 'rgba(34,211,238,0.80)');
-volBarGrad.addColorStop(0.5, 'rgba(34,211,238,0.40)');
-volBarGrad.addColorStop(1, 'rgba(34,211,238,0.10)');
-
-window.arcVolChart = new Chart(document.getElementById('volChart'), {
-  type:'bar',
-  data:{
-    labels:volLabels,
-    datasets:[{
-      label:'Volume ($M)',
-      data:volData,
-      backgroundColor:volBarGrad,
-      borderColor:'rgba(34,211,238,0)',
-      borderWidth:0,
-      borderRadius:7,
-      borderSkipped:false,
-    }]
-  },
-  options:{
-    responsive:true, maintainAspectRatio:false,
-    plugins:{legend:{display:false}, tooltip:{
-      backgroundColor:'rgba(10,10,28,0.96)',
-      borderColor:'rgba(34,211,238,0.35)',
-      borderWidth:1,
-      titleColor:'#22d3ee',
-      bodyColor:'#f8fafc',
-      padding:10,
-      callbacks:{label:ctx=>`$${ctx.raw}M`}
-    }},
-    scales:{
-      x:{grid:{display:false},ticks:{color:'#64748b',font:{size:10}}},
-      y:{grid:{color:'rgba(255,255,255,0.03)'},ticks:{color:'#64748b',font:{size:10},callback:v=>`$${v}M`}}
-    }
+  if (xpEmpty) {
+    if (xpEmptyEl) xpEmptyEl.style.display = 'flex';
+  } else {
+    if (xpEmptyEl) xpEmptyEl.style.display = 'none';
+    const xpCtx = document.getElementById('xpBreakChart');
+    if (xpCtx) new Chart(xpCtx, {
+      type: 'doughnut',
+      data: { labels: xpLabels, datasets: [{ data: xpData, backgroundColor: xpColors, borderWidth: 2, borderColor: 'rgba(10,10,28,.8)', hoverOffset: 6 }] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: true, position: 'right', labels: { color: '#94a3b8', font: { size: 11 }, boxWidth: 12, padding: 10 } },
+          tooltip: {
+            backgroundColor: 'rgba(10,10,28,.96)', borderColor: 'rgba(139,92,246,.35)', borderWidth: 1,
+            titleColor: '#c084fc', bodyColor: '#f8fafc', padding: 10,
+            callbacks: { label: ctx => ` ${ctx.raw} XP` }
+          }
+        },
+        cutout: '62%'
+      }
+    });
   }
-});
-
-function refreshData(){
-  showToast('Data refreshed!','success');
 }
+
+function refreshData() {
+  buildCharts();
+  showToast('Data refreshed!', 'success');
+}
+
+document.addEventListener('DOMContentLoaded', buildCharts);
+document.addEventListener('arcTxSuccess', () => setTimeout(buildCharts, 500));
 </script>
 <script src="assets/js/animations.js"></script>
 <script src="assets/js/points.js"></script>
