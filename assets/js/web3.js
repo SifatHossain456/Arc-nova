@@ -1,61 +1,40 @@
-/* ── Arc Nova Web3 Layer ─────────────────────────────────────────────────── */
-/* Real on-chain when contracts deployed; seamless Demo Mode when not.       */
-
+/* ── Arc Nova Web3 Layer — Real on-chain only ─────────────────────────────── */
 'use strict';
 
-/* ── Demo state (lives in memory per page load) ── */
-const _demo = {
-  nova:      10000.00,
-  usdc:      100.00,
-  staked:    0.00,
-  rewards:   0.00,
-  unbonding: 0.00,
-  lastFaucet: 0,
-};
-
-/* ── Helpers ── */
-const _isDemo   = () => !isDeployed(CONTRACT_ADDRESSES.NOVA_TOKEN);
-const _fakeHash = () => '0x' + Array.from({length:64}, () => Math.floor(Math.random()*16).toString(16)).join('');
-
-/* Simulate a tx: show TX modal → pending (with fake hash) → call fn() → success */
-async function _demoTx(title, workFn, successMsg) {
-  openTxModal(title, 'Processing… (Demo Mode — no real transaction)');
-  await new Promise(r => setTimeout(r, 700));
-  const hash = _fakeHash();
-  txPending(hash);
-  await new Promise(r => setTimeout(r, 1400));
-  workFn();
-  _refreshDemoUI();
-  txSuccess(successMsg + '\n(Demo Mode)');
+/* ── Guard helpers ── */
+function _requireWallet() {
+  if (!walletConnected || !activeSigner) {
+    showToast('Connect your wallet first', 'error');
+    openWalletModal();
+    return false;
+  }
+  return true;
 }
 
-/* Refresh all balance elements from demo state */
-function _refreshDemoUI() {
-  const d = _demo;
-  document.querySelectorAll('.balance-nova').forEach(el => el.textContent = d.nova.toFixed(2) + ' NOVA');
-  document.querySelectorAll('.balance-usdc').forEach(el => el.textContent = d.usdc.toFixed(2) + ' USDC');
-  const fromSym = document.getElementById('fromToken')?.dataset.symbol || 'NOVA';
-  const toSym   = document.getElementById('toToken')?.dataset.symbol   || 'USDC';
-  const fb = document.getElementById('fromBal');
-  if (fb) fb.textContent = fromSym === 'NOVA' ? d.nova.toFixed(2) + ' NOVA' : d.usdc.toFixed(2) + ' USDC';
-  const tb = document.getElementById('toBal');
-  if (tb) tb.textContent = toSym === 'NOVA' ? d.nova.toFixed(2) + ' NOVA' : d.usdc.toFixed(2) + ' USDC';
-  const ub = document.getElementById('userBalance');
-  if (ub) ub.textContent = d.usdc.toFixed(2) + ' USDC';
-  /* Update every element that shows staked / rewards (handles duplicate IDs) */
-  document.querySelectorAll('#stakedValue, #miniStakedValue').forEach(el => {
-    el.textContent = d.staked > 0 ? d.staked.toFixed(2) + ' NOVA' : '—';
-  });
-  document.querySelectorAll('#earnedRewards, #miniEarnedRewards').forEach(el => {
-    el.textContent = d.rewards > 0 ? d.rewards.toFixed(4) + ' NOVA' : '—';
-  });
-  const unb = document.getElementById('unbondingDisplay');
-  if (unb) {
-    unb.textContent = d.unbonding > 0 ? d.unbonding.toFixed(2) + ' NOVA (unlocks in ~24h)' : '—';
+/* Silently switch to Arc Testnet if the wallet is on another chain */
+async function _ensureNetwork() {
+  try {
+    const net = await ethersProvider.getNetwork();
+    if (net.chainId !== ARC_CHAIN_ID) {
+      showToast('Switching to Arc Testnet…', 'info');
+      await _switchToArc(activeProvider);
+      ethersProvider = new ethers.providers.Web3Provider(activeProvider, 'any');
+      activeSigner   = ethersProvider.getSigner();
+    }
+  } catch {}
+}
+
+/* ── ERC20 approve (only if allowance insufficient) ── */
+async function _ensureApproval(tokenAddr, spenderAddr, amount) {
+  const token     = new ethers.Contract(tokenAddr, ERC20_ABI, activeSigner);
+  const allowance = await token.allowance(activeAccount, spenderAddr);
+  if (allowance.lt(amount)) {
+    const tx = await token.approve(spenderAddr, ethers.constants.MaxUint256);
+    await tx.wait();
   }
 }
 
-/* Refresh UI from real on-chain data after a tx */
+/* Refresh all balance/staking elements from chain after a tx */
 async function _refreshOnchainUI() {
   if (!walletConnected || !activeAccount || !ethersProvider) return;
   try {
@@ -97,64 +76,11 @@ async function _refreshOnchainUI() {
   } catch {}
 }
 
-/* ── Guard helpers ── */
-function _requireWallet() {
-  if (!walletConnected || !activeSigner) {
-    showToast('Connect your wallet first', 'error');
-    openWalletModal();
-    return false;
-  }
-  return true;
-}
-
-/* Silently switch to Arc Testnet if the wallet drifted to another chain */
-async function _ensureNetwork() {
-  try {
-    const net = await ethersProvider.getNetwork();
-    if (net.chainId !== ARC_CHAIN_ID) {
-      showToast('Switching to Arc Testnet…', 'info');
-      await _switchToArc(activeProvider);
-      /* Re-create provider+signer so they point to the new chain */
-      ethersProvider = new ethers.providers.Web3Provider(activeProvider, 'any');
-      activeSigner   = ethersProvider.getSigner();
-    }
-  } catch { /* if network check itself fails, proceed and let the tx fail naturally */ }
-}
-
-/* ── ERC20 approve (only if allowance insufficient) ── */
-async function _ensureApproval(tokenAddr, spenderAddr, amount) {
-  const token     = new ethers.Contract(tokenAddr, ERC20_ABI, activeSigner);
-  const allowance = await token.allowance(activeAccount, spenderAddr);
-  if (allowance.lt(amount)) {
-    const tx = await token.approve(spenderAddr, ethers.constants.MaxUint256);
-    await tx.wait();
-  }
-}
-
 /* ═══════════════════════════════════════════════════════════════════════════
    FAUCET
 ═══════════════════════════════════════════════════════════════════════════ */
 async function claimFaucet() {
   if (!_requireWallet()) return;
-
-  /* ── Demo Mode ── */
-  if (_isDemo()) {
-    const now = Math.floor(Date.now() / 1000);
-    if (_demo.lastFaucet && now - _demo.lastFaucet < 86400) {
-      const rem = 86400 - (now - _demo.lastFaucet);
-      openTxModal('Faucet Cooldown', '');
-      txError(`Cooldown active: ${Math.floor(rem/3600)}h ${Math.floor((rem%3600)/60)}m remaining`);
-      return;
-    }
-    await _demoTx('Claiming 1,000 NOVA', () => {
-      _demo.nova += 1000;
-      _demo.lastFaucet = Math.floor(Date.now() / 1000);
-    }, 'Claimed 1,000 NOVA!');
-    window.ArcPoints?.award('faucet');
-    return;
-  }
-
-  /* ── Real Mode ── */
   await _ensureNetwork();
   openTxModal('Claiming NOVA', 'Confirm the faucet transaction in your wallet');
   try {
@@ -163,7 +89,7 @@ async function claimFaucet() {
     const now   = Math.floor(Date.now() / 1000);
     if (last.gt(0) && now - last.toNumber() < 86400) {
       const rem = 86400 - (now - last.toNumber());
-      txError(`Faucet cooldown: ${Math.floor(rem/3600)}h ${Math.floor((rem%3600)/60)}m`);
+      txError(`Faucet cooldown: ${Math.floor(rem/3600)}h ${Math.floor((rem%3600)/60)}m remaining`);
       return;
     }
     const tx = await token.faucet();
@@ -172,6 +98,7 @@ async function claimFaucet() {
     txSuccess('Claimed 1,000 NOVA!');
     window.ArcPoints?.award('faucet');
     document.dispatchEvent(new CustomEvent('arcTxSuccess', { detail: { type: 'faucet' } }));
+    _refreshOnchainUI();
   } catch (err) { txError(_parseErr(err)); }
 }
 
@@ -180,24 +107,6 @@ async function claimFaucet() {
 ═══════════════════════════════════════════════════════════════════════════ */
 async function executeSwap(fromSym, toSym, amountIn, slippagePct = 0.5) {
   if (!_requireWallet()) return;
-
-  /* ── Demo Mode ── */
-  if (_isDemo()) {
-    const RATE = { 'NOVA/USDC': 0.001, 'USDC/NOVA': 1000 };
-    const rate  = RATE[`${fromSym}/${toSym}`] || 1;
-    const amtOut = amountIn * rate;
-    if (fromSym === 'NOVA' && _demo.nova < amountIn) { showToast('Insufficient NOVA balance', 'error'); return; }
-    if (fromSym === 'USDC' && _demo.usdc < amountIn) { showToast('Insufficient USDC balance', 'error'); return; }
-    await _demoTx(`Swapping ${amountIn} ${fromSym}`, () => {
-      if (fromSym === 'NOVA') { _demo.nova -= amountIn; _demo.usdc += amtOut; }
-      else                    { _demo.usdc -= amountIn; _demo.nova += amtOut; }
-    }, `Swapped ${amountIn} ${fromSym} → ${amtOut.toFixed(4)} ${toSym}`);
-    window.ArcPoints?.award('swap');
-    document.dispatchEvent(new CustomEvent('arcTxSuccess', { detail: { type: 'swap', btn: document.getElementById('swapBtn') } }));
-    return;
-  }
-
-  /* ── Real Mode ── */
   await _ensureNetwork();
   const swapAddr = CONTRACT_ADDRESSES.SWAP;
   openTxModal('Swapping tokens', 'Confirm this transaction in your wallet');
@@ -207,7 +116,7 @@ async function executeSwap(fromSym, toSym, amountIn, slippagePct = 0.5) {
     const swapW = new ethers.Contract(swapAddr, SWAP_ABI, activeSigner);
     let tx;
     if (fromSym === 'NOVA') {
-      const parsed  = ethers.utils.parseEther(String(amountIn));
+      const parsed   = ethers.utils.parseEther(String(amountIn));
       const expected = await swapR.getAmountOut(parsed, novaRes, usdcRes);
       const minOut   = expected.mul(Math.floor((1 - slippagePct/100)*10000)).div(10000);
       await _ensureApproval(CONTRACT_ADDRESSES.NOVA_TOKEN, swapAddr, parsed);
@@ -224,6 +133,7 @@ async function executeSwap(fromSym, toSym, amountIn, slippagePct = 0.5) {
     txSuccess(`Swapped ${amountIn} ${fromSym} → ${toSym}`);
     window.ArcPoints?.award('swap');
     document.dispatchEvent(new CustomEvent('arcTxSuccess', { detail: { type: 'swap', btn: document.getElementById('swapBtn') } }));
+    _refreshOnchainUI();
   } catch (err) { txError(_parseErr(err)); }
 }
 
@@ -233,22 +143,8 @@ async function executeSwap(fromSym, toSym, amountIn, slippagePct = 0.5) {
 async function executeStake(amountStr) {
   if (!_requireWallet()) return;
   const amount = parseFloat(amountStr);
-
-  /* ── Demo Mode ── */
-  if (_isDemo()) {
-    if (_demo.nova < amount) { showToast('Insufficient NOVA balance', 'error'); return; }
-    await _demoTx(`Staking ${amount} NOVA`, () => {
-      _demo.nova  -= amount;
-      _demo.staked += amount;
-    }, `Staked ${amount} NOVA! Earning ~12% APY`);
-    window.ArcPoints?.award('stake');
-    document.dispatchEvent(new CustomEvent('arcTxSuccess', { detail: { type: 'stake', btn: document.getElementById('stakeBtn') } }));
-    return;
-  }
-
-  /* ── Real Mode ── */
   await _ensureNetwork();
-  openTxModal('Staking NOVA', 'Step 1 — Approve NOVA in your wallet (then step 2: confirm stake)');
+  openTxModal('Staking NOVA', 'Step 1 — Approve NOVA in your wallet, then confirm stake');
   try {
     const parsed = ethers.utils.parseEther(amountStr);
     await _ensureApproval(CONTRACT_ADDRESSES.NOVA_TOKEN, CONTRACT_ADDRESSES.STAKING, parsed);
@@ -268,18 +164,6 @@ async function executeStake(amountStr) {
 ═══════════════════════════════════════════════════════════════════════════ */
 async function executeUnstake(amountStr) {
   if (!_requireWallet()) return;
-  const amount = parseFloat(amountStr);
-
-  if (_isDemo()) {
-    if (_demo.staked < amount) { showToast('Insufficient staked balance', 'error'); return; }
-    await _demoTx(`Unstaking ${amount} NOVA`, () => {
-      _demo.staked    -= amount;
-      _demo.unbonding += amount;
-    }, `Unstake requested! Tokens unlock in 24h.`);
-    window.ArcPoints?.award('unstake');
-    return;
-  }
-
   await _ensureNetwork();
   openTxModal('Unstaking NOVA', 'Confirm the unstake transaction in your wallet');
   try {
@@ -299,18 +183,7 @@ async function executeUnstake(amountStr) {
 ═══════════════════════════════════════════════════════════════════════════ */
 async function executeWithdraw() {
   if (!_requireWallet()) return;
-
-  if (_isDemo()) {
-    if (_demo.unbonding <= 0) { showToast('No tokens available to withdraw', 'error'); return; }
-    await _demoTx('Withdrawing NOVA', () => {
-      _demo.nova      += _demo.unbonding;
-      _demo.unbonding  = 0;
-    }, 'NOVA withdrawn to your wallet!');
-    return;
-  }
-
   await _ensureNetwork();
-  /* Pre-check: must have unbonded tokens ready */
   try {
     const scR = new ethers.Contract(CONTRACT_ADDRESSES.STAKING, STAKING_ABI, ethersProvider);
     const info = await scR.getUserInfo(activeAccount);
@@ -339,23 +212,7 @@ async function executeWithdraw() {
 ═══════════════════════════════════════════════════════════════════════════ */
 async function executeClaim() {
   if (!_requireWallet()) return;
-
-  if (_isDemo()) {
-    /* Accrue some demo rewards based on staked amount */
-    const accrued = _demo.staked * 0.12 / 365 * 0.1; /* ~10 minutes worth */
-    _demo.rewards += accrued;
-    if (_demo.rewards < 0.0001) { showToast('No rewards to claim yet', 'info'); return; }
-    await _demoTx('Claiming Rewards', () => {
-      _demo.nova    += _demo.rewards;
-      _demo.rewards  = 0;
-    }, `Claimed ${_demo.rewards.toFixed(4)} NOVA rewards!`);
-    window.ArcPoints?.award('claim_rewards');
-    document.dispatchEvent(new CustomEvent('arcTxSuccess', { detail: { type: 'claim' } }));
-    return;
-  }
-
   await _ensureNetwork();
-  /* Pre-check: must have rewards accumulated */
   try {
     const scR   = new ethers.Contract(CONTRACT_ADDRESSES.STAKING, STAKING_ABI, ethersProvider);
     const earned = await scR.earned(activeAccount);
@@ -378,18 +235,9 @@ async function executeClaim() {
    LIVE SWAP QUOTE
 ═══════════════════════════════════════════════════════════════════════════ */
 async function getSwapQuote(fromSym, toSym, amountIn) {
-  /* Demo fallback rates */
-  const DEMO_RATES = { 'NOVA/USDC': 0.001, 'USDC/NOVA': 1000 };
-  const key = `${fromSym}/${toSym}`;
-
-  if (!isDeployed(CONTRACT_ADDRESSES.SWAP)) {
-    const rate = DEMO_RATES[key];
-    return rate ? (amountIn * rate).toFixed(4) : null;
-  }
-
   try {
-    const rpc    = ethersProvider || new ethers.providers.JsonRpcProvider('https://rpc.testnet.arc.network');
-    const swapC  = new ethers.Contract(CONTRACT_ADDRESSES.SWAP, SWAP_ABI, rpc);
+    const rpc   = ethersProvider || new ethers.providers.JsonRpcProvider('https://rpc.testnet.arc.network');
+    const swapC = new ethers.Contract(CONTRACT_ADDRESSES.SWAP, SWAP_ABI, rpc);
     const [novaRes, usdcRes] = await swapC.getReserves();
     if (fromSym === 'NOVA') {
       const out = await swapC.getAmountOut(ethers.utils.parseEther(String(amountIn)), novaRes, usdcRes);
@@ -398,16 +246,12 @@ async function getSwapQuote(fromSym, toSym, amountIn) {
       const out = await swapC.getAmountOut(ethers.utils.parseUnits(String(amountIn), 6), usdcRes, novaRes);
       return parseFloat(ethers.utils.formatEther(out)).toFixed(4);
     }
-  } catch { return (amountIn * (DEMO_RATES[key] || 1)).toFixed(4); }
+  } catch { return null; }
 }
 
 /* ── Called by wallet.js after wallet connect ── */
 function initDemoBalances() {
-  if (_isDemo() && walletConnected) {
-    _refreshDemoUI();
-  } else if (walletConnected) {
-    _refreshOnchainUI();
-  }
+  if (walletConnected) _refreshOnchainUI();
 }
 
 /* ── Error parser ── */
