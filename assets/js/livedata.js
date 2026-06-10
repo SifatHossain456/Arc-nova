@@ -210,6 +210,8 @@ async function fetchChain() {
         S.arcPrice = S.usdcReserve / S.novaReserve;
         setLive('[data-live="pool-nova"]', S.novaReserve, { dec:2, suffix:' NOVA' });
         setLive('[data-live="pool-usdc"]', S.usdcReserve, { dec:2, suffix:' USDC' });
+        const priceEl = document.getElementById('hdr-nova-price');
+        if (priceEl) { priceEl.textContent = '$' + S.arcPrice.toFixed(4); flash(priceEl); }
       }
     }
     if (totalStaked) {
@@ -224,118 +226,15 @@ async function fetchChain() {
   } catch {}
 }
 
-/* ── Live transaction feed (UI demo — not real chain txs) ── */
-const TX_TYPES = [
-  { label:'Swap',    bg:'rgba(124,58,237,.15)', color:'#a78bfa' },
-  { label:'Stake',   bg:'rgba(16,185,129,.12)', color:'#10b981' },
-  { label:'Bridge',  bg:'rgba(34,211,238,.12)', color:'#22d3ee' },
-  { label:'LP Add',  bg:'rgba(245,158,11,.12)', color:'#f59e0b' },
-  { label:'Unstake', bg:'rgba(239,68,68,.12)',  color:'#ef4444' },
-  { label:'Claim',   bg:'rgba(99,102,241,.12)', color:'#818cf8' },
-];
-const HEX_CHARS = '0123456789abcdef';
-function randHex(n) { return Array.from({length:n}, () => HEX_CHARS[Math.floor(Math.random()*16)]).join(''); }
-
-function addTxRow() {
-  const feed = document.getElementById('liveTxFeed');
-  if (!feed) return;
-  const type = TX_TYPES[Math.floor(Math.random() * TX_TYPES.length)];
-  const addr = '0x' + randHex(4) + '…' + randHex(4);
-  const val  = (Math.random() * 4800 + 120).toFixed(0);
-  const sign = Math.random() > 0.35 ? '+' : '';
-  const row  = document.createElement('div');
-  row.className = 'tx-row';
-  row.style.cssText = 'opacity:0;transform:translateY(-8px);transition:opacity 0.4s ease,transform 0.4s ease';
-  row.innerHTML = `
-    <div style="display:flex;align-items:center;gap:10px">
-      <span class="tx-type" style="background:${type.bg};color:${type.color}">${type.label}</span>
-      <span style="color:var(--text-2)">${addr}</span>
-    </div>
-    <div style="text-align:right">
-      <div style="font-weight:700;color:var(--text)">${sign}$${val}</div>
-      <div class="tx-time" style="font-size:0.72rem;color:var(--muted)">just now</div>
-    </div>`;
-  feed.insertBefore(row, feed.firstChild);
-  requestAnimationFrame(() => { row.style.opacity = '1'; row.style.transform = 'translateY(0)'; });
-  const AGES = ['just now', '3s ago', '12s ago', '28s ago', '52s ago', '1m ago', '2m ago'];
-  feed.querySelectorAll('.tx-row').forEach((r, i) => {
-    const t = r.querySelector('.tx-time'); if (t && AGES[i]) t.textContent = AGES[i];
-  });
-  while (feed.children.length > 6) feed.removeChild(feed.lastChild);
-}
-
-/* ── DeFi stats — realistic simulated data with subtle jitter ── */
-const DEFI_BASE = {
-  stakeApy:  12.4,
-  p1Apy: 12.4,  p1Staked: 840000,
-  p2Apy: 18.7,  p2Tvl:   1240000,
-  p3Apy: 14.2,  p3Tvl:    680000,
-  p4Apy:  7.8,  p4Tvl:    420000,
-  v1Apy:  8.4,  v1Tvl:  2100000, v1Cap: 85,
-  v2Apy: 23.7,  v2Tvl:   890000, v2Cap: 67,
-  v3Apy: 48.2,  v3Tvl:   340000, v3Cap: 42,
-  lp1Tvl: 1240000, lp1Vol: 187000, lp1Fees:  561, lp1Apr: 18.2,
-  lp2Tvl:  680000, lp2Vol:  93000, lp2Fees:  279, lp2Apr: 14.8,
-  lp3Tvl:  420000, lp3Vol: 312000, lp3Fees:  936, lp3Apr:  8.2,
-  lp4Tvl:  290000, lp4Vol:  47000, lp4Fees:  141, lp4Apr: 22.4,
-};
-
-function _j(v, pct) { return v * (1 + (Math.random() - 0.5) * (pct || 0.03)); }
-function _fmtM(v) {
-  if (v >= 1e6) return '$' + (v / 1e6).toFixed(2) + 'M';
-  if (v >= 1e3) return '$' + (v / 1e3).toFixed(1) + 'K';
-  return '$' + Math.round(v);
-}
-function _set(id, txt) {
-  const e = document.getElementById(id);
-  if (!e) return;
-  if (e.textContent !== txt) { e.textContent = txt; flash(e); }
-}
-
-function _updateDeFiStats() {
-  const b = DEFI_BASE;
-  const apyTxt = _j(b.stakeApy).toFixed(1) + '%';
-  _set('stake-info-apy',      apyTxt);   /* page header  */
-  _set('stake-info-apy-card', apyTxt);   /* stake card   */
-  _set('stake-banner-apy',    '~' + apyTxt); /* banner    */
-  _set('p1-apy',   _j(b.p1Apy).toFixed(1) + '%');
-  _set('p1-staked', _fmtM(_j(b.p1Staked)));
-  _set('p2-apy',   _j(b.p2Apy).toFixed(1) + '%');
-  _set('p2-tvl',   _fmtM(_j(b.p2Tvl)));
-  _set('p3-apy',   _j(b.p3Apy).toFixed(1) + '%');
-  _set('p3-tvl',   _fmtM(_j(b.p3Tvl)));
-  _set('p4-apy',   _j(b.p4Apy).toFixed(1) + '%');
-  _set('p4-tvl',   _fmtM(_j(b.p4Tvl)));
-
-  _set('v1-apy', _j(b.v1Apy, 0.01).toFixed(1) + '%');
-  _set('v1-tvl', _fmtM(_j(b.v1Tvl)));
-  _set('v1-cap', Math.round(_j(b.v1Cap, 0.01)) + '%');
-  _set('v2-apy', _j(b.v2Apy, 0.01).toFixed(1) + '%');
-  _set('v2-tvl', _fmtM(_j(b.v2Tvl)));
-  _set('v2-cap', Math.round(_j(b.v2Cap, 0.01)) + '%');
-  _set('v3-apy', _j(b.v3Apy, 0.02).toFixed(1) + '%');
-  _set('v3-tvl', _fmtM(_j(b.v3Tvl)));
-  _set('v3-cap', Math.round(_j(b.v3Cap, 0.01)) + '%');
-
-  _set('lp1-tvl',  _fmtM(_j(b.lp1Tvl)));
-  _set('lp1-vol',  _fmtM(_j(b.lp1Vol)));
-  _set('lp1-fees', '$' + Math.round(_j(b.lp1Fees)));
-  _set('lp1-apr',  _j(b.lp1Apr, 0.02).toFixed(1) + '%');
-
-  _set('lp2-tvl',  _fmtM(_j(b.lp2Tvl)));
-  _set('lp2-vol',  _fmtM(_j(b.lp2Vol)));
-  _set('lp2-fees', '$' + Math.round(_j(b.lp2Fees)));
-  _set('lp2-apr',  _j(b.lp2Apr, 0.02).toFixed(1) + '%');
-
-  _set('lp3-tvl',  _fmtM(_j(b.lp3Tvl)));
-  _set('lp3-vol',  _fmtM(_j(b.lp3Vol)));
-  _set('lp3-fees', '$' + Math.round(_j(b.lp3Fees)));
-  _set('lp3-apr',  _j(b.lp3Apr, 0.02).toFixed(1) + '%');
-
-  _set('lp4-tvl',  _fmtM(_j(b.lp4Tvl)));
-  _set('lp4-vol',  _fmtM(_j(b.lp4Vol)));
-  _set('lp4-fees', '$' + Math.round(_j(b.lp4Fees)));
-  _set('lp4-apr',  _j(b.lp4Apr, 0.02).toFixed(1) + '%');
+/* ── Blank all DeFi stats — no real contract data yet ── */
+function _clearDeFiStats() {
+  const dash = id => { const e = document.getElementById(id); if (e) e.textContent = '—'; };
+  ['p1-apy','p1-staked','p2-apy','p2-tvl','p3-apy','p3-tvl','p4-apy','p4-tvl',
+   'v1-apy','v1-tvl','v1-cap','v2-apy','v2-tvl','v2-cap','v3-apy','v3-tvl','v3-cap',
+   'lp1-tvl','lp1-vol','lp1-fees','lp1-apr',
+   'lp2-tvl','lp2-vol','lp2-fees','lp2-apr',
+   'lp3-tvl','lp3-vol','lp3-fees','lp3-apr',
+   'lp4-tvl','lp4-vol','lp4-fees','lp4-apr'].forEach(dash);
 }
 
 /* ── Micro tick — subtle ETH/BTC price movement between 60s fetches ── */
@@ -375,15 +274,7 @@ function init() {
   setInterval(fetchPrices, 60000);
   setInterval(microTick,    6000);
 
-  /* DeFi stats — populate on load then refresh every 30s */
-  _updateDeFiStats();
-  setInterval(_updateDeFiStats, 30000);
-
-  if (document.getElementById('liveTxFeed')) {
-    setTimeout(addTxRow, 2500);
-    const schedNext = () => setTimeout(() => { addTxRow(); schedNext(); }, 6000 + Math.random() * 9000);
-    schedNext();
-  }
+  _clearDeFiStats();
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
