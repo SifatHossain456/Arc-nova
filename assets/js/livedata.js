@@ -216,9 +216,17 @@ async function fetchChain() {
     }
     if (totalStaked) {
       const staked = parseFloat(ethers.utils.formatEther(totalStaked));
-      if (staked > 0) {
-        S.totalStaked = staked;
-        setLive('[data-live="staked"]', S.totalStaked, { dec:0, suffix:' NOVA' });
+      S.totalStaked = staked;
+      setLive('[data-live="staked"]', S.totalStaked, { dec:0, suffix:' NOVA' });
+      /* Update p1-staked (NOVA Staking pool card) with real on-chain value */
+      const p1s = document.getElementById('p1-staked');
+      if (p1s) {
+        const fmt = staked >= 1e6 ? (staked/1e6).toFixed(2)+'M NOVA'
+                  : staked >= 1e3 ? (staked/1e3).toFixed(1)+'K NOVA'
+                  : staked.toFixed(0)+' NOVA';
+        p1s.textContent = fmt;
+        p1s.style.color = '';
+        p1s.style.fontSize = '';
       }
     }
 
@@ -226,15 +234,27 @@ async function fetchChain() {
   } catch {}
 }
 
-/* ── Blank all DeFi stats — no real contract data yet ── */
+/* ── DeFi stats — show only what has real contracts ── */
 function _clearDeFiStats() {
-  const dash = id => { const e = document.getElementById(id); if (e) e.textContent = '—'; };
-  ['p1-apy','p1-staked','p2-apy','p2-tvl','p3-apy','p3-tvl','p4-apy','p4-tvl',
+  /* NOVA staking APY comes from contract constant: 12% */
+  ['stake-info-apy','stake-info-apy-card','stake-banner-apy','p1-apy'].forEach(id => {
+    const e = document.getElementById(id);
+    if (e) e.textContent = id === 'stake-banner-apy' ? '~12%' : '12%';
+  });
+  /* Everything else has no deployed contract → show Coming Soon */
+  const soon = id => {
+    const e = document.getElementById(id);
+    if (!e) return;
+    e.textContent = 'Soon';
+    e.style.color = 'var(--muted)';
+    e.style.fontSize = '0.78rem';
+  };
+  ['p2-apy','p2-tvl','p3-apy','p3-tvl','p4-apy','p4-tvl',
    'v1-apy','v1-tvl','v1-cap','v2-apy','v2-tvl','v2-cap','v3-apy','v3-tvl','v3-cap',
    'lp1-tvl','lp1-vol','lp1-fees','lp1-apr',
    'lp2-tvl','lp2-vol','lp2-fees','lp2-apr',
    'lp3-tvl','lp3-vol','lp3-fees','lp3-apr',
-   'lp4-tvl','lp4-vol','lp4-fees','lp4-apr'].forEach(dash);
+   'lp4-tvl','lp4-vol','lp4-fees','lp4-apr'].forEach(soon);
 }
 
 /* ── Micro tick — subtle ETH/BTC price movement between 60s fetches ── */
