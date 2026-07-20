@@ -90,9 +90,10 @@ arc-nova/
 
 | Contract | Address |
 |---|---|
-| NOVA Token | `0x3619Ce00C6300126543BcEd410D064212284B818` |
-| Swap | `0x334db09B3809c595E4D1B317E95c725715a65c39` |
-| Staking | `0xf6001aEceB3f3EF35b25682FCaF397ab11a14D59` |
+| NOVA Token | `0x9a718c17a25bEB1Caf9a35c843932Bd4a6b75aB5` |
+| Swap | `0x4938ABC30c8730D39855d11fC10F37bAD87FAcD3` |
+| Staking | `0x93358717C67c575C6B8D4eBF750DA3f784ae2FfE` |
+| USDC | `0x3600000000000000000000000000000000000000` |
 
 RPC: `https://rpc.testnet.arc.network`  
 Explorer: `https://testnet.arcscan.app`
