@@ -155,22 +155,34 @@ function selectToken(sym, color, bg, init) {
 }
 
 /* ── CONFIRM MODAL ── */
-function showConfirmModal(title, rows, onConfirm) {
+function showConfirmModal(title, rows, onConfirm, options) {
   const modal = document.getElementById('confirmModal');
   if (!modal) { onConfirm(); return; }
+  const opts = options || {};
   document.getElementById('confirmTitle').textContent = title;
   const body = document.getElementById('confirmDetails');
-  body.innerHTML = rows.map(([label, val, col]) =>
-    `<div class="confirm-row">
-      <span style="color:var(--muted)">${label}</span>
-      <span style="font-weight:700;color:${col||'var(--text)'}">${val}</span>
-    </div>`
-  ).join('');
+  /* Support both array-of-tuples and raw HTML string */
+  if (typeof rows === 'string') {
+    body.innerHTML = rows;
+  } else {
+    body.innerHTML = rows.map(([label, val, col]) =>
+      `<div class="confirm-row">
+        <span style="color:var(--muted)">${label}</span>
+        <span style="font-weight:700;color:${col||'var(--text)'}">${val}</span>
+      </div>`
+    ).join('');
+  }
   modal.classList.add('open');
-  document.getElementById('confirmBtn').onclick = () => {
-    modal.classList.remove('open');
-    onConfirm();
-  };
+  /* Apply options to confirm button */
+  const confirmBtn = document.getElementById('confirmBtn');
+  if (confirmBtn) {
+    confirmBtn.textContent = opts.confirmText || 'Confirm';
+    confirmBtn.className = 'btn ' + (opts.confirmClass || 'btn-primary');
+    confirmBtn.onclick = () => {
+      modal.classList.remove('open');
+      onConfirm();
+    };
+  }
 }
 
 function closeConfirmModal() {

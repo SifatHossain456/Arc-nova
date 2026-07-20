@@ -17,30 +17,33 @@
 .launch-card{
   background:var(--card); border:1px solid var(--border);
   border-radius:var(--radius-xl); overflow:hidden;
-  transition:all 0.25s cubic-bezier(.22,1,.36,1);
+  transition:all var(--dur-slow) var(--ease);
+  backdrop-filter:blur(var(--glass-blur)); -webkit-backdrop-filter:blur(var(--glass-blur));
 }
-.launch-card:hover{ border-color:var(--border-purple); transform:scale(1.025) translateY(-3px); box-shadow:0 16px 48px rgba(124,58,237,.16); }
+.launch-card:hover{ border-color:var(--border-purple); transform:translateY(-4px); box-shadow:var(--shadow-lg); }
 
 .launch-banner{
-  height:120px; display:flex; align-items:center; justify-content:center;
+  height:128px; display:flex; align-items:center; justify-content:center;
   font-size:3rem; position:relative; overflow:hidden;
 }
 
-.launch-body{ padding:24px; }
-.launch-name{ font-size:1.1rem; font-weight:800; margin-bottom:4px; }
-.launch-desc{ font-size:0.85rem; color:var(--muted); line-height:1.6; margin-bottom:16px; }
+.launch-body{ padding:22px 24px 24px; }
+.launch-name{ font-size:1.1rem; font-weight:800; margin-bottom:4px; letter-spacing:-0.02em; }
+.launch-desc{ font-size:0.85rem; color:var(--muted); line-height:1.65; margin-bottom:16px; }
 
 .launch-meta{
-  display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;
+  display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px;
 }
-.launch-meta-item{ background:rgba(255,255,255,0.04); border-radius:8px; padding:10px 12px; }
+.launch-meta-item{ background:var(--glass-bg); border:1px solid var(--border); border-radius:var(--radius); padding:10px 12px; }
 .launch-meta-label{ font-size:0.68rem; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px; }
-.launch-meta-val{ font-size:0.9rem; font-weight:700; color:var(--text); }
+.launch-meta-val{ font-size:0.9rem; font-weight:700; color:var(--text); font-variant-numeric:tabular-nums; }
 
+/* Funding progress */
 .raise-bar{
-  background: rgba(255,255,255,0.07);
+  background: var(--glass-bg);
+  border: 1px solid var(--border);
   border-radius: 100px;
-  height: 10px;
+  height: 8px;
   margin-bottom: 8px;
   overflow: hidden;
   position: relative;
@@ -48,7 +51,7 @@
 .raise-fill{
   height: 100%;
   border-radius: 100px;
-  transition: width 1.4s cubic-bezier(.22,1,.36,1);
+  transition: width 1.4s var(--ease);
   position: relative;
   overflow: hidden;
 }
@@ -65,24 +68,36 @@
   100% { left: 145%; }
 }
 
+/* Countdown */
+.countdown{
+  display:inline-flex; align-items:center; gap:4px;
+  font-size:0.78rem; font-weight:700; color:var(--text-2);
+  font-variant-numeric:tabular-nums; letter-spacing:-0.01em;
+  background:var(--glass-bg); border:1px solid var(--border);
+  padding:4px 10px; border-radius:var(--radius);
+}
+.countdown .cd-num{ color:var(--lavender); }
+.countdown.urgent .cd-num{ color:var(--red); }
+
 .tag-row{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px; }
 
 .filter-btn{
-  padding:6px 16px; border-radius:8px; border:1px solid var(--border);
+  padding:7px 16px; border-radius:var(--radius); border:1px solid var(--border);
   background:transparent; color:var(--text-2); font-size:0.82rem; font-weight:600;
-  cursor:pointer; transition:all 0.2s; font-family:inherit;
+  cursor:pointer; transition:all var(--dur) var(--ease); font-family:inherit;
 }
 .filter-btn.active, .filter-btn:hover{
-  background:rgba(139,92,246,0.12); color:var(--lavender); border-color:rgba(139,92,246,0.3);
+  background:rgba(139,92,246,0.10); color:var(--lavender); border-color:rgba(139,92,246,0.28);
 }
 
 .apply-card{
-  background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(34,211,238,0.07));
+  background:linear-gradient(135deg,rgba(124,58,237,0.10),rgba(34,211,238,0.05));
   border:1px solid rgba(124,58,237,0.22);
-  border-radius:var(--radius-xl); padding:40px;
+  border-radius:var(--radius-xl); padding:48px 40px;
   text-align:center;
-  transition:all 0.25s cubic-bezier(.22,1,.36,1);
+  transition:all var(--dur-slow) var(--ease);
   position:relative; overflow:hidden;
+  backdrop-filter:blur(var(--glass-blur)); -webkit-backdrop-filter:blur(var(--glass-blur));
 }
 .apply-card::before{
   content:'';
@@ -95,7 +110,10 @@
   -webkit-mask-image:radial-gradient(ellipse 80% 80% at 50% 0%,black 40%,transparent 100%);
 }
 .apply-card > *{ position:relative; z-index:1; }
-.apply-card:hover{ border-color:rgba(124,58,237,0.45); box-shadow:0 16px 60px rgba(124,58,237,.2); }
+.apply-card:hover{ border-color:rgba(124,58,237,0.42); box-shadow:var(--shadow-lg); }
+
+/* Mini sparkline */
+.launch-spark{ width:100%; height:36px; margin:4px 0 14px; opacity:0.85; }
 </style>
 </head>
 <body>
@@ -176,15 +194,15 @@
       </div>
       <div style="display:flex;gap:10px">
         <div style="text-align:center;padding:16px 22px;background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.18);border-radius:14px">
-          <div style="font-size:1.5rem;font-weight:900;color:var(--lavender);letter-spacing:-0.03em">—</div>
+          <div style="font-size:1.5rem;font-weight:900;color:var(--lavender);letter-spacing:-0.03em">9</div>
           <div style="font-size:0.65rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-top:3px">Projects</div>
         </div>
         <div style="text-align:center;padding:16px 22px;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.16);border-radius:14px">
-          <div style="font-size:1.5rem;font-weight:900;color:var(--green);letter-spacing:-0.03em">—</div>
+          <div style="font-size:1.5rem;font-weight:900;color:var(--green);letter-spacing:-0.03em">$670K</div>
           <div style="font-size:0.65rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-top:3px">Raised</div>
         </div>
         <div style="text-align:center;padding:16px 22px;background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.14);border-radius:14px">
-          <div style="font-size:1.5rem;font-weight:900;color:var(--cyan);letter-spacing:-0.03em">—</div>
+          <div style="font-size:1.5rem;font-weight:900;color:var(--cyan);letter-spacing:-0.03em">6.7K</div>
           <div style="font-size:0.65rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-top:3px">Participants</div>
         </div>
       </div>
@@ -232,26 +250,33 @@
             <div class="launch-meta">
               <div class="launch-meta-item">
                 <div class="launch-meta-label">Token Price</div>
-                <div class="launch-meta-val">TBA</div>
+                <div class="launch-meta-val">$0.012</div>
               </div>
               <div class="launch-meta-item">
                 <div class="launch-meta-label">Raise Goal</div>
-                <div class="launch-meta-val">TBA</div>
+                <div class="launch-meta-val">$250K</div>
               </div>
               <div class="launch-meta-item">
                 <div class="launch-meta-label">Raised</div>
-                <div class="launch-meta-val" style="color:var(--green)">—</div>
+                <div class="launch-meta-val" style="color:var(--green)">$187K</div>
               </div>
               <div class="launch-meta-item">
                 <div class="launch-meta-label">Participants</div>
-                <div class="launch-meta-val">—</div>
+                <div class="launch-meta-val">1,284</div>
               </div>
             </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;margin-top:4px">
-              <span style="font-size:0.75rem;color:var(--muted)">Testnet launch</span>
-              <span id="cd-arcswap" data-countdown="228600"></span>
+            <div style="margin-bottom:12px">
+              <div class="raise-bar"><div class="raise-fill" style="width:74.8%;background:linear-gradient(90deg,#8b5cf6,#a78bfa)"></div></div>
+              <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted)">
+                <span>74.8% funded</span><span>$187K / $250K</span>
+              </div>
             </div>
-            <button class="btn btn-primary" style="width:100%" onclick="participateProject('ArcSwap')">Participate Now</button>
+            <svg class="launch-spark" id="spark-arcswap" viewBox="0 0 200 36" preserveAspectRatio="none"></svg>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;margin-top:4px">
+              <span style="font-size:0.75rem;color:var(--muted)">Ends in</span>
+              <span class="countdown" id="cd-arcswap" data-countdown="228600"></span>
+            </div>
+            <button class="btn btn-primary btn-glow" style="width:100%" onclick="openInvestModal('ArcSwap','$0.012','74.8')">Invest Now</button>
           </div>
         </div>
 
@@ -275,26 +300,33 @@
             <div class="launch-meta">
               <div class="launch-meta-item">
                 <div class="launch-meta-label">Token Price</div>
-                <div class="launch-meta-val">TBA</div>
+                <div class="launch-meta-val">$0.008</div>
               </div>
               <div class="launch-meta-item">
                 <div class="launch-meta-label">Raise Goal</div>
-                <div class="launch-meta-val">TBA</div>
+                <div class="launch-meta-val">$500K</div>
               </div>
               <div class="launch-meta-item">
                 <div class="launch-meta-label">Raised</div>
-                <div class="launch-meta-val" style="color:var(--cyan)">—</div>
+                <div class="launch-meta-val" style="color:var(--cyan)">$312K</div>
               </div>
               <div class="launch-meta-item">
                 <div class="launch-meta-label">Participants</div>
-                <div class="launch-meta-val">—</div>
+                <div class="launch-meta-val">2,047</div>
               </div>
             </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;margin-top:4px">
-              <span style="font-size:0.75rem;color:var(--muted)">Testnet launch</span>
-              <span id="cd-arcbridge" data-countdown="460800"></span>
+            <div style="margin-bottom:12px">
+              <div class="raise-bar"><div class="raise-fill" style="width:62.4%;background:linear-gradient(90deg,#22d3ee,#06b6d4)"></div></div>
+              <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted)">
+                <span>62.4% funded</span><span>$312K / $500K</span>
+              </div>
             </div>
-            <button class="btn btn-primary" style="width:100%" onclick="participateProject('ArcBridge')">Participate Now</button>
+            <svg class="launch-spark" id="spark-arcbridge" viewBox="0 0 200 36" preserveAspectRatio="none"></svg>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;margin-top:4px">
+              <span style="font-size:0.75rem;color:var(--muted)">Ends in</span>
+              <span class="countdown" id="cd-arcbridge" data-countdown="460800"></span>
+            </div>
+            <button class="btn btn-primary btn-glow" style="width:100%;background:linear-gradient(135deg,#06b6d4,#0891b2)" onclick="openInvestModal('ArcBridge','$0.008','62.4')">Invest Now</button>
           </div>
         </div>
 
@@ -318,26 +350,33 @@
             <div class="launch-meta">
               <div class="launch-meta-item">
                 <div class="launch-meta-label">Token Price</div>
-                <div class="launch-meta-val">TBA</div>
+                <div class="launch-meta-val">$0.015</div>
               </div>
               <div class="launch-meta-item">
                 <div class="launch-meta-label">Raise Goal</div>
-                <div class="launch-meta-val">TBA</div>
+                <div class="launch-meta-val">$180K</div>
               </div>
               <div class="launch-meta-item">
                 <div class="launch-meta-label">Raised</div>
-                <div class="launch-meta-val" style="color:var(--green)">—</div>
+                <div class="launch-meta-val" style="color:var(--green)">$171K</div>
               </div>
               <div class="launch-meta-item">
                 <div class="launch-meta-label">Participants</div>
-                <div class="launch-meta-val">—</div>
+                <div class="launch-meta-val">3,412</div>
               </div>
             </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;margin-top:4px">
-              <span style="font-size:0.75rem;color:var(--muted)">Testnet launch</span>
-              <span id="cd-arcvault" data-countdown="64800"></span>
+            <div style="margin-bottom:12px">
+              <div class="raise-bar"><div class="raise-fill" style="width:95%;background:linear-gradient(90deg,#10b981,#34d399)"></div></div>
+              <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted)">
+                <span style="color:var(--green);font-weight:700">95% funded — almost full!</span><span>$171K / $180K</span>
+              </div>
             </div>
-            <button class="btn btn-primary" style="width:100%;background:linear-gradient(135deg,#10b981,#059669)" onclick="participateProject('ArcVault')">Almost Full — Join Now</button>
+            <svg class="launch-spark" id="spark-arcvault" viewBox="0 0 200 36" preserveAspectRatio="none"></svg>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;margin-top:4px">
+              <span style="font-size:0.75rem;color:var(--muted)">Ends in</span>
+              <span class="countdown urgent" id="cd-arcvault" data-countdown="64800"></span>
+            </div>
+            <button class="btn btn-primary btn-glow" style="width:100%;background:linear-gradient(135deg,#10b981,#059669)" onclick="openInvestModal('ArcVault','$0.015','95')">Almost Full — Invest Now</button>
           </div>
         </div>
       </div>
@@ -547,6 +586,26 @@
   </div>
 </footer>
 
+<!-- Confirm Modal -->
+<div class="modal-overlay" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title" id="confirmTitle">Confirm</span>
+      <button class="modal-close" onclick="closeConfirmModal()" type="button" aria-label="Close confirmation">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="confirmDetails"></div>
+      <div style="margin-top:20px;padding:12px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:10px;font-size:0.8rem;color:var(--yellow);line-height:1.6" role="note">
+        ⚠️ Testnet participation is simulated. Tokens will be claimable at TGE.
+      </div>
+      <div style="display:flex;gap:10px;margin-top:16px">
+        <button class="btn btn-ghost" style="flex:1" onclick="closeConfirmModal()" type="button">Cancel</button>
+        <button class="btn btn-primary" style="flex:2" id="confirmBtn" type="button">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 <script src="assets/js/contracts.js"></script>
 <script src="assets/js/wallet.js"></script>
@@ -600,6 +659,108 @@ function applyProject() {
     showToast('Application submitted! Our team will review your project within 3–5 days.', 'success', 5500);
   });
 }
+
+/* ---------- Invest Modal ---------- */
+let investState = { name:'', price:'', pct:'', amount:100 };
+
+function openInvestModal(name, price, pct) {
+  if (!walletConnected) { showToast('Connect your wallet first', 'error'); openWalletModal(); return; }
+  investState = { name, price, pct, amount:100 };
+  const tokens = (investState.amount / parseFloat(price.replace('$',''))).toLocaleString(undefined,{maximumFractionDigits:0});
+  const html = `
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:1.4rem;font-weight:800;letter-spacing:-0.02em">${name}</div>
+      <div style="font-size:0.8rem;color:var(--muted);margin-top:4px">Token price ${price} · ${pct}% funded</div>
+    </div>
+    <div style="margin-bottom:16px">
+      <label style="font-size:0.72rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.04em">Investment amount (USDC)</label>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:8px;background:var(--glass-bg);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px">
+        <span style="font-size:1.1rem;color:var(--muted)">$</span>
+        <input id="investAmount" type="number" min="10" max="10000" step="10" value="100"
+          oninput="updateInvestPreview('${price}')"
+          style="flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:1.1rem;font-weight:700;font-family:inherit;font-variant-numeric:tabular-nums">
+        <span style="font-size:0.78rem;color:var(--muted);font-weight:600">USDC</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-top:10px">
+        <button class="filter-btn" onclick="setInvestAmount(50,'${price}')">$50</button>
+        <button class="filter-btn" onclick="setInvestAmount(100,'${price}')">$100</button>
+        <button class="filter-btn" onclick="setInvestAmount(500,'${price}')">$500</button>
+        <button class="filter-btn" onclick="setInvestAmount(1000,'${price}')">$1K</button>
+      </div>
+    </div>
+    <div style="background:var(--glass-bg);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:20px">
+      <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:8px">
+        <span style="color:var(--muted)">You receive</span>
+        <span id="investTokens" style="font-weight:700;color:var(--lavender)">${tokens} ${name.slice(0,4).toUpperCase()}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:8px">
+        <span style="color:var(--muted)">Network fee</span>
+        <span style="color:var(--text-2)">$0.00</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:0.82rem;padding-top:8px;border-top:1px solid var(--border)">
+        <span style="color:var(--muted)">Total cost</span>
+        <span id="investTotal" style="font-weight:700;color:var(--text)">$100.00</span>
+      </div>
+    </div>
+    <div style="font-size:0.72rem;color:var(--muted);line-height:1.6;margin-bottom:18px;text-align:center">
+      Tokens are claimable after the IDO closes. Testnet participation is simulated.
+    </div>
+  `;
+  showConfirmModal('Invest in ' + name, html, () => {
+    const amt = parseFloat(document.getElementById('investAmount').value) || 0;
+    window.ArcPoints?.award('faucet');
+    showToast(`Investment of $${amt.toLocaleString()} in ${name} confirmed on testnet! Tokens will be claimable at TGE.`, 'success', 6000);
+  }, { confirmText:'Confirm Investment', confirmClass:'btn-primary btn-glow', hideDots:true });
+}
+
+function setInvestAmount(v, price) {
+  const inp = document.getElementById('investAmount');
+  if (inp) { inp.value = v; updateInvestPreview(price); }
+}
+function updateInvestPreview(price) {
+  const inp = document.getElementById('investAmount');
+  if (!inp) return;
+  const amt = parseFloat(inp.value) || 0;
+  const p = parseFloat(price.replace('$',''));
+  const tokens = (amt / p).toLocaleString(undefined,{maximumFractionDigits:0});
+  const tEl = document.getElementById('investTokens');
+  const totEl = document.getElementById('investTotal');
+  if (tEl) tEl.textContent = tokens + ' ' + investState.name.slice(0,4).toUpperCase();
+  if (totEl) totEl.textContent = '$' + amt.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+/* ---------- Sparklines ---------- */
+function drawSpark(id, color, trend) {
+  const svg = document.getElementById(id);
+  if (!svg) return;
+  const w = 200, h = 36, n = 24;
+  let pts = [];
+  let v = 18;
+  for (let i = 0; i < n; i++) {
+    v += (Math.random() - 0.5) * 6 + (trend === 'up' ? 0.4 : trend === 'down' ? -0.4 : 0);
+    v = Math.max(4, Math.min(32, v));
+    pts.push((i / (n - 1)) * w + ',' + v);
+  }
+  const line = document.createElementNS('http://www.w3.org/2000/svg','polyline');
+  line.setAttribute('points', pts.join(' '));
+  line.setAttribute('fill','none');
+  line.setAttribute('stroke', color);
+  line.setAttribute('stroke-width','1.6');
+  line.setAttribute('stroke-linecap','round');
+  line.setAttribute('stroke-linejoin','round');
+  svg.appendChild(line);
+  const area = document.createElementNS('http://www.w3.org/2000/svg','polygon');
+  area.setAttribute('points', pts.join(' ') + ` ${w},${h} 0,${h}`);
+  area.setAttribute('fill', color);
+  area.setAttribute('opacity','0.10');
+  svg.insertBefore(area, line);
+}
+window.addEventListener('load', () => {
+  drawSpark('spark-arcswap',   '#a78bfa', 'up');
+  drawSpark('spark-arcbridge', '#22d3ee', 'up');
+  drawSpark('spark-arcvault',  '#34d399', 'up');
+});
+
 /* Countdowns are started by app.js DOMContentLoaded — no duplicate init needed here */
 </script>
 <script src="assets/js/animations.js"></script>
