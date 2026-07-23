@@ -1,12 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
-  /* ── Dark Institutional Fintech Design Tokens ── */
-  --bg-base: #06070a;
-  --bg-elevated: #0b0c12;
-  --bg-surface: #10121a;
-  --bg-surface-2: #151722;
-  --bg-overlay: rgba(6, 7, 10, 0.82);
+  /* ── Requested Institutional Fintech Design Tokens ── */
+  --bg-base: #0b1220;
+  --bg-elevated: #111827;
+  --bg-surface: #172033;
+  --bg-surface-2: #1e293b;
+  --bg-overlay: rgba(11, 18, 32, 0.84);
 
   --violet-50: #f5f3ff;
   --violet-300: #c4b5fd;
@@ -33,16 +33,16 @@
 
   --border-subtle: rgba(255, 255, 255, 0.05);
   --border-default: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.13);
-  --border-accent: rgba(139, 92, 246, 0.32);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --border-accent: rgba(139, 92, 246, 0.35);
 
   /* ── Legacy & Compatibility Tokens ── */
   --bg-0: var(--bg-base);
   --bg-1: var(--bg-elevated);
   --bg-2: var(--bg-surface);
   --bg-3: var(--bg-surface-2);
-  --card: rgba(16, 18, 26, 0.78);
-  --card-hover: rgba(21, 23, 34, 0.88);
+  --card: rgba(23, 32, 51, 0.78);
+  --card-hover: rgba(30, 41, 59, 0.88);
   --card-solid: var(--bg-surface);
   --border: var(--border-default);
   --border-light: var(--border-strong);
