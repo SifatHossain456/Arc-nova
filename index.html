@@ -3,486 +3,205 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Arc Nova — DeFi Hub on Arc Network</title>
-<meta name="description" content="Arc Nova is the premier DeFi hub on Arc Network. Swap tokens, stake NOVA, earn yield, and discover new projects — all on Arc Testnet with real on-chain settlement.">
-<meta property="og:title" content="Arc Nova — DeFi Hub on Arc Network">
-<meta property="og:description" content="Trade, stake, earn, and launch on Arc Network's stablecoin-native blockchain. Real on-chain swaps, live analytics, and a full DeFi suite on Arc Testnet.">
+<title>Arc Nova — Institutional DeFi Hub on Arc Network</title>
+<meta name="description" content="Arc Nova is the institutional-grade DeFi hub on Arc Network. Swap tokens, stake NOVA, earn yield, bridge assets, and discover new projects — all on Arc Testnet with real on-chain settlement.">
+<meta property="og:title" content="Arc Nova — Institutional DeFi Hub">
+<meta property="og:description" content="Trade, stake, earn, bridge, and launch on Arc Network's stablecoin-native blockchain.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://arc-nova.vercel.app">
-<meta property="og:image" content="https://arc-nova.vercel.app/assets/og-image.svg">
+<meta property="og:url" content="https://arcnovaai.xyz">
+<meta property="og:image" content="https://arcnovaai.xyz/assets/og-image.svg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://arc-nova.vercel.app/assets/og-image.svg">
+<meta name="twitter:image" content="https://arcnovaai.xyz/assets/og-image.svg">
 <meta name="theme-color" content="#7c3aed">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%238b5cf6'/><circle cx='16' cy='16' r='9.5' fill='none' stroke='rgba(255,255,255,0.18)' stroke-width='1.6'/><path d='M 16 6.5 A 9.5 9.5 0 1 1 6.5 16' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round'/><circle cx='6.5' cy='16' r='3.2' fill='%2322d3ee'/><circle cx='6.5' cy='16' r='1.6' fill='white'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/styles.css">
 <style>
-/* ── Base ── */
-body { background:#040412; }
+/* ── Page-specific styles ── */
+body { background:#0b1220; }
 .ticker-bar { display:none; }
 
 /* ── Hero ── */
 .hero {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  position: relative;
-  z-index: 1;
-  overflow: hidden;
-  padding-top: 88px;
-  padding-bottom: 160px;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  position:relative;
+  z-index:1;
+  overflow:hidden;
+  padding-top:88px;
+  padding-bottom:180px;
 }
 .hero-grid-bg {
-  position: absolute;
-  inset: 0;
+  position:absolute; inset:0; pointer-events:none;
   background-image:
-    linear-gradient(rgba(124,58,237,.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(124,58,237,.05) 1px, transparent 1px);
-  background-size: 48px 48px;
-  pointer-events: none;
-  z-index: 0;
-  mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, black 40%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, black 40%, transparent 100%);
-}
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 16px;
-  border-radius: 100px;
-  background: rgba(124,58,237,.11);
-  border: 1px solid rgba(124,58,237,.35);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #a78bfa;
-  margin-bottom: 28px;
-  box-shadow: 0 0 28px rgba(124,58,237,.22), inset 0 1px 0 rgba(255,255,255,.07);
-}
-.badge-live-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: #a78bfa;
-  flex-shrink: 0;
-  animation: pulseDot 2s ease infinite;
-}
-.hero-title {
-  font-size: clamp(2.8rem, 5.8vw, 5.2rem);
-  font-weight: 900;
-  line-height: 1.06;
-  color: #ffffff;
-  letter-spacing: -0.04em;
-  margin-bottom: 24px;
-}
-.hero-desc {
-  font-size: 1.05rem;
-  color: rgba(248,250,252,.44);
-  line-height: 1.85;
-  max-width: 450px;
-  margin-bottom: 44px;
-  font-weight: 400;
-}
-.hero-cta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.btn-hero-primary {
-  padding: 13px 28px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #a855f7, #7c3aed);
-  color: #fff;
-  font-weight: 700;
-  font-size: 0.9rem;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 0 32px rgba(124,58,237,.4), 0 4px 16px rgba(0,0,0,.35);
-  transition: all .22s cubic-bezier(.22,1,.36,1);
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: inherit;
-}
-.btn-hero-primary:hover {
-  transform: scale(1.04);
-  box-shadow: 0 0 44px rgba(124,58,237,.6), 0 8px 24px rgba(0,0,0,.35);
-}
-.btn-hero-outline {
-  padding: 12px 22px;
-  border-radius: 10px;
-  background: rgba(255,255,255,.04);
-  color: rgba(248,250,252,.72);
-  font-weight: 600;
-  font-size: 0.9rem;
-  text-decoration: none;
-  border: 1px solid rgba(255,255,255,.13);
-  cursor: pointer;
-  transition: all .22s cubic-bezier(.22,1,.36,1);
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: inherit;
-}
-.btn-hero-outline:hover {
-  background: rgba(255,255,255,.08);
-  border-color: rgba(255,255,255,.26);
-  transform: scale(1.02);
+    linear-gradient(rgba(124,58,237,0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124,58,237,0.045) 1px, transparent 1px);
+  background-size:52px 52px;
+  mask-image:radial-gradient(ellipse 80% 75% at 50% 0%, black 40%, transparent 100%);
+  -webkit-mask-image:radial-gradient(ellipse 80% 75% at 50% 0%, black 40%, transparent 100%);
+  z-index:0;
 }
 
-/* Hero arc visual */
+/* Hero ambient orbs */
+.hero-orb-1 {
+  position:absolute; top:-10%; right:-5%;
+  width:700px; height:700px; border-radius:50%;
+  background:radial-gradient(ellipse at center, rgba(124,58,237,0.10) 0%, transparent 65%);
+  pointer-events:none; animation:orbFloat 14s ease-in-out infinite;
+}
+.hero-orb-2 {
+  position:absolute; bottom:-20%; left:-8%;
+  width:500px; height:500px; border-radius:50%;
+  background:radial-gradient(ellipse at center, rgba(34,211,238,0.06) 0%, transparent 60%);
+  pointer-events:none; animation:orbFloat 18s ease-in-out infinite reverse;
+}
+@keyframes orbFloat {
+  0%,100% { transform:translate(0,0) scale(1); }
+  50% { transform:translate(20px,-30px) scale(1.04); }
+}
+
+/* Arc visual */
 .hero-arc-wrap {
-  position: absolute;
-  right: -80px;
-  top: 50%;
-  transform: translateY(-52%);
-  width: 660px;
-  height: 660px;
-  pointer-events: none;
+  position:absolute; right:-60px; top:50%;
+  transform:translateY(-52%);
+  width:640px; height:640px;
+  pointer-events:none;
 }
 .arc-nebula {
-  position: absolute;
-  inset: 80px;
-  border-radius: 50%;
-  background: radial-gradient(ellipse at 44% 46%, rgba(100,30,210,.22) 0%, rgba(60,10,160,.07) 45%, transparent 70%);
-  animation: nebulaPulse 8s ease-in-out infinite;
+  position:absolute; inset:80px; border-radius:50%;
+  background:radial-gradient(ellipse at 44% 46%, rgba(100,30,210,0.18) 0%, rgba(60,10,160,0.06) 45%, transparent 70%);
+  animation:nebulaPulse 8s ease-in-out infinite;
 }
-.arc-svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  animation: arcBreathe 9s ease-in-out infinite;
-}
-@keyframes nebulaPulse {
-  0%,100%{ opacity:.65; transform:scale(1); }
-  50%{ opacity:1; transform:scale(1.07); }
-}
-@keyframes arcBreathe {
-  0%,100%{ opacity:.7; }
-  50%{ opacity:1; }
-}
+.arc-svg { position:absolute; inset:0; width:100%; height:100%; animation:arcBreathe 9s ease-in-out infinite; }
+@keyframes nebulaPulse { 0%,100%{opacity:0.65;transform:scale(1)} 50%{opacity:1;transform:scale(1.07)} }
+@keyframes arcBreathe  { 0%,100%{opacity:0.7} 50%{opacity:1} }
 
-/* Stats */
+@media(max-width:900px) { .hero-arc-wrap{display:none} }
+
+/* Hero stats */
 .hero-stats {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  padding-bottom: 56px;
-  padding-left:  max(calc((100vw - 1200px)/2), 24px);
-  padding-right: max(calc((100vw - 1200px)/2), 24px);
+  position:absolute; bottom:0; left:0; right:0;
+  display:grid; grid-template-columns:repeat(4,1fr);
+  padding-bottom:52px;
+  padding-left:max(calc((100vw - 1200px)/2), 2rem);
+  padding-right:max(calc((100vw - 1200px)/2), 2rem);
+  border-top:1px solid rgba(255,255,255,0.06);
+  padding-top:32px;
 }
-.hstat {
-  flex: 1;
-  padding-left: 36px;
-  border-left: 1px solid rgba(255,255,255,.08);
+.hstat { padding-right:32px; }
+.hstat + .hstat { padding-left:32px; padding-right:32px; border-left:1px solid rgba(255,255,255,0.07); }
+.hstat-num { font-size:1.9rem; font-weight:900; color:#fff; letter-spacing:-0.045em; margin-bottom:5px; display:block; }
+.hstat-lbl { font-size:0.66rem; color:rgba(248,250,252,0.3); font-weight:600; letter-spacing:0.07em; text-transform:uppercase; }
+@media(max-width:900px) {
+  .hero-stats { grid-template-columns:repeat(2,1fr); gap:0; padding-bottom:36px; }
+  .hstat + .hstat { border-left:none; }
+  .hstat:nth-child(3), .hstat:nth-child(4) { border-top:1px solid rgba(255,255,255,0.07); padding-top:20px; }
 }
-.hstat:first-child { padding-left: 0; border-left: none; }
-.hstat-num {
-  font-size: 1.95rem;
-  font-weight: 900;
-  color: #fff;
-  letter-spacing: -0.045em;
-  margin-bottom: 5px;
-  display: block;
-  font-variant-numeric: tabular-nums;
-}
-.hstat-lbl {
-  font-size: 0.68rem;
-  color: rgba(248,250,252,.35);
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+@media(max-width:600px) {
+  .hero { padding-bottom:280px; }
+  .hero-title { font-size:2.5rem !important; }
 }
 
-/* ── Feature cards ── */
-.feat-card {
-  background: rgba(255,255,255,.025);
-  border: 1px solid rgba(255,255,255,.07);
-  border-radius: 20px;
-  padding: 32px;
-  transition: all 0.28s cubic-bezier(.22,1,.36,1);
-  text-decoration: none;
-  display: block;
-  position: relative;
-  overflow: hidden;
+/* ── Trust bar ── */
+.trust-bar {
+  display:flex; align-items:center; justify-content:center; gap:28px;
+  padding:14px 28px;
+  background:rgba(255,255,255,0.024);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:16px;
+  flex-wrap:wrap;
 }
-.feat-card:hover {
-  border-color: rgba(139,92,246,.45);
-  background: rgba(124,58,237,.07);
-  transform: scale(1.025) translateY(-3px);
-  box-shadow: 0 24px 64px rgba(124,58,237,.14);
+.trust-item {
+  display:flex; align-items:center; gap:7px;
+  font-size:0.78rem; font-weight:600; color:rgba(248,250,252,0.45);
+  white-space:nowrap;
 }
-.feat-icon {
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
-  background: rgba(124,58,237,.15);
-  border: 1px solid rgba(124,58,237,.28);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  margin-bottom: 20px;
-  transition: all .28s;
-}
-.feat-card:hover .feat-icon {
-  background: rgba(124,58,237,.25);
-  border-color: rgba(139,92,246,.55);
-  transform: scale(1.08);
-}
-.feat-title {
-  font-size: 1.1rem;
-  font-weight: 800;
-  margin-bottom: 10px;
-  color: #fff;
-  letter-spacing: -0.025em;
-}
-.feat-desc {
-  font-size: 0.875rem;
-  color: rgba(248,250,252,.42);
-  line-height: 1.75;
-}
-.feat-arrow {
-  margin-top: 22px;
-  font-size: 0.82rem;
-  color: rgba(167,139,250,.65);
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: all .22s;
-}
-.feat-card:hover .feat-arrow { gap: 11px; color: #a78bfa; }
+.trust-check { color:#10b981; font-size:0.9rem; }
 
-/* ── Eco card ── */
-.eco-card {
-  background: rgba(255,255,255,.025);
-  border: 1px solid rgba(255,255,255,.07);
-  border-radius: 20px;
-  padding: 32px;
-  display: flex;
-  align-items: flex-start;
-  gap: 22px;
-  transition: all .25s;
-}
-.eco-card:hover {
-  border-color: rgba(139,92,246,.3);
-  background: rgba(124,58,237,.045);
-}
-.eco-logo {
-  width: 60px;
-  height: 60px;
-  border-radius: 16px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  font-weight: 900;
+/* ── Feature card SVG icon ── */
+.feat-icon-svg {
+  width:48px; height:48px; border-radius:13px;
+  display:flex; align-items:center; justify-content:center;
+  margin-bottom:18px; flex-shrink:0; font-size:20px;
+  transition:all 0.28s;
 }
 
 /* ── Projects card ── */
 .projects-card {
-  background: rgba(255,255,255,.025);
-  border: 1px solid rgba(255,255,255,.07);
-  border-radius: 20px;
-  padding: 24px;
-  margin-top: 0;
+  background:rgba(255,255,255,0.024);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:20px; padding:8px;
 }
-.proj-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 12px;
-  border-radius: 12px;
-  transition: background .2s;
+.proj-row { border-bottom:1px solid rgba(255,255,255,0.05); }
+.proj-row:last-child { border-bottom:none; }
+
+/* ── XP bar ── */
+.xp-bar-wrap {
+  width:100%; height:6px;
+  background:rgba(255,255,255,0.08);
+  border-radius:100px; overflow:hidden; margin-bottom:4px;
 }
-.proj-row:hover { background: rgba(255,255,255,.04); }
-.proj-info { display: flex; align-items: center; gap: 14px; }
-.proj-av {
-  width: 42px;
-  height: 42px;
-  border-radius: 11px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  font-weight: 900;
-  flex-shrink: 0;
+.xp-bar-fill {
+  height:100%; border-radius:100px;
+  background:linear-gradient(90deg,#7c3aed,#22d3ee);
+  transition:width 1s ease; position:relative; overflow:hidden;
+}
+.xp-bar-fill::after {
+  content:''; position:absolute; top:0; left:-150%; width:60%; bottom:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);
+  animation:barShimmer 2.8s ease-in-out infinite;
 }
 
-/* ── Steps ── */
-.step-card {
-  background: rgba(255,255,255,.025);
-  border: 1px solid rgba(255,255,255,.06);
-  border-radius: 20px;
-  padding: 40px 32px;
-  text-align: center;
-  transition: all .28s cubic-bezier(.22,1,.36,1);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
-}
-.step-card:hover {
-  transform: scale(1.025) translateY(-3px);
-  border-color: rgba(139,92,246,.36);
-  background: rgba(124,58,237,.06);
-  box-shadow: 0 20px 56px rgba(124,58,237,.14), inset 0 1px 0 rgba(168,85,247,.15);
-}
-.step-num {
-  width: 54px;
-  height: 54px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.15rem;
-  font-weight: 900;
-  margin: 0 auto 22px;
-}
-.step-title {
-  font-size: 1.1rem;
-  font-weight: 800;
-  margin-bottom: 12px;
-  letter-spacing: -0.02em;
-  color: #fff;
-}
-.step-desc {
-  font-size: 0.875rem;
-  color: rgba(248,250,252,.42);
-  line-height: 1.8;
-}
-
-/* ── CTA banner ── */
-.cta-banner {
-  position: relative;
-  overflow: hidden;
-  background: rgba(124,58,237,.07);
-  border: 1px solid rgba(124,58,237,.22);
-  border-radius: 24px;
-  padding: 80px 48px;
-  text-align: center;
-}
-.cta-banner-grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(124,58,237,.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(124,58,237,.07) 1px, transparent 1px);
-  background-size: 32px 32px;
-  pointer-events: none;
-}
-.cta-banner-glow {
-  position: absolute;
-  top: -80px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 700px;
-  height: 350px;
-  background: radial-gradient(ellipse, rgba(124,58,237,.22) 0%, transparent 70%);
-  pointer-events: none;
-}
-.cta-title {
-  font-size: clamp(1.8rem, 4vw, 2.9rem);
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  color: #fff;
-  margin-bottom: 16px;
-  position: relative;
-  z-index: 1;
-}
-.cta-desc {
-  color: rgba(248,250,252,.48);
-  font-size: 1rem;
-  margin-bottom: 36px;
-  max-width: 460px;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.75;
-  position: relative;
-  z-index: 1;
-}
-.cta-buttons {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
-  position: relative;
-  z-index: 1;
-}
-
-/* ── Section headers ── */
-.section-label-wrap { margin-bottom: 20px; }
-.section-h {
-  font-size: clamp(1.7rem, 3.2vw, 2.4rem);
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  color: #fff;
-  margin-bottom: 14px;
-  line-height: 1.15;
-}
-.section-sub {
-  font-size: 0.95rem;
-  color: rgba(248,250,252,.4);
-  line-height: 1.8;
-  max-width: 520px;
-}
-
-/* ── Airdrop section responsive grids ── */
-.arc-tier-grid  { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:48px; }
-.arc-earn-grid  { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:40px; }
-
-/* ── Responsive ── */
-@media(max-width:900px) {
-  .hero-arc-wrap { display: none; }
-  .hero-stats { gap: 0; flex-wrap: wrap; }
-  .hstat { min-width: 50%; padding: 12px 0 0; border: none; }
-  .cta-banner { padding: 48px 24px; }
-  .eco-grid { grid-template-columns: 1fr !important; }
-  .arc-tier-grid { grid-template-columns: repeat(3,1fr); }
-  .arc-earn-grid { grid-template-columns: repeat(2,1fr); }
-}
-@media(max-width:600px) {
-  .hero-title { font-size: 2.4rem; }
-  .hero { padding-bottom: 260px; }
-  .arc-tier-grid { grid-template-columns: repeat(2,1fr); }
-  .arc-earn-grid { grid-template-columns: repeat(2,1fr); }
+/* ── Roadmap card highlight ── */
+.roadmap-card-active {
+  border-color:rgba(139,92,246,0.4) !important;
+  box-shadow:0 0 0 1px rgba(139,92,246,0.12), 0 8px 32px rgba(0,0,0,0.28) !important;
 }
 </style>
 </head>
 <body>
 
-<!-- ── NAV ── -->
-<nav class="nav">
-  <a href="index.html" class="nav-logo">
-    <img src="assets/img/logo.svg" alt="Arc Nova" style="width:30px;height:30px;flex-shrink:0"> Arc Nova
+<!-- ── NAVBAR ── -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <a href="index.html" class="nav-logo" aria-label="Arc Nova Home">
+    <img src="assets/img/logo.svg" alt="Arc Nova logo" width="30" height="30" style="flex-shrink:0">
+    Arc Nova
   </a>
-  <ul class="nav-links">
-    <li><a href="index.html" class="active">Home</a></li>
+
+  <ul class="nav-links" role="list">
+    <li><a href="index.html" class="active" aria-current="page">Home</a></li>
     <li><a href="dashboard.html">Dashboard</a></li>
     <li><a href="launchpad.html">Launchpad</a></li>
     <li><a href="defi.html">DeFi</a></li>
     <li><a href="portfolio.html">Portfolio</a></li>
     <li><a href="https://docs.arc.network/" target="_blank" rel="noopener noreferrer">Docs ↗</a></li>
   </ul>
+
   <div class="nav-right">
     <span class="badge-testnet">Testnet</span>
     <div class="notif-wrapper">
-      <button class="notif-btn" onclick="toggleNotifPanel();renderNotifications()" aria-label="Notifications" type="button">🔔<span class="notif-badge" style="display:none">0</span></button>
-      <div class="notif-panel" id="notifPanel" role="status" aria-live="polite"></div>
+      <button class="notif-btn" onclick="toggleNotifPanel();renderNotifications()" aria-label="Notifications" type="button" id="notifBtnHome">
+        🔔<span class="notif-badge" style="display:none" aria-live="polite">0</span>
+      </button>
+      <div class="notif-panel" id="notifPanel" role="log" aria-live="polite"></div>
     </div>
     <button class="btn btn-primary" onclick="connectWallet()" id="walletBtn" type="button">Connect Wallet</button>
-    <button class="hamburger" onclick="toggleMobileNav()" id="hamburgerBtn" aria-label="Open menu" type="button"><span></span><span></span><span></span></button>
+    <button class="hamburger" onclick="toggleMobileNav()" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false" type="button">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
 
-<!-- Mobile Nav -->
-<div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobileNav()"></div>
-<div class="mobile-nav" id="mobileNav">
+<!-- Mobile overlay & drawer -->
+<div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobileNav()" aria-hidden="true"></div>
+<div class="mobile-nav" id="mobileNav" aria-label="Mobile navigation" role="dialog">
   <div class="mobile-nav-header">
-    <a href="index.html" class="nav-logo"><img src="assets/img/logo.svg" alt="Arc Nova" style="width:30px;height:30px;flex-shrink:0"> Arc Nova</a>
-    <button class="mobile-nav-close" onclick="toggleMobileNav()">✕</button>
+    <a href="index.html" class="nav-logo"><img src="assets/img/logo.svg" alt="Arc Nova" width="30" height="30" style="flex-shrink:0"> Arc Nova</a>
+    <button class="mobile-nav-close" onclick="toggleMobileNav()" aria-label="Close menu" type="button">✕</button>
   </div>
-  <ul class="mobile-nav-links">
+  <ul class="mobile-nav-links" role="list">
     <li><a href="index.html">🏠 Home</a></li>
     <li><a href="dashboard.html">📊 Dashboard</a></li>
     <li><a href="launchpad.html">🚀 Launchpad</a></li>
@@ -491,47 +210,59 @@ body { background:#040412; }
     <li><a href="https://docs.arc.network/" target="_blank" rel="noopener noreferrer">📄 Docs ↗</a></li>
   </ul>
   <div class="mobile-nav-footer">
-    <span class="badge-testnet">Testnet</span>
+    <span class="badge-testnet">Arc Testnet</span>
     <button class="btn btn-primary" style="width:100%" onclick="connectWallet();toggleMobileNav()" type="button">Connect Wallet</button>
   </div>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════
-     HERO
+     HERO SECTION
 ══════════════════════════════════════════════════════════ -->
-<section class="hero">
-  <div class="hero-grid-bg"></div>
+<section class="hero" aria-label="Hero section">
+  <div class="hero-grid-bg" aria-hidden="true"></div>
+  <div class="hero-orb-1" aria-hidden="true"></div>
+  <div class="hero-orb-2" aria-hidden="true"></div>
 
-  <!-- Content -->
   <div class="container" style="position:relative;z-index:2">
-    <div style="max-width:540px">
+    <div style="max-width:560px">
+
+      <!-- Live badge -->
       <div class="hero-badge fade-up" role="status" aria-label="Live — Built on Arc Network">
         <span class="badge-live-dot" aria-hidden="true"></span>
         Built on Arc Network
       </div>
 
-      <h1 class="hero-title fade-up d1">
-        The DeFi Hub<br>for <span class="grad-text">Arc Network</span>
+      <!-- Headline -->
+      <h1 class="hero-title fade-up d1" style="font-size:clamp(2.8rem,5.8vw,5.2rem)">
+        The DeFi Hub for<br><span class="grad-text">Arc Network</span>
       </h1>
 
+      <!-- Subheading -->
       <p class="hero-desc fade-up d2">
-        Trade, stake, earn yield, and discover new projects — all on Arc Testnet's stablecoin-native infrastructure with real on-chain settlement.
+        Trade, stake, bridge, and earn yield on Arc Testnet's stablecoin-native infrastructure. Real on-chain settlement with institutional-grade tools.
       </p>
 
+      <!-- CTA row -->
       <div class="hero-cta fade-up d3">
-        <a href="defi.html" class="btn-hero-primary">
+        <a href="defi.html" class="btn-hero-primary" role="button">
           Launch App
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 7h9M7.5 3l4 4-4 4" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2.5 7h9M7.5 3l4 4-4 4" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
-        <a href="dashboard.html" class="btn-hero-outline">
-          View Dashboard
-        </a>
+        <a href="dashboard.html" class="btn-hero-outline" role="button">View Dashboard</a>
+      </div>
+
+      <!-- Trust signals -->
+      <div class="trust-bar fade-up d4" style="margin-top:40px;max-width:500px">
+        <div class="trust-item"><span class="trust-check">✓</span> EIP-6963 Wallets</div>
+        <div class="trust-item"><span class="trust-check">✓</span> Real On-Chain Swaps</div>
+        <div class="trust-item"><span class="trust-check">✓</span> Live Block Data</div>
+        <div class="trust-item"><span class="trust-check">✓</span> Non-Custodial</div>
       </div>
     </div>
   </div>
 
-  <!-- Arc visual -->
-  <div class="hero-arc-wrap">
+  <!-- Arc SVG visual (desktop only) -->
+  <div class="hero-arc-wrap" aria-hidden="true">
     <div class="arc-nebula"></div>
     <svg class="arc-svg" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -551,22 +282,22 @@ body { background:#040412; }
           <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
       </defs>
-      <circle cx="300" cy="300" r="290" fill="none" stroke="url(#arcG1)" stroke-width="8" filter="url(#arcSoftGlow)" opacity="0.32"/>
+      <circle cx="300" cy="300" r="290" fill="none" stroke="url(#arcG1)" stroke-width="8" filter="url(#arcSoftGlow)" opacity="0.28"/>
       <circle cx="300" cy="300" r="290" fill="none" stroke="url(#arcG1)" stroke-width="1.4" filter="url(#arcGlow)"/>
-      <circle cx="300" cy="300" r="262" fill="none" stroke="rgba(139,92,246,.05)" stroke-width="1"/>
-      <circle cx="300" cy="300" r="318" fill="none" stroke="rgba(139,92,246,.04)" stroke-width="1"/>
+      <circle cx="300" cy="300" r="258" fill="none" stroke="rgba(139,92,246,.045)" stroke-width="1"/>
+      <circle cx="300" cy="300" r="322" fill="none" stroke="rgba(139,92,246,.035)" stroke-width="1"/>
     </svg>
   </div>
 
-  <!-- Stats -->
-  <div class="hero-stats fade-up d4">
+  <!-- Hero stats strip -->
+  <div class="hero-stats fade-up d4" role="region" aria-label="Key protocol statistics">
     <div class="hstat">
       <span class="hstat-num" data-live="hero-tvl">—</span>
       <div class="hstat-lbl">Total Value Locked</div>
     </div>
     <div class="hstat">
       <span class="hstat-num" data-live="hero-projects">—</span>
-      <div class="hstat-lbl">Projects</div>
+      <div class="hstat-lbl">Active Projects</div>
     </div>
     <div class="hstat">
       <span class="hstat-num" data-live="hero-users">—</span>
@@ -580,124 +311,182 @@ body { background:#040412; }
 </section>
 
 <!-- ══════════════════════════════════════════════════════════
-     FEATURES
+     PLATFORM FEATURES
 ══════════════════════════════════════════════════════════ -->
 <section class="section" style="padding-top:20px">
   <div class="container">
     <div style="text-align:center;margin-bottom:56px">
       <span class="section-label">⚡ Platform</span>
       <h2 class="section-h" style="text-align:center;margin:14px auto 0">Everything you need in one place</h2>
+      <p class="section-sub" style="text-align:center;margin:12px auto 0;max-width:480px">A complete suite of institutional-grade DeFi tools, all connected to Arc Network's on-chain infrastructure.</p>
     </div>
+
     <div class="grid-4">
-      <a href="dashboard.html" class="feat-card fade-up d1">
-        <div class="feat-icon">📊</div>
-        <div class="feat-title">Dashboard</div>
-        <div class="feat-desc">Real-time TVL, volume, and protocol analytics across all Arc-based projects with live on-chain data.</div>
+      <a href="dashboard.html" class="feat-card fade-up d1" role="link">
+        <div class="feat-icon" style="background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.24)">📊</div>
+        <div class="feat-title">Analytics Dashboard</div>
+        <div class="feat-desc">Real-time TVL, volume, and protocol analytics across all Arc-based projects with live on-chain data feeds.</div>
         <div class="feat-arrow">View Dashboard <span>→</span></div>
       </a>
-      <a href="launchpad.html" class="feat-card fade-up d2">
-        <div class="feat-icon">🚀</div>
-        <div class="feat-title">Launchpad</div>
+      <a href="launchpad.html" class="feat-card fade-up d2" role="link">
+        <div class="feat-icon" style="background:rgba(245,158,11,0.10);border:1px solid rgba(245,158,11,0.22)">🚀</div>
+        <div class="feat-title">Project Launchpad</div>
         <div class="feat-desc">Discover and invest in the next generation of Arc ecosystem projects before they go mainstream.</div>
         <div class="feat-arrow">Explore Projects <span>→</span></div>
       </a>
-      <a href="defi.html" class="feat-card fade-up d3">
-        <div class="feat-icon">🔄</div>
-        <div class="feat-title">Swap</div>
-        <div class="feat-desc">Instant token swaps with minimal slippage on Arc's deterministic settlement layer.</div>
+      <a href="defi.html" class="feat-card fade-up d3" role="link">
+        <div class="feat-icon" style="background:rgba(34,211,238,0.08);border:1px solid rgba(34,211,238,0.18)">🔄</div>
+        <div class="feat-title">Instant Swap</div>
+        <div class="feat-desc">Swap tokens with minimal slippage on Arc's deterministic settlement layer. Zero gas surprises.</div>
         <div class="feat-arrow">Start Swapping <span>→</span></div>
       </a>
-      <a href="defi.html" class="feat-card fade-up d4">
-        <div class="feat-icon">💎</div>
+      <a href="defi.html" class="feat-card fade-up d4" role="link">
+        <div class="feat-icon" style="background:rgba(16,185,129,0.09);border:1px solid rgba(16,185,129,0.20)">💎</div>
         <div class="feat-title">Stake & Earn</div>
-        <div class="feat-desc">Put your assets to work. Earn yield through staking pools, LP provision, and yield vaults.</div>
+        <div class="feat-desc">Put your assets to work. Earn yield through NOVA staking, LP provision, and yield vaults.</div>
         <div class="feat-arrow">Start Earning <span>→</span></div>
+      </a>
+    </div>
+
+    <!-- Additional features row -->
+    <div class="grid-4" style="margin-top:20px">
+      <a href="defi.html" class="feat-card fade-up d1" role="link">
+        <div class="feat-icon" style="background:rgba(99,102,241,0.10);border:1px solid rgba(99,102,241,0.22)">🌉</div>
+        <div class="feat-title">ArcBridge</div>
+        <div class="feat-desc">Bridge assets cross-chain to Arc Testnet in seconds with no fees on testnet.</div>
+        <div class="feat-arrow">Bridge Assets <span>→</span></div>
+      </a>
+      <a href="portfolio.html" class="feat-card fade-up d2" role="link">
+        <div class="feat-icon" style="background:rgba(168,85,247,0.10);border:1px solid rgba(168,85,247,0.22)">💼</div>
+        <div class="feat-title">Portfolio Tracker</div>
+        <div class="feat-desc">Track all your holdings, staking positions, and yield rewards in a unified dashboard.</div>
+        <div class="feat-arrow">View Portfolio <span>→</span></div>
+      </a>
+      <a href="defi.html" class="feat-card fade-up d3" role="link">
+        <div class="feat-icon" style="background:rgba(6,182,212,0.09);border:1px solid rgba(6,182,212,0.19)">🌊</div>
+        <div class="feat-title">Liquidity Pools</div>
+        <div class="feat-desc">Provide liquidity to earn swap fees on the most liquid Arc trading pairs.</div>
+        <div class="feat-arrow">Add Liquidity <span>→</span></div>
+      </a>
+      <a href="defi.html" class="feat-card fade-up d4" role="link">
+        <div class="feat-icon" style="background:rgba(245,158,11,0.09);border:1px solid rgba(245,158,11,0.19)">💰</div>
+        <div class="feat-title">Lending Markets</div>
+        <div class="feat-desc">Borrow against collateral or earn lending yield with transparent on-chain rates.</div>
+        <div class="feat-arrow">Explore Markets <span>→</span></div>
       </a>
     </div>
   </div>
 </section>
 
-
-
 <!-- ══════════════════════════════════════════════════════════
      ECOSYSTEM
 ══════════════════════════════════════════════════════════ -->
-<section class="section">
+<section class="section" style="border-top:1px solid rgba(255,255,255,0.05)">
   <div class="container">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start" class="eco-grid">
-
-      <!-- Arc Network card -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start" class="eco-grid">
+      <!-- Left: Arc Network -->
       <div class="fade-up d1">
         <span class="section-label">🌐 Ecosystem</span>
         <h2 class="section-h" style="margin:16px 0 12px">Built on the Best</h2>
-        <p class="section-sub" style="margin-bottom:28px">Arc Nova sits at the centre of Arc Network's growing DeFi ecosystem.</p>
-        <div class="eco-card">
-          <div class="eco-logo" style="background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.25);color:#a78bfa">A</div>
+        <p class="section-sub" style="margin-bottom:28px">Arc Nova sits at the centre of Arc Network's growing DeFi ecosystem, harnessing deterministic settlement and stablecoin-native infrastructure.</p>
+
+        <div class="eco-card" style="margin-bottom:16px">
+          <div class="eco-logo" style="background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.24);color:#a78bfa">A</div>
           <div>
-            <div style="font-weight:800;font-size:1.05rem;margin-bottom:8px;color:#fff;letter-spacing:-0.02em">Arc Network</div>
-            <div style="font-size:0.875rem;color:rgba(248,250,252,.42);line-height:1.75">Stablecoin-native L1 with fast deterministic settlement, low fees, and full EVM compatibility — enabling payments, stablecoin FX, and the agentic economy.</div>
-            <a href="https://docs.arc.network/" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:5px;margin-top:14px;font-size:0.8rem;color:#a78bfa;font-weight:700;text-decoration:none">Read Docs ↗</a>
+            <div style="font-weight:800;font-size:1.05rem;margin-bottom:7px;color:#fff;letter-spacing:-0.022em">Arc Network</div>
+            <div style="font-size:0.875rem;color:rgba(248,250,252,0.4);line-height:1.75">Stablecoin-native L1 with fast deterministic settlement, low fees, and full EVM compatibility — enabling payments, stablecoin FX, and the agentic economy.</div>
+            <a href="https://docs.arc.network/" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:5px;margin-top:14px;font-size:0.8rem;color:#a78bfa;font-weight:700;text-decoration:none;transition:opacity 0.2s" onmouseover="this.style.opacity=0.75" onmouseout="this.style.opacity=1">Read Documentation ↗</a>
+          </div>
+        </div>
+
+        <!-- Quick stats -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:4px">
+          <div class="arc-net-stat" style="border-radius:12px">
+            <div class="arc-net-stat-val" data-live="arc-block">—</div>
+            <div class="arc-net-stat-lbl">Block Height</div>
+          </div>
+          <div class="arc-net-stat" style="border-radius:12px">
+            <div class="arc-net-stat-val" data-live="arc-tps">—</div>
+            <div class="arc-net-stat-lbl">TPS</div>
+          </div>
+          <div class="arc-net-stat" style="border-radius:12px">
+            <div class="arc-net-stat-val" style="color:var(--success)">100%</div>
+            <div class="arc-net-stat-lbl">Uptime</div>
           </div>
         </div>
       </div>
 
-      <!-- Featured Projects -->
+      <!-- Right: Featured projects -->
       <div class="fade-up d2">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-top:2px">
-          <div style="font-weight:800;font-size:1rem;color:#fff;letter-spacing:-0.02em">Featured Projects</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <div style="font-weight:800;font-size:1rem;color:#fff;letter-spacing:-0.022em">Featured Projects</div>
           <a href="launchpad.html" style="font-size:0.8rem;color:#a78bfa;font-weight:700;text-decoration:none">View All →</a>
         </div>
+
         <div class="projects-card">
           <div class="proj-row">
             <div class="proj-info">
-              <div class="proj-av" style="background:rgba(124,58,237,.15);color:#a78bfa">⚡</div>
+              <div class="proj-av" style="background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.2);color:#a78bfa">⚡</div>
               <div>
                 <div style="font-weight:700;font-size:0.9rem;color:#fff">ArcSwap</div>
-                <div style="font-size:0.76rem;color:rgba(248,250,252,.35)">DEX Protocol</div>
+                <div style="font-size:0.74rem;color:rgba(248,250,252,0.35)">DEX Protocol</div>
               </div>
             </div>
             <div style="text-align:right">
               <span class="tag tag-green">● Live</span>
-              <div style="font-size:0.76rem;color:rgba(248,250,252,.3);margin-top:4px">TVL: —</div>
+              <div style="font-size:0.74rem;color:rgba(248,250,252,0.28);margin-top:4px">TVL —</div>
             </div>
           </div>
           <div class="proj-row">
             <div class="proj-info">
-              <div class="proj-av" style="background:rgba(34,211,238,.12);color:#22d3ee">🏦</div>
+              <div class="proj-av" style="background:rgba(34,211,238,0.10);border:1px solid rgba(34,211,238,0.18);color:#22d3ee">🏦</div>
               <div>
                 <div style="font-weight:700;font-size:0.9rem;color:#fff">NovaLend</div>
-                <div style="font-size:0.76rem;color:rgba(248,250,252,.35)">Lending Protocol</div>
+                <div style="font-size:0.74rem;color:rgba(248,250,252,0.35)">Lending Protocol</div>
               </div>
             </div>
             <div style="text-align:right">
               <span class="tag tag-yellow">⏳ Upcoming</span>
-              <div style="font-size:0.76rem;color:rgba(248,250,252,.3);margin-top:4px">Raise: TBA</div>
+              <div style="font-size:0.74rem;color:rgba(248,250,252,0.28);margin-top:4px">Raise: TBA</div>
             </div>
           </div>
           <div class="proj-row">
             <div class="proj-info">
-              <div class="proj-av" style="background:rgba(245,158,11,.12);color:#f59e0b">🌉</div>
+              <div class="proj-av" style="background:rgba(245,158,11,0.10);border:1px solid rgba(245,158,11,0.18);color:#f59e0b">🌉</div>
               <div>
                 <div style="font-weight:700;font-size:0.9rem;color:#fff">ArcBridge</div>
-                <div style="font-size:0.76rem;color:rgba(248,250,252,.35)">Cross-chain Bridge</div>
+                <div style="font-size:0.74rem;color:rgba(248,250,252,0.35)">Cross-chain Bridge</div>
               </div>
             </div>
             <div style="text-align:right">
               <span class="tag tag-green">● Live</span>
-              <div style="font-size:0.76rem;color:rgba(248,250,252,.3);margin-top:4px">Volume: —</div>
+              <div style="font-size:0.74rem;color:rgba(248,250,252,0.28);margin-top:4px">Volume —</div>
             </div>
           </div>
           <div class="proj-row">
             <div class="proj-info">
-              <div class="proj-av" style="background:rgba(99,102,241,.15);color:#818cf8">🎨</div>
+              <div class="proj-av" style="background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.2);color:#818cf8">🎨</div>
               <div>
                 <div style="font-weight:700;font-size:0.9rem;color:#fff">ArcNFT</div>
-                <div style="font-size:0.76rem;color:rgba(248,250,252,.35)">NFT Marketplace</div>
+                <div style="font-size:0.74rem;color:rgba(248,250,252,0.35)">NFT Marketplace</div>
               </div>
             </div>
             <div style="text-align:right">
               <span class="tag tag-yellow">⏳ Upcoming</span>
-              <div style="font-size:0.76rem;color:rgba(248,250,252,.3);margin-top:4px">Raise: TBA</div>
+              <div style="font-size:0.74rem;color:rgba(248,250,252,0.28);margin-top:4px">Raise: TBA</div>
+            </div>
+          </div>
+          <div class="proj-row">
+            <div class="proj-info">
+              <div class="proj-av" style="background:rgba(16,185,129,0.10);border:1px solid rgba(16,185,129,0.18);color:#10b981">📊</div>
+              <div>
+                <div style="font-weight:700;font-size:0.9rem;color:#fff">ArcPerp</div>
+                <div style="font-size:0.74rem;color:rgba(248,250,252,0.35)">Perpetuals DEX</div>
+              </div>
+            </div>
+            <div style="text-align:right">
+              <span class="tag tag-blue">🔮 Planned</span>
+              <div style="font-size:0.74rem;color:rgba(248,250,252,0.28);margin-top:4px">Q4 2026</div>
             </div>
           </div>
         </div>
@@ -709,88 +498,89 @@ body { background:#040412; }
 <!-- ══════════════════════════════════════════════════════════
      HOW IT WORKS
 ══════════════════════════════════════════════════════════ -->
-<section class="section" style="border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05)">
+<section class="section" style="border-top:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05)">
   <div class="container">
     <div style="text-align:center;margin-bottom:56px">
       <span class="section-label">📋 How It Works</span>
       <h2 class="section-h" style="text-align:center;margin:14px auto 0">Get started in minutes</h2>
+      <p class="section-sub" style="text-align:center;margin:12px auto 0;max-width:440px">No KYC, no sign-up, no custody. Just connect your wallet and go.</p>
     </div>
     <div class="grid-3">
       <div class="step-card fade-up d1">
-        <div class="step-num" style="background:rgba(124,58,237,.14);border:1.5px solid rgba(124,58,237,.3);color:#a78bfa">1</div>
+        <div class="step-num" style="background:rgba(124,58,237,0.12);border:1.5px solid rgba(124,58,237,0.28);color:#a78bfa">1</div>
         <div class="step-title">Connect Wallet</div>
-        <div class="step-desc">Connect MetaMask or any EVM wallet to Arc Testnet and get started instantly — no KYC, no sign-up required.</div>
+        <div class="step-desc">Connect MetaMask, WalletConnect, or any EIP-6963 compatible wallet to Arc Testnet and get 1,000 NOVA from the faucet instantly.</div>
       </div>
       <div class="step-card fade-up d2">
-        <div class="step-num" style="background:rgba(34,211,238,.12);border:1.5px solid rgba(34,211,238,.3);color:#22d3ee">2</div>
+        <div class="step-num" style="background:rgba(34,211,238,0.10);border:1.5px solid rgba(34,211,238,0.26);color:#22d3ee">2</div>
         <div class="step-title">Explore & Trade</div>
-        <div class="step-desc">Swap tokens, provide liquidity, or discover new projects on the launchpad with minimal fees and instant settlement.</div>
+        <div class="step-desc">Swap tokens, provide liquidity, or discover projects on the launchpad — all with minimal fees and instant on-chain settlement.</div>
       </div>
       <div class="step-card fade-up d3">
-        <div class="step-num" style="background:rgba(16,185,129,.12);border:1.5px solid rgba(16,185,129,.3);color:#10b981">3</div>
+        <div class="step-num" style="background:rgba(16,185,129,0.10);border:1.5px solid rgba(16,185,129,0.26);color:#10b981">3</div>
         <div class="step-title">Earn Rewards</div>
-        <div class="step-desc">Stake NOVA, provide liquidity, and earn yield from multiple sources across the growing Arc ecosystem.</div>
+        <div class="step-desc">Stake NOVA, provide liquidity, and earn XP to secure your mainnet NOVA token allocation. Every action earns points.</div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ══════════════════════════════════════════════════════════
-     AIRDROP / XP
+     NOVA AIRDROP / XP TIERS
 ══════════════════════════════════════════════════════════ -->
-<section class="section" style="background:rgba(245,158,11,.02);border-top:1px solid rgba(245,158,11,.10);border-bottom:1px solid rgba(245,158,11,.10)">
+<section class="section" style="background:rgba(245,158,11,0.018);border-top:1px solid rgba(245,158,11,0.08);border-bottom:1px solid rgba(245,158,11,0.08)">
   <div class="container">
     <div style="text-align:center;margin-bottom:48px">
-      <span class="section-label" style="background:rgba(245,158,11,.10);border-color:rgba(245,158,11,.28);color:#fbbf24">🪂 NOVA Airdrop</span>
+      <span class="section-label" style="background:rgba(245,158,11,0.09);border-color:rgba(245,158,11,0.25);color:#fbbf24">🪂 NOVA Airdrop</span>
       <h2 class="section-h fade-up" style="text-align:center;margin:16px auto 0">Earn your <span class="grad-text">NOVA allocation</span></h2>
       <p class="section-sub fade-up d1" style="text-align:center;margin:14px auto 0;max-width:540px">
-        Arc Nova is preparing for mainnet. Early testnet participants who accumulate XP will receive a guaranteed <strong style="color:#fbbf24">NOVA token allocation</strong> at launch. Snapshot date TBA — start earning now.
+        Arc Nova is preparing for mainnet. Early testnet participants who accumulate XP will receive a guaranteed <strong style="color:#fbbf24;font-weight:700">NOVA token allocation</strong> at launch. Snapshot date TBA — start earning now.
       </p>
     </div>
 
     <!-- Tier cards -->
     <div class="arc-tier-grid fade-up d2">
-      <div class="card" style="text-align:center;padding:18px 12px;border-color:rgba(205,127,50,.2)">
+      <div class="card" style="text-align:center;padding:20px 12px;border-color:rgba(205,127,50,0.2)">
         <div style="font-size:1.6rem;margin-bottom:8px">🥉</div>
-        <div style="font-weight:800;font-size:.85rem;color:#cd7f32;margin-bottom:4px">Bronze</div>
-        <div style="font-size:.72rem;color:var(--muted);margin-bottom:8px">0 – 249 XP</div>
-        <div style="font-size:.76rem;font-weight:800;color:var(--text)">0.5%<br><span style="font-weight:400;color:var(--muted)">allocation</span></div>
+        <div style="font-weight:800;font-size:0.85rem;color:#cd7f32;margin-bottom:4px">Bronze</div>
+        <div style="font-size:0.72rem;color:var(--muted);margin-bottom:8px">0 – 249 XP</div>
+        <div style="font-size:0.82rem;font-weight:900;color:var(--text)">0.5%<br><span style="font-weight:400;font-size:0.7rem;color:var(--muted)">allocation</span></div>
       </div>
-      <div class="card" style="text-align:center;padding:18px 12px;border-color:rgba(148,163,184,.2)">
+      <div class="card" style="text-align:center;padding:20px 12px;border-color:rgba(148,163,184,0.2)">
         <div style="font-size:1.6rem;margin-bottom:8px">🥈</div>
-        <div style="font-weight:800;font-size:.85rem;color:#94a3b8;margin-bottom:4px">Silver</div>
-        <div style="font-size:.72rem;color:var(--muted);margin-bottom:8px">250 – 799 XP</div>
-        <div style="font-size:.76rem;font-weight:800;color:var(--text)">1%<br><span style="font-weight:400;color:var(--muted)">allocation</span></div>
+        <div style="font-weight:800;font-size:0.85rem;color:#94a3b8;margin-bottom:4px">Silver</div>
+        <div style="font-size:0.72rem;color:var(--muted);margin-bottom:8px">250 – 799 XP</div>
+        <div style="font-size:0.82rem;font-weight:900;color:var(--text)">1%<br><span style="font-weight:400;font-size:0.7rem;color:var(--muted)">allocation</span></div>
       </div>
-      <div class="card" style="text-align:center;padding:18px 12px;border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.04)">
+      <div class="card" style="text-align:center;padding:20px 12px;border-color:rgba(245,158,11,0.26);background:rgba(245,158,11,0.035)">
         <div style="font-size:1.6rem;margin-bottom:8px">🥇</div>
-        <div style="font-weight:800;font-size:.85rem;color:#f59e0b;margin-bottom:4px">Gold</div>
-        <div style="font-size:.72rem;color:var(--muted);margin-bottom:8px">800 – 1,999 XP</div>
-        <div style="font-size:.76rem;font-weight:800;color:var(--text)">2%<br><span style="font-weight:400;color:var(--muted)">allocation</span></div>
+        <div style="font-weight:800;font-size:0.85rem;color:#f59e0b;margin-bottom:4px">Gold</div>
+        <div style="font-size:0.72rem;color:var(--muted);margin-bottom:8px">800 – 1,999 XP</div>
+        <div style="font-size:0.82rem;font-weight:900;color:var(--text)">2%<br><span style="font-weight:400;font-size:0.7rem;color:var(--muted)">allocation</span></div>
       </div>
-      <div class="card" style="text-align:center;padding:18px 12px;border-color:rgba(226,232,240,.15)">
+      <div class="card" style="text-align:center;padding:20px 12px;border-color:rgba(226,232,240,0.14)">
         <div style="font-size:1.6rem;margin-bottom:8px">🏆</div>
-        <div style="font-weight:800;font-size:.85rem;color:#e2e8f0;margin-bottom:4px">Platinum</div>
-        <div style="font-size:.72rem;color:var(--muted);margin-bottom:8px">2,000 – 4,999 XP</div>
-        <div style="font-size:.76rem;font-weight:800;color:var(--text)">4%<br><span style="font-weight:400;color:var(--muted)">allocation</span></div>
+        <div style="font-weight:800;font-size:0.85rem;color:#e2e8f0;margin-bottom:4px">Platinum</div>
+        <div style="font-size:0.72rem;color:var(--muted);margin-bottom:8px">2,000 – 4,999 XP</div>
+        <div style="font-size:0.82rem;font-weight:900;color:var(--text)">4%<br><span style="font-weight:400;font-size:0.7rem;color:var(--muted)">allocation</span></div>
       </div>
-      <div class="card" style="text-align:center;padding:18px 12px;border-color:rgba(34,211,238,.28);background:rgba(34,211,238,.04)">
+      <div class="card" style="text-align:center;padding:20px 12px;border-color:rgba(34,211,238,0.3);background:rgba(34,211,238,0.035)">
         <div style="font-size:1.6rem;margin-bottom:8px">💎</div>
-        <div style="font-weight:800;font-size:.85rem;color:#22d3ee;margin-bottom:4px">Diamond</div>
-        <div style="font-size:.72rem;color:var(--muted);margin-bottom:8px">5,000+ XP</div>
-        <div style="font-size:.76rem;font-weight:800;color:var(--text)">8%<br><span style="font-weight:400;color:var(--muted)">allocation</span></div>
+        <div style="font-weight:800;font-size:0.85rem;color:#22d3ee;margin-bottom:4px">Diamond</div>
+        <div style="font-size:0.72rem;color:var(--muted);margin-bottom:8px">5,000+ XP</div>
+        <div style="font-size:0.82rem;font-weight:900;color:var(--text)">8%<br><span style="font-weight:400;font-size:0.7rem;color:var(--muted)">allocation</span></div>
       </div>
     </div>
 
-    <!-- Connected user's XP card (hidden until wallet connected) -->
-    <div id="airXpCard" style="display:none;max-width:480px;margin:0 auto 36px">
-      <div class="glass-panel" style="padding:22px;text-align:center">
-        <div style="font-size:.7rem;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px">Your Progress</div>
-        <div style="font-size:2.4rem;font-weight:900;letter-spacing:-.03em;margin-bottom:4px" data-xp>0</div>
-        <div style="font-size:.8rem;font-weight:700;margin-bottom:12px" data-xp-tier style="color:#cd7f32">🥉 Bronze</div>
+    <!-- Connected user XP card -->
+    <div id="airXpCard" style="display:none;max-width:460px;margin:0 auto 36px">
+      <div class="glass-panel" style="padding:24px;text-align:center">
+        <div style="font-size:0.7rem;font-weight:700;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:12px">Your Progress</div>
+        <div style="font-size:2.4rem;font-weight:900;letter-spacing:-0.03em;margin-bottom:4px" data-xp>0</div>
+        <div style="font-size:0.8rem;font-weight:700;margin-bottom:12px;color:#cd7f32" data-xp-tier>🥉 Bronze</div>
         <div class="xp-bar-wrap"><div class="xp-bar-fill" style="width:0%"></div></div>
-        <div style="font-size:.72rem;color:var(--muted);margin-top:8px" data-xp-next></div>
-        <div style="display:flex;justify-content:center;gap:24px;margin-top:16px;font-size:.8rem">
+        <div style="font-size:0.72rem;color:var(--muted);margin-top:8px" data-xp-next></div>
+        <div style="display:flex;justify-content:center;gap:28px;margin-top:16px;font-size:0.8rem">
           <div style="text-align:center"><div style="font-weight:800;color:var(--text)" data-xp-rank>#—</div><div style="color:var(--muted)">Rank</div></div>
           <div style="text-align:center"><div style="font-weight:800;color:var(--text)" data-xp-streak>0 days</div><div style="color:var(--muted)">Streak</div></div>
         </div>
@@ -799,31 +589,31 @@ body { background:#040412; }
 
     <!-- How to earn XP -->
     <div class="arc-earn-grid fade-up d3">
-      <div style="text-align:center;padding:16px 12px;border-radius:14px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06)">
-        <div style="font-size:1.4rem;margin-bottom:8px">🔗</div>
-        <div style="font-weight:700;font-size:.82rem;color:var(--text);margin-bottom:4px">Connect Wallet</div>
-        <div style="font-size:.72rem;color:#a78bfa;font-weight:800">+50 XP</div>
+      <div style="text-align:center;padding:18px 14px;border-radius:15px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06)">
+        <div style="font-size:1.5rem;margin-bottom:8px">🔗</div>
+        <div style="font-weight:700;font-size:0.82rem;color:var(--text);margin-bottom:4px">Connect Wallet</div>
+        <div style="font-size:0.72rem;color:#a78bfa;font-weight:800">+50 XP</div>
       </div>
-      <div style="text-align:center;padding:16px 12px;border-radius:14px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06)">
-        <div style="font-size:1.4rem;margin-bottom:8px">🔄</div>
-        <div style="font-weight:700;font-size:.82rem;color:var(--text);margin-bottom:4px">Swap Tokens</div>
-        <div style="font-size:.72rem;color:#a78bfa;font-weight:800">+25 XP each</div>
+      <div style="text-align:center;padding:18px 14px;border-radius:15px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06)">
+        <div style="font-size:1.5rem;margin-bottom:8px">🔄</div>
+        <div style="font-weight:700;font-size:0.82rem;color:var(--text);margin-bottom:4px">Swap Tokens</div>
+        <div style="font-size:0.72rem;color:#a78bfa;font-weight:800">+25 XP each</div>
       </div>
-      <div style="text-align:center;padding:16px 12px;border-radius:14px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06)">
-        <div style="font-size:1.4rem;margin-bottom:8px">🏦</div>
-        <div style="font-weight:700;font-size:.82rem;color:var(--text);margin-bottom:4px">Stake NOVA</div>
-        <div style="font-size:.72rem;color:#a78bfa;font-weight:800">+40 XP each</div>
+      <div style="text-align:center;padding:18px 14px;border-radius:15px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06)">
+        <div style="font-size:1.5rem;margin-bottom:8px">🏦</div>
+        <div style="font-weight:700;font-size:0.82rem;color:var(--text);margin-bottom:4px">Stake NOVA</div>
+        <div style="font-size:0.72rem;color:#a78bfa;font-weight:800">+40 XP each</div>
       </div>
-      <div style="text-align:center;padding:16px 12px;border-radius:14px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06)">
-        <div style="font-size:1.4rem;margin-bottom:8px">📅</div>
-        <div style="font-weight:700;font-size:.82rem;color:var(--text);margin-bottom:4px">Daily Check-in</div>
-        <div style="font-size:.72rem;color:#a78bfa;font-weight:800">+15 XP / day</div>
+      <div style="text-align:center;padding:18px 14px;border-radius:15px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06)">
+        <div style="font-size:1.5rem;margin-bottom:8px">📅</div>
+        <div style="font-weight:700;font-size:0.82rem;color:var(--text);margin-bottom:4px">Daily Check-in</div>
+        <div style="font-size:0.72rem;color:#a78bfa;font-weight:800">+15 XP / day</div>
       </div>
     </div>
 
     <div style="text-align:center">
-      <div style="font-size:.85rem;color:var(--muted);margin-bottom:16px">Connect your wallet to track your XP and secure your allocation</div>
-      <button onclick="openWalletModal()" class="btn btn-primary btn-lg" id="airCtaBtn">Start Earning XP →</button>
+      <div style="font-size:0.85rem;color:var(--muted);margin-bottom:18px">Connect your wallet to track your XP and secure your allocation</div>
+      <button onclick="connectWallet()" class="btn btn-primary btn-lg" id="airCtaBtn" type="button">Start Earning XP →</button>
     </div>
   </div>
 </section>
@@ -831,75 +621,70 @@ body { background:#040412; }
 <!-- ══════════════════════════════════════════════════════════
      YIELD CALCULATOR
 ══════════════════════════════════════════════════════════ -->
-<section class="section" style="border-top:1px solid rgba(255,255,255,.05)">
+<section class="section" style="border-top:1px solid rgba(255,255,255,0.05)">
   <div class="container">
     <div style="text-align:center;margin-bottom:40px">
-      <span class="section-label" style="background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.25);color:#10b981">📈 Calculator</span>
+      <span class="section-label" style="background:rgba(16,185,129,0.08);border-color:rgba(16,185,129,0.22);color:#10b981">📈 Calculator</span>
       <h2 class="section-h fade-up" style="text-align:center;margin:14px auto 0">NOVA Yield Calculator</h2>
-      <p class="section-sub fade-up d1" style="text-align:center;max-width:460px;margin:12px auto 0">See exactly how much you can earn staking NOVA at the current APY</p>
+      <p class="section-sub fade-up d1" style="text-align:center;max-width:440px;margin:12px auto 0">See exactly how much you can earn staking NOVA at the current APY</p>
     </div>
     <div class="yield-calc-wrap fade-up d2" style="max-width:680px;margin:0 auto">
       <div style="margin-bottom:24px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-          <span style="font-size:.85rem;color:var(--muted);font-weight:600">NOVA Amount</span>
+          <span style="font-size:0.85rem;color:var(--muted);font-weight:600">NOVA Amount</span>
           <span style="font-weight:900;font-size:1.1rem;color:#a78bfa" id="yieldAmtLbl">1,000 NOVA</span>
         </div>
-        <input type="range" class="yield-slider" min="100" max="50000" step="100" value="1000" id="yieldSlider" oninput="calcYield(this.value)">
-        <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:.72rem;color:var(--muted)">
+        <input type="range" class="yield-slider" min="100" max="50000" step="100" value="1000" id="yieldSlider" oninput="calcYield(this.value)" aria-label="NOVA staking amount">
+        <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:0.72rem;color:var(--muted)">
           <span>100 NOVA</span><span>50,000 NOVA</span>
         </div>
       </div>
-      <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:24px;padding:10px 20px;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.15);border-radius:10px">
-        <span style="font-size:.82rem;color:var(--muted);font-weight:600">Current Staking APY</span>
-        <span style="font-weight:900;font-size:1.3rem;color:#10b981;letter-spacing:-.02em">12.5%</span>
-        <span style="font-size:.72rem;color:var(--muted);background:rgba(16,185,129,.1);padding:2px 8px;border-radius:6px;font-weight:700">Live Rate</span>
+      <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:24px;padding:10px 20px;background:rgba(16,185,129,0.055);border:1px solid rgba(16,185,129,0.14);border-radius:10px">
+        <span style="font-size:0.82rem;color:var(--muted);font-weight:600">Current Staking APY</span>
+        <span style="font-weight:900;font-size:1.3rem;color:#10b981;letter-spacing:-0.02em">12.5%</span>
+        <span style="font-size:0.72rem;color:var(--muted);background:rgba(16,185,129,0.09);padding:2px 9px;border-radius:6px;font-weight:700">Live Rate</span>
       </div>
       <div class="yield-result-box">
-        <div>
+        <div style="text-align:center">
           <div class="yield-result-num" id="yr1m">10.42</div>
-          <div style="font-size:.72rem;color:var(--muted);margin-top:6px;font-weight:700">1 Month</div>
+          <div style="font-size:0.72rem;color:var(--muted);margin-top:6px;font-weight:700">1 Month</div>
         </div>
-        <div>
+        <div style="text-align:center">
           <div class="yield-result-num" id="yr3m">31.25</div>
-          <div style="font-size:.72rem;color:var(--muted);margin-top:6px;font-weight:700">3 Months</div>
+          <div style="font-size:0.72rem;color:var(--muted);margin-top:6px;font-weight:700">3 Months</div>
         </div>
-        <div>
+        <div style="text-align:center">
           <div class="yield-result-num" id="yr6m">62.50</div>
-          <div style="font-size:.72rem;color:var(--muted);margin-top:6px;font-weight:700">6 Months</div>
+          <div style="font-size:0.72rem;color:var(--muted);margin-top:6px;font-weight:700">6 Months</div>
         </div>
-        <div>
+        <div style="text-align:center">
           <div class="yield-result-num" id="yr1y">125.00</div>
-          <div style="font-size:.72rem;color:var(--muted);margin-top:6px;font-weight:700">1 Year</div>
+          <div style="font-size:0.72rem;color:var(--muted);margin-top:6px;font-weight:700">1 Year</div>
         </div>
       </div>
 
-      <!-- Live Yield Chart Container -->
-      <div style="margin:24px 0;background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.05);border-radius:14px;padding:16px 20px;position:relative;">
+      <!-- SVG yield chart -->
+      <div style="margin:24px 0;background:rgba(255,255,255,0.013);border:1px solid rgba(255,255,255,0.05);border-radius:14px;padding:16px 20px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-          <span style="font-size:0.75rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.04em">12-Month Staking Projection</span>
-          <span style="font-size:0.72rem;color:rgba(255,255,255,.45)">NOVA Growth Curve</span>
+          <span style="font-size:0.74rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.04em">12-Month Staking Projection</span>
+          <span style="font-size:0.7rem;color:rgba(255,255,255,0.38)">NOVA Growth Curve</span>
         </div>
         <div style="height:110px;width:100%;position:relative" id="yieldChartContainer"></div>
       </div>
 
-      <div style="text-align:center;margin-top:18px;font-size:.74rem;color:var(--muted)">
+      <div style="text-align:center;margin-top:14px;font-size:0.72rem;color:var(--muted)">
         All projections in NOVA tokens · APY may vary · Not financial advice
       </div>
     </div>
   </div>
 </section>
+
 <script>
 function drawYieldChart(amt, apy) {
   const container = document.getElementById('yieldChartContainer');
   if (!container) return;
-  const w = container.clientWidth || 600;
-  const h = 110;
-  
-  const points = [];
-  const totalMonths = 12;
-  const baseAmt = parseFloat(amt);
-  const maxGrowth = baseAmt * apy;
-  
+  const w = container.clientWidth || 600, h = 110;
+  const points = [], totalMonths = 12, baseAmt = parseFloat(amt), maxGrowth = baseAmt * apy;
   for (let m = 0; m <= totalMonths; m++) {
     const val = baseAmt + (baseAmt * apy * m / 12);
     const x = (m / totalMonths) * w;
@@ -907,150 +692,117 @@ function drawYieldChart(amt, apy) {
     const y = h - 20 - ((growth / (maxGrowth || 1)) * (h - 36));
     points.push({x, y, val, month: m});
   }
-  
   const pathData = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
   const areaData = `${pathData} L ${w} ${h-14} L 0 ${h-14} Z`;
-  
-  const labels = [
-    {x: 2, txt: 'Start'},
-    {x: w / 4, txt: '3M'},
-    {x: w / 2, txt: '6M'},
-    {x: (w * 3) / 4, txt: '9M'},
-    {x: w - 24, txt: '12M'}
-  ];
-  
-  const labelsSvg = labels.map(l => `
-    <text x="${l.x}" y="${h - 2}" fill="rgba(255,255,255,0.3)" font-size="9" font-weight="600">${l.txt}</text>
-  `).join('');
-
-  const gridSvg = `
-    <line x1="0" y1="${h-14}" x2="${w}" y2="${h-14}" stroke="rgba(255,255,255,0.04)" stroke-width="1" />
-    <line x1="0" y1="12" x2="${w}" y2="12" stroke="rgba(255,255,255,0.03)" stroke-width="1" stroke-dasharray="2,2" />
-  `;
-
+  const labels = [{x:2,txt:'Start'},{x:w/4,txt:'3M'},{x:w/2,txt:'6M'},{x:(w*3)/4,txt:'9M'},{x:w-24,txt:'12M'}];
+  const labelsSvg = labels.map(l=>`<text x="${l.x}" y="${h-2}" fill="rgba(255,255,255,0.28)" font-size="9" font-weight="600">${l.txt}</text>`).join('');
   const endP = points[points.length - 1];
-  
-  container.innerHTML = `
-    <svg width="100%" height="100%" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="overflow:visible">
-      <defs>
-        <linearGradient id="yieldGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.25"/>
-          <stop offset="100%" stop-color="#22d3ee" stop-opacity="0"/>
-        </linearGradient>
-        <linearGradient id="strokeGrad" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="#a78bfa"/>
-          <stop offset="50%" stop-color="#7c3aed"/>
-          <stop offset="100%" stop-color="#22d3ee"/>
-        </linearGradient>
-        <filter id="glow" x="-10%" y="-10%" width="120%" height="120%">
-          <feGaussianBlur stdDeviation="3" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-      </defs>
-      ${gridSvg}
-      <path d="${areaData}" fill="url(#yieldGrad)" />
-      <path d="${pathData}" fill="none" stroke="url(#strokeGrad)" stroke-width="2" stroke-linecap="round" filter="url(#glow)" />
-      <circle cx="${points[0].x}" cy="${points[0].y}" r="3.5" fill="#a78bfa" stroke="#040412" stroke-width="1.5" />
-      <circle cx="${endP.x}" cy="${endP.y}" r="4.5" fill="#22d3ee" stroke="#040412" stroke-width="1.5" filter="url(#glow)" />
-      
-      <g transform="translate(${w - 82}, ${endP.y - 18})">
-        <rect width="80" height="16" rx="4" fill="rgba(13,14,15,0.92)" stroke="rgba(34,211,238,0.2)" stroke-width="1"/>
-        <text x="40" y="11" fill="#22d3ee" font-size="8.5" font-weight="700" text-anchor="middle">+${Math.round(maxGrowth).toLocaleString()} NOVA</text>
-      </g>
-      
-      ${labelsSvg}
-    </svg>
-  `;
+  container.innerHTML = `<svg width="100%" height="100%" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="overflow:visible">
+    <defs>
+      <linearGradient id="yieldGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.22"/>
+        <stop offset="100%" stop-color="#22d3ee" stop-opacity="0"/>
+      </linearGradient>
+      <linearGradient id="strokeGrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#a78bfa"/>
+        <stop offset="50%" stop-color="#7c3aed"/>
+        <stop offset="100%" stop-color="#22d3ee"/>
+      </linearGradient>
+      <filter id="glow" x="-10%" y="-10%" width="120%" height="120%">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+    <line x1="0" y1="${h-14}" x2="${w}" y2="${h-14}" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+    <path d="${areaData}" fill="url(#yieldGrad)"/>
+    <path d="${pathData}" fill="none" stroke="url(#strokeGrad)" stroke-width="2" stroke-linecap="round" filter="url(#glow)"/>
+    <circle cx="${points[0].x}" cy="${points[0].y}" r="3.5" fill="#a78bfa" stroke="#0b1220" stroke-width="1.5"/>
+    <circle cx="${endP.x}" cy="${endP.y}" r="4.5" fill="#22d3ee" stroke="#0b1220" stroke-width="1.5" filter="url(#glow)"/>
+    <g transform="translate(${w-82}, ${endP.y-18})">
+      <rect width="80" height="16" rx="4" fill="rgba(11,18,32,0.94)" stroke="rgba(34,211,238,0.2)" stroke-width="1"/>
+      <text x="40" y="11" fill="#22d3ee" font-size="8.5" font-weight="700" text-anchor="middle">+${Math.round(maxGrowth).toLocaleString()} NOVA</text>
+    </g>
+    ${labelsSvg}
+  </svg>`;
 }
 
 function calcYield(v) {
-  const amt = parseFloat(v);
-  const apy = 0.125;
+  const amt = parseFloat(v), apy = 0.125;
   document.getElementById('yieldAmtLbl').textContent = Number(amt).toLocaleString() + ' NOVA';
   const fmt = n => n >= 1000 ? (n/1000).toFixed(2)+'k' : n.toFixed(2);
   document.getElementById('yr1m').textContent = fmt(amt * apy / 12);
   document.getElementById('yr3m').textContent = fmt(amt * apy / 4);
   document.getElementById('yr6m').textContent = fmt(amt * apy / 2);
   document.getElementById('yr1y').textContent = fmt(amt * apy);
-  
   drawYieldChart(amt, apy);
 }
-
 document.addEventListener('DOMContentLoaded', () => {
   calcYield(document.getElementById('yieldSlider').value);
-  window.addEventListener('resize', () => {
-    calcYield(document.getElementById('yieldSlider').value);
-  });
+  window.addEventListener('resize', () => calcYield(document.getElementById('yieldSlider').value));
 });
 </script>
 
 <!-- ══════════════════════════════════════════════════════════
-     ROADMAP TIMELINE
+     ROADMAP
 ══════════════════════════════════════════════════════════ -->
-<section class="section" style="padding-top:20px">
+<section class="section" style="padding-top:16px">
   <div class="container">
     <div style="text-align:center;margin-bottom:48px">
-      <span class="section-label">🗺️ Execution Roadmap</span>
+      <span class="section-label">🗺️ Roadmap</span>
       <h2 class="section-h" style="text-align:center;margin:14px auto 0">Protocol Milestones &amp; Mainnet Journey</h2>
+      <p class="section-sub" style="text-align:center;margin:12px auto 0;max-width:460px">From testnet infrastructure to global mainnet — here is our path to production.</p>
     </div>
-
     <div class="grid-4">
-      <div class="glass-panel fade-up d1" style="padding:24px;position:relative">
+      <div class="glass-panel fade-up d1" style="padding:24px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-          <span style="font-size:0.75rem;font-weight:800;color:var(--lavender);letter-spacing:0.06em">Q1 2026</span>
+          <span style="font-size:0.73rem;font-weight:800;color:var(--brand-light);letter-spacing:0.06em">Q1 2026</span>
           <span class="tag tag-green">Completed ✓</span>
         </div>
-        <div style="font-weight:800;font-size:1.05rem;color:var(--text);margin-bottom:8px">Testnet Architecture</div>
-        <ul style="font-size:0.82rem;color:var(--muted);line-height:1.7;list-style:none;display:flex;flex-direction:column;gap:6px">
-          <li>✓ Arc Testnet RPC integration</li>
-          <li>✓ EIP-6963 Multi-Wallet Engine</li>
-          <li>✓ NOVA Single Staking Vault</li>
-          <li>✓ Real-time Block Ticker</li>
+        <div style="font-weight:800;font-size:1rem;color:var(--text);margin-bottom:10px;letter-spacing:-0.02em">Testnet Architecture</div>
+        <ul style="font-size:0.81rem;color:var(--muted);line-height:1.72;list-style:none;display:flex;flex-direction:column;gap:6px">
+          <li style="display:flex;gap:8px"><span style="color:var(--success)">✓</span>Arc Testnet RPC Integration</li>
+          <li style="display:flex;gap:8px"><span style="color:var(--success)">✓</span>EIP-6963 Multi-Wallet Engine</li>
+          <li style="display:flex;gap:8px"><span style="color:var(--success)">✓</span>NOVA Single Staking Vault</li>
+          <li style="display:flex;gap:8px"><span style="color:var(--success)">✓</span>Real-time Block Ticker</li>
         </ul>
       </div>
-
-      <div class="glass-panel fade-up d2" style="padding:24px;position:relative;border-color:var(--border-purple)">
+      <div class="glass-panel fade-up d2 roadmap-card-active" style="padding:24px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-          <span style="font-size:0.75rem;font-weight:800;color:var(--cyan);letter-spacing:0.06em">Q2 2026</span>
-          <span class="tag tag-purple">Active Phase ⚡</span>
+          <span style="font-size:0.73rem;font-weight:800;color:var(--cyan);letter-spacing:0.06em">Q2 2026</span>
+          <span class="tag tag-purple">Active ⚡</span>
         </div>
-        <div style="font-weight:800;font-size:1.05rem;color:var(--text);margin-bottom:8px">DeFi Hub &amp; Launchpad</div>
-        <ul style="font-size:0.82rem;color:var(--muted);line-height:1.7;list-style:none;display:flex;flex-direction:column;gap:6px">
-          <li>✓ ArcSwap Instant Token Swap</li>
-          <li>✓ IDO Project Launchpad Platform</li>
-          <li>✓ XP Airdrop &amp; Leaderboard</li>
-          <li>✓ Personal Asset Portfolio Tracker</li>
+        <div style="font-weight:800;font-size:1rem;color:var(--text);margin-bottom:10px;letter-spacing:-0.02em">DeFi Hub &amp; Launchpad</div>
+        <ul style="font-size:0.81rem;color:var(--muted);line-height:1.72;list-style:none;display:flex;flex-direction:column;gap:6px">
+          <li style="display:flex;gap:8px"><span style="color:var(--success)">✓</span>ArcSwap Instant Token Swap</li>
+          <li style="display:flex;gap:8px"><span style="color:var(--success)">✓</span>IDO Project Launchpad</li>
+          <li style="display:flex;gap:8px"><span style="color:var(--success)">✓</span>XP Airdrop &amp; Leaderboard</li>
+          <li style="display:flex;gap:8px"><span style="color:var(--success)">✓</span>ArcBridge Cross-chain</li>
         </ul>
       </div>
-
-      <div class="glass-panel fade-up d3" style="padding:24px;position:relative">
+      <div class="glass-panel fade-up d3" style="padding:24px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-          <span style="font-size:0.75rem;font-weight:800;color:var(--muted);letter-spacing:0.06em">Q3 2026</span>
+          <span style="font-size:0.73rem;font-weight:800;color:var(--muted);letter-spacing:0.06em">Q3 2026</span>
           <span class="tag tag-yellow">Upcoming</span>
         </div>
-        <div style="font-weight:800;font-size:1.05rem;color:var(--text);margin-bottom:8px">Security &amp; Governance</div>
-        <ul style="font-size:0.82rem;color:var(--muted);line-height:1.7;list-style:none;display:flex;flex-direction:column;gap:6px">
-          <li>• Full Smart Contract Security Audit</li>
-          <li>• Cross-chain ArcBridge Protocol</li>
-          <li>• Decentralized Governance V1</li>
-          <li>• Mainnet Genesis Snapshot</li>
+        <div style="font-weight:800;font-size:1rem;color:var(--text);margin-bottom:10px;letter-spacing:-0.02em">Security &amp; Governance</div>
+        <ul style="font-size:0.81rem;color:var(--muted);line-height:1.72;list-style:none;display:flex;flex-direction:column;gap:6px">
+          <li style="display:flex;gap:8px"><span style="opacity:0.4">•</span>Full Smart Contract Audit</li>
+          <li style="display:flex;gap:8px"><span style="opacity:0.4">•</span>Decentralized Governance V1</li>
+          <li style="display:flex;gap:8px"><span style="opacity:0.4">•</span>Mainnet Genesis Snapshot</li>
+          <li style="display:flex;gap:8px"><span style="opacity:0.4">•</span>Institutional Yield Vaults</li>
         </ul>
       </div>
-
-      <div class="glass-panel fade-up d4" style="padding:24px;position:relative">
+      <div class="glass-panel fade-up d4" style="padding:24px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-          <span style="font-size:0.75rem;font-weight:800;color:var(--muted);letter-spacing:0.06em">Q4 2026</span>
+          <span style="font-size:0.73rem;font-weight:800;color:var(--muted);letter-spacing:0.06em">Q4 2026</span>
           <span class="tag tag-blue">Planned</span>
         </div>
-        <div style="font-weight:800;font-size:1.05rem;color:var(--text);margin-bottom:8px">Mainnet Launch &amp; TGE</div>
-        <ul style="font-size:0.82rem;color:var(--muted);line-height:1.7;list-style:none;display:flex;flex-direction:column;gap:6px">
-          <li>• Mainnet NOVA Token Airdrop</li>
-          <li>• Institutional Yield Vaults</li>
-          <li>• ArcPerp Perpetuals DEX</li>
-          <li>• Global Ecosystem Expansion</li>
+        <div style="font-weight:800;font-size:1rem;color:var(--text);margin-bottom:10px;letter-spacing:-0.02em">Mainnet Launch &amp; TGE</div>
+        <ul style="font-size:0.81rem;color:var(--muted);line-height:1.72;list-style:none;display:flex;flex-direction:column;gap:6px">
+          <li style="display:flex;gap:8px"><span style="opacity:0.4">•</span>Mainnet NOVA Token Airdrop</li>
+          <li style="display:flex;gap:8px"><span style="opacity:0.4">•</span>ArcPerp Perpetuals DEX</li>
+          <li style="display:flex;gap:8px"><span style="opacity:0.4">•</span>Global Ecosystem Expansion</li>
+          <li style="display:flex;gap:8px"><span style="opacity:0.4">•</span>Multi-chain Deployments</li>
         </ul>
       </div>
     </div>
@@ -1058,18 +810,18 @@ document.addEventListener('DOMContentLoaded', () => {
 </section>
 
 <!-- ══════════════════════════════════════════════════════════
-     CTA
+     CTA BANNER
 ══════════════════════════════════════════════════════════ -->
 <section class="section">
   <div class="container">
     <div class="cta-banner fade-up">
-      <div class="cta-banner-grid"></div>
-      <div class="cta-banner-glow"></div>
+      <div class="cta-banner-grid" aria-hidden="true"></div>
+      <div class="cta-banner-glow" aria-hidden="true"></div>
       <div class="cta-title">
         Ready to join <span class="grad-text">Arc Nova?</span>
       </div>
       <p class="cta-desc">
-        Join developers building, trading, and testing on Arc Network's high-performance stablecoin-native testnet.
+        Join developers building, trading, and testing on Arc Network's high-performance stablecoin-native testnet. No KYC, no barriers.
       </p>
       <div class="cta-buttons">
         <a href="defi.html" class="btn btn-primary btn-lg">🚀 Launch App</a>
@@ -1087,13 +839,16 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="footer-grid">
       <div>
         <a href="index.html" class="footer-logo">
-          <img src="assets/img/logo.svg" alt="Arc Nova" style="width:30px;height:30px;flex-shrink:0"> Arc Nova
+          <img src="assets/img/logo.svg" alt="Arc Nova" width="30" height="30" style="flex-shrink:0"> Arc Nova
         </a>
-        <p class="footer-desc">The premier DeFi hub built on Arc Network. Trade, stake, earn, and discover on Arc's stablecoin-native blockchain.</p>
-        <div class="footer-social" style="display:flex;gap:20px;margin-top:20px">
-          <a href="https://twitter.com/arcnetwork_" target="_blank" rel="noopener noreferrer" aria-label="Arc Nova on Twitter">𝕏 Twitter</a>
-          <a href="https://discord.gg/arcnetwork" target="_blank" rel="noopener noreferrer" aria-label="Arc Nova Discord">Discord</a>
-          <a href="https://github.com/SifatHossain456/Arc-nova" target="_blank" rel="noopener noreferrer" aria-label="Arc Nova on GitHub">GitHub</a>
+        <p class="footer-desc">The institutional DeFi hub built on Arc Network. Trade, stake, earn, bridge, and discover on Arc's stablecoin-native blockchain.</p>
+        <div style="display:inline-flex;align-items:center;gap:7px;padding:6px 13px;background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.18);border-radius:100px;font-size:0.72rem;font-weight:600;color:var(--success);margin-top:18px">
+          <span class="arc-status-dot arc-status-pulse"></span> Arc Testnet 100% Operational
+        </div>
+        <div class="footer-social" style="display:flex;gap:18px;margin-top:18px">
+          <a href="https://twitter.com/arcnetwork_" target="_blank" rel="noopener noreferrer" aria-label="Twitter">𝕏 Twitter</a>
+          <a href="https://discord.gg/arcnetwork" target="_blank" rel="noopener noreferrer" aria-label="Discord">Discord</a>
+          <a href="https://github.com/SifatHossain456/Arc-nova" target="_blank" rel="noopener noreferrer" aria-label="GitHub">GitHub</a>
         </div>
       </div>
       <div>
@@ -1103,7 +858,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <li><a href="launchpad.html">Launchpad</a></li>
           <li><a href="defi.html">Swap</a></li>
           <li><a href="defi.html">Stake</a></li>
-          <li><a href="defi.html">Earn</a></li>
+          <li><a href="portfolio.html">Portfolio</a></li>
         </ul>
       </div>
       <div>
@@ -1112,24 +867,24 @@ document.addEventListener('DOMContentLoaded', () => {
           <li><a href="https://docs.arc.network/" target="_blank" rel="noopener noreferrer">Arc Network</a></li>
           <li><a href="launchpad.html">ArcSwap</a></li>
           <li><a href="launchpad.html">NovaLend</a></li>
-          <li><a href="launchpad.html">ArcBridge</a></li>
+          <li><a href="defi.html">ArcBridge</a></li>
         </ul>
       </div>
       <div>
         <div class="footer-heading">Resources</div>
         <ul class="footer-links">
-          <li><a href="https://docs.arc.network/" target="_blank" rel="noopener noreferrer">Documentation</a></li>
-          <li><a href="https://github.com/SifatHossain456/Arc-nova" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-          <li><a href="https://docs.arc.network/" target="_blank" rel="noopener noreferrer">Arc Docs ↗</a></li>
+          <li><a href="https://docs.arc.network/" target="_blank" rel="noopener noreferrer">Documentation ↗</a></li>
+          <li><a href="https://github.com/SifatHossain456/Arc-nova" target="_blank" rel="noopener noreferrer">GitHub ↗</a></li>
           <li><a href="https://testnet.arc.network/" target="_blank" rel="noopener noreferrer">Arc Testnet ↗</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <div>© 2026 Arc Nova. Built on Arc Network.</div>
-      <div style="display:flex;gap:20px" class="footer-social">
+      <div>© 2026 Arc Nova. Built for Arc Network Testnet. Not financial advice.</div>
+      <div class="footer-social" style="display:flex;gap:18px">
         <a href="https://docs.arc.network/" target="_blank" rel="noopener noreferrer">Docs</a>
         <a href="https://github.com/SifatHossain456/Arc-nova" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://testnet.arc.network/" target="_blank" rel="noopener noreferrer">Explorer</a>
       </div>
     </div>
   </div>
