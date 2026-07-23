@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Dashboard — Arc Nova</title>
+<title>Dashboard — Arc Nova Analytics</title>
 <meta name="description" content="Live analytics dashboard for Arc Nova — track TVL, volume, block height, pool reserves, and protocol activity on Arc Testnet in real time.">
 <meta property="og:title" content="Dashboard — Arc Nova">
-<meta property="og:description" content="Real-time DeFi analytics for Arc Nova on Arc Testnet. Live block data, pool reserves, and protocol metrics.">
+<meta property="og:description" content="Real-time DeFi analytics for Arc Nova on Arc Testnet.">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#7c3aed">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%238b5cf6'/><circle cx='16' cy='16' r='9.5' fill='none' stroke='rgba(255,255,255,0.18)' stroke-width='1.6'/><path d='M 16 6.5 A 9.5 9.5 0 1 1 6.5 16' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round'/><circle cx='6.5' cy='16' r='3.2' fill='%2322d3ee'/><circle cx='6.5' cy='16' r='1.6' fill='white'/></svg>">
@@ -15,70 +15,96 @@
 <link rel="stylesheet" href="assets/css/styles.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-.chart-card{
-  background:var(--card); border:1px solid var(--border);
-  border-radius:var(--radius-lg); padding:24px;
-  transition:all var(--dur-slow) var(--ease);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
-  backdrop-filter:blur(var(--glass-blur)); -webkit-backdrop-filter:blur(var(--glass-blur));
+body { padding-top:0; }
+
+/* Chart card */
+.chart-card {
+  background:var(--card);
+  border:1px solid var(--border-subtle);
+  border-radius:var(--radius-lg);
+  padding:24px;
+  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  box-shadow:var(--shadow-sm);
+  transition:var(--transition);
 }
-.chart-card:hover{
-  border-color:var(--border-purple);
-  transform:translateY(-3px);
-  box-shadow:var(--shadow-lg), 0 0 0 1px rgba(139,92,246,.10);
-}
-.chart-title{ font-weight:700; font-size:0.95rem; margin-bottom:4px; color:var(--text); letter-spacing:-0.01em; }
-.chart-sub{ font-size:0.78rem; color:var(--muted); margin-bottom:20px; }
-.network-dot{
+.chart-card:hover { border-color:var(--border-brand); transform:translateY(-2px); box-shadow:var(--shadow-md); }
+.chart-title { font-weight:800; font-size:0.95rem; margin-bottom:4px; color:var(--text-primary); letter-spacing:-0.015em; }
+.chart-sub   { font-size:0.77rem; color:var(--text-tertiary); margin-bottom:20px; }
+
+/* Network dot */
+.network-dot {
   width:8px; height:8px; border-radius:50%;
-  background:var(--green); display:inline-block;
-  animation:pulseGlow 2s infinite; margin-right:6px;
-  box-shadow:0 0 8px rgba(16,185,129,.5);
+  background:var(--success); display:inline-block;
+  box-shadow:0 0 8px rgba(16,185,129,0.55);
+  animation:livePulse 2.2s ease infinite; margin-right:6px;
 }
-.rank-num{
+
+/* Rank number */
+.rank-num {
   width:28px; height:28px; border-radius:var(--radius-sm);
-  background:rgba(255,255,255,0.04);
-  border:1px solid var(--border);
+  background:rgba(255,255,255,0.04); border:1px solid var(--border-subtle);
   display:inline-flex; align-items:center; justify-content:center;
-  font-size:0.78rem; font-weight:700; color:var(--muted);
+  font-size:0.77rem; font-weight:700; color:var(--text-tertiary);
 }
-.proto-logo{
+.rank-num.top { background:rgba(245,158,11,0.10); border-color:rgba(245,158,11,0.25); color:var(--warning); }
+
+/* Proto logo */
+.proto-logo {
   width:36px; height:36px; border-radius:var(--radius-sm);
   display:flex; align-items:center; justify-content:center;
-  font-size:16px; flex-shrink:0;
-  border:1px solid var(--border);
+  font-size:16px; flex-shrink:0; border:1px solid var(--border-subtle);
 }
-.tx-row{
+
+/* Tx row */
+.tx-row {
   display:flex; align-items:center; justify-content:space-between;
-  padding:12px 8px; margin:0 -8px; border-bottom:1px solid var(--border);
+  padding:12px 8px; margin:0 -8px;
+  border-bottom:1px solid rgba(255,255,255,0.04);
   font-size:0.84rem; border-radius:var(--radius-sm);
-  transition:background var(--dur) var(--ease);
+  transition:background var(--duration-base) var(--ease-out);
 }
-.tx-row:hover{ background:rgba(139,92,246,0.05); border-bottom-color:transparent; }
-.tx-row:last-child{ border-bottom:none; }
-.tx-type{
-  padding:2px 8px; border-radius:var(--radius-xs); font-size:0.72rem; font-weight:700;
+.tx-row:hover { background:rgba(139,92,246,0.05); }
+.tx-row:last-child { border-bottom:none; }
+
+/* Time select */
+.dash-select {
+  background:rgba(255,255,255,0.04); border:1px solid var(--border-subtle);
+  color:var(--text-secondary); padding:9px 14px; border-radius:var(--radius-md);
+  font-size:0.8rem; font-family:inherit; outline:none; cursor:pointer;
+  transition:var(--transition);
 }
-.dash-select{
-  background:var(--glass-bg); border:1px solid var(--border-strong); color:var(--text-2);
-  padding:9px 14px; border-radius:var(--radius); font-size:0.8rem; font-family:inherit;
-  outline:none; cursor:pointer; transition:all var(--dur) var(--ease);
-  backdrop-filter:blur(var(--glass-blur)); -webkit-backdrop-filter:blur(var(--glass-blur));
+.dash-select:hover  { border-color:var(--border-brand); color:var(--text-primary); }
+.dash-select:focus  { border-color:var(--border-brand); box-shadow:0 0 0 3px rgba(139,92,246,0.12); }
+.dash-select option { background:var(--bg-elevated); }
+
+/* Live bar */
+.live-bar {
+  display:flex; align-items:center; gap:32px;
+  background:rgba(16,185,129,0.04); border:1px solid rgba(16,185,129,0.12);
+  border-radius:var(--radius-xl); padding:16px 24px;
+  margin-bottom:24px; flex-wrap:wrap;
 }
-.dash-select:hover{ border-color:var(--border-focus); color:var(--text); }
-.dash-select:focus{ border-color:var(--border-focus); box-shadow:0 0 0 3px rgba(139,92,246,.15); }
+.live-bar-item { display:flex; flex-direction:column; gap:3px; }
+.live-bar-val  { font-size:1rem; font-weight:800; font-variant-numeric:tabular-nums; color:var(--text-primary); letter-spacing:-0.02em; }
+.live-bar-lbl  { font-size:0.65rem; color:var(--text-tertiary); font-weight:700; text-transform:uppercase; letter-spacing:0.07em; }
+
+/* XP bar */
+.xp-bar-wrap { width:100%; height:6px; background:rgba(255,255,255,0.07); border-radius:100px; overflow:hidden; }
+.xp-bar-fill { height:100%; border-radius:100px; background:linear-gradient(90deg,#7c3aed,#22d3ee); transition:width 1s ease; position:relative; overflow:hidden; }
+.xp-bar-fill::after { content:''; position:absolute; top:0; left:-150%; width:60%; bottom:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.28),transparent); animation:barShimmer 2.8s ease-in-out infinite; }
+@keyframes barShimmer { 0%{left:-60%} 100%{left:140%} }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav class="nav">
+<!-- ── NAVBAR ── -->
+<nav class="nav" role="navigation">
   <a href="index.html" class="nav-logo">
-    <img src="assets/img/logo.svg" alt="Arc Nova" style="width:30px;height:30px;flex-shrink:0"> Arc Nova
+    <img src="assets/img/logo.svg" alt="Arc Nova" width="30" height="30" style="flex-shrink:0"> Arc Nova
   </a>
-  <ul class="nav-links">
+  <ul class="nav-links" role="list">
     <li><a href="index.html">Home</a></li>
-    <li><a href="dashboard.html" class="active">Dashboard</a></li>
+    <li><a href="dashboard.html" class="active" aria-current="page">Dashboard</a></li>
     <li><a href="launchpad.html">Launchpad</a></li>
     <li><a href="defi.html">DeFi</a></li>
     <li><a href="portfolio.html">Portfolio</a></li>
@@ -87,11 +113,11 @@
   <div class="nav-right">
     <span class="badge-testnet">Testnet</span>
     <div class="notif-wrapper">
-      <button class="notif-btn" onclick="toggleNotifPanel();renderNotifications()">🔔<span class="notif-badge" style="display:none">0</span></button>
-      <div class="notif-panel" id="notifPanel"></div>
+      <button class="notif-btn" onclick="toggleNotifPanel();renderNotifications()" aria-label="Notifications" type="button">🔔<span class="notif-badge" style="display:none">0</span></button>
+      <div class="notif-panel" id="notifPanel" role="log" aria-live="polite"></div>
     </div>
-    <button class="btn btn-primary" onclick="connectWallet()" id="walletBtn">Connect Wallet</button>
-    <button class="hamburger" onclick="toggleMobileNav()" id="hamburgerBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    <button class="btn btn-primary" onclick="connectWallet()" id="walletBtn" type="button">Connect Wallet</button>
+    <button class="hamburger" onclick="toggleMobileNav()" id="hamburgerBtn" aria-label="Open menu" type="button"><span></span><span></span><span></span></button>
   </div>
 </nav>
 
@@ -99,10 +125,10 @@
 <div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobileNav()"></div>
 <div class="mobile-nav" id="mobileNav">
   <div class="mobile-nav-header">
-    <a href="index.html" class="nav-logo"><img src="assets/img/logo.svg" alt="Arc Nova" style="width:30px;height:30px;flex-shrink:0"> Arc Nova</a>
-    <button class="mobile-nav-close" onclick="toggleMobileNav()">✕</button>
+    <a href="index.html" class="nav-logo"><img src="assets/img/logo.svg" alt="Arc Nova" width="30" height="30" style="flex-shrink:0"> Arc Nova</a>
+    <button class="mobile-nav-close" onclick="toggleMobileNav()" type="button">✕</button>
   </div>
-  <ul class="mobile-nav-links">
+  <ul class="mobile-nav-links" role="list">
     <li><a href="index.html">🏠 Home</a></li>
     <li><a href="dashboard.html">📊 Dashboard</a></li>
     <li><a href="launchpad.html">🚀 Launchpad</a></li>
@@ -112,42 +138,28 @@
   </ul>
   <div class="mobile-nav-footer">
     <span class="badge-testnet">Testnet</span>
-    <button class="btn btn-primary" style="width:100%" onclick="connectWallet();toggleMobileNav()">Connect Wallet</button>
+    <button class="btn btn-primary" style="width:100%" onclick="connectWallet();toggleMobileNav()" type="button">Connect Wallet</button>
   </div>
 </div>
 
-<!-- Price Ticker -->
-<div class="ticker-bar">
-  <div class="ticker-track"><div class="ticker-scroll">
-    <span class="tick-item"><span class="tick-sym">ARC</span>&nbsp;<span class="tick-price">—</span>&nbsp;<span class="tick-up"></span></span>
-    <span class="tick-item"><span class="tick-sym">USDC</span>&nbsp;<span class="tick-price">$1.000</span>&nbsp;<span style="color:var(--muted)">Stable</span></span>
-    <span class="tick-item"><span class="tick-sym">ETH</span>&nbsp;<span class="tick-price">—</span>&nbsp;<span class="tick-up"></span></span>
-    <span class="tick-item"><span class="tick-sym">BTC</span>&nbsp;<span class="tick-price">—</span>&nbsp;<span class="tick-up"></span></span>
-    <span class="tick-item"><span style="color:var(--lavender);font-weight:700">ARC TVL</span>&nbsp;<span class="tick-price">—</span>&nbsp;<span class="tick-up"></span></span>
-    <span class="tick-item"><span style="color:var(--cyan);font-weight:700">24h Vol</span>&nbsp;<span class="tick-price">—</span>&nbsp;<span class="tick-up"></span></span>
-    <span class="tick-item"><span class="tick-sym">ARC</span>&nbsp;<span class="tick-price">—</span>&nbsp;<span class="tick-up"></span></span>
-    <span class="tick-item"><span class="tick-sym">USDC</span>&nbsp;<span class="tick-price">$1.000</span>&nbsp;<span style="color:var(--muted)">Stable</span></span>
-    <span class="tick-item"><span class="tick-sym">ETH</span>&nbsp;<span class="tick-price">—</span>&nbsp;<span class="tick-up"></span></span>
-    <span class="tick-item"><span class="tick-sym">BTC</span>&nbsp;<span class="tick-price">—</span>&nbsp;<span class="tick-up"></span></span>
-    <span class="tick-item"><span style="color:var(--lavender);font-weight:700">ARC TVL</span>&nbsp;<span class="tick-price">—</span>&nbsp;<span class="tick-up"></span></span>
-    <span class="tick-item"><span style="color:var(--cyan);font-weight:700">24h Vol</span>&nbsp;<span class="tick-price">—</span>&nbsp;<span class="tick-up"></span></span>
-  </div></div>
-</div>
-
-<!-- PAGE HEADER -->
-<div class="page-header" style="padding-bottom:36px">
+<!-- ══════════════════════════════════
+     PAGE HEADER
+══════════════════════════════════ -->
+<div class="page-header" style="padding-bottom:32px">
   <div class="container">
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap">
       <div>
-        <span class="section-label">Live Analytics</span>
-        <h1 class="section-title" style="margin-bottom:8px;font-size:clamp(1.8rem,3.5vw,2.8rem)">Protocol <span class="grad-text">Dashboard</span></h1>
-        <p style="color:var(--muted);font-size:0.875rem;display:flex;align-items:center;gap:8px">
-          <span class="network-dot"></span>Arc Testnet · Real-time data
+        <span class="hero-section-label">📊 Live Analytics</span>
+        <h1 style="font-size:clamp(1.9rem,3.6vw,2.8rem);font-weight:900;letter-spacing:-0.035em;line-height:1.1;margin:10px 0 8px">
+          Protocol <span class="grad-text">Dashboard</span>
+        </h1>
+        <p style="color:var(--text-tertiary);font-size:0.875rem;display:flex;align-items:center;gap:8px">
+          <span class="network-dot" aria-hidden="true"></span>Arc Testnet · Real-time data · <span data-live="arc-block" style="font-variant-numeric:tabular-nums">—</span> blocks synced
         </p>
       </div>
       <div style="display:flex;gap:8px;align-items:center">
-        <button class="btn btn-ghost btn-sm" onclick="refreshData()" style="border-radius:var(--radius)">↺ Refresh</button>
-        <select class="dash-select">
+        <button class="btn btn-ghost btn-sm" onclick="refreshData()" type="button">↺ Refresh</button>
+        <select class="dash-select" id="timeSelect" aria-label="Time range">
           <option>Last 7 days</option>
           <option>Last 30 days</option>
           <option>All time</option>
@@ -157,159 +169,192 @@
   </div>
 </div>
 
-<!-- STATS GRID -->
-<div style="position:relative;z-index:1">
+<!-- ══════════════════════════════════
+     MAIN CONTENT
+══════════════════════════════════ -->
+<div style="position:relative;z-index:1;padding-bottom:80px">
   <div class="container">
+
+    <!-- Live bar -->
+    <div class="live-bar fade-up">
+      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+        <span class="nfx-live-dot" aria-hidden="true"></span>
+        <span style="font-size:0.72rem;font-weight:800;color:var(--success);letter-spacing:0.07em;text-transform:uppercase">Arc Testnet Live</span>
+      </div>
+      <div class="live-bar-item">
+        <div class="live-bar-val" data-live="arc-block">—</div>
+        <div class="live-bar-lbl">Block</div>
+      </div>
+      <div class="live-bar-item">
+        <div class="live-bar-val" data-live="arc-tps">—</div>
+        <div class="live-bar-lbl">TPS</div>
+      </div>
+      <div class="live-bar-item">
+        <div class="live-bar-val" data-live="arc-finality">—</div>
+        <div class="live-bar-lbl">Finality</div>
+      </div>
+      <div class="live-bar-item">
+        <div class="live-bar-val" style="color:var(--success)">100%</div>
+        <div class="live-bar-lbl">Uptime</div>
+      </div>
+    </div>
+
+    <!-- Key stats grid -->
     <div class="grid-4" style="margin-bottom:24px">
       <div class="stat-card fade-up d1">
         <div class="stat-label">Total Value Locked</div>
         <div class="stat-value" data-live="tvl">—</div>
-        <div class="stat-change">—</div>
+        <div class="stat-change up" style="font-size:0.75rem;margin-top:8px;display:flex;align-items:center;gap:4px">
+          <span>—</span>
+        </div>
       </div>
       <div class="stat-card fade-up d2">
         <div class="stat-label">24h Volume</div>
         <div class="stat-value" data-live="vol24">—</div>
-        <div class="stat-change">—</div>
+        <div class="stat-change up" style="font-size:0.75rem;margin-top:8px">—</div>
       </div>
       <div class="stat-card fade-up d3">
         <div class="stat-label">Active Users (24h)</div>
         <div class="stat-value" data-live="users">—</div>
-        <div class="stat-change">—</div>
+        <div class="stat-change up" style="font-size:0.75rem;margin-top:8px">—</div>
       </div>
       <div class="stat-card fade-up d4">
         <div class="stat-label">Total Transactions</div>
         <div class="stat-value" data-live="txcount">—</div>
-        <div class="stat-change">—</div>
+        <div class="stat-change up" style="font-size:0.75rem;margin-top:8px">—</div>
       </div>
     </div>
 
-
+    <!-- Charts row -->
     <div class="grid-2" style="margin-bottom:24px">
-      <!-- Transaction Breakdown Chart -->
+      <!-- Transaction chart -->
       <div class="chart-card fade-up d1">
         <div class="chart-title">Your Transactions</div>
         <div class="chart-sub">Activity breakdown — all time</div>
         <div style="height:220px;position:relative">
-          <canvas id="txChart"></canvas>
-          <div id="txEmptyState" style="display:none;position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px">
-            <div style="font-size:2rem">🔗</div>
-            <div style="font-size:.82rem;color:var(--muted)">Connect wallet & start trading to see activity</div>
+          <canvas id="txChart" aria-label="Transaction breakdown chart"></canvas>
+          <div id="txEmptyState" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;display:none">
+            <div style="font-size:2.4rem">🔗</div>
+            <div style="font-size:0.82rem;color:var(--text-tertiary);text-align:center">Connect wallet &amp; start trading to see your activity</div>
+            <a href="defi.html" class="btn btn-outline btn-sm">Go to DeFi →</a>
           </div>
         </div>
       </div>
-      <!-- XP Breakdown Chart -->
+      <!-- XP chart -->
       <div class="chart-card fade-up d2">
         <div class="chart-title">XP Earned by Activity</div>
         <div class="chart-sub">How you earned your XP</div>
         <div style="height:220px;position:relative">
-          <canvas id="xpBreakChart"></canvas>
-          <div id="xpEmptyState" style="display:none;position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px">
-            <div style="font-size:2rem">📈</div>
-            <div style="font-size:.82rem;color:var(--muted)">Complete actions to see your XP breakdown</div>
+          <canvas id="xpBreakChart" aria-label="XP breakdown chart"></canvas>
+          <div id="xpEmptyState" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;display:none">
+            <div style="font-size:2.4rem">📈</div>
+            <div style="font-size:0.82rem;color:var(--text-tertiary);text-align:center">Complete actions to see your XP breakdown</div>
+            <a href="defi.html" class="btn btn-outline btn-sm">Earn XP →</a>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Top Protocols Table -->
+    <!-- Protocols table -->
     <div style="margin-bottom:24px">
-      <div>
-        <div style="font-weight:700;margin-bottom:14px;font-size:0.95rem">Top Protocols by TVL</div>
-        <div class="table-wrap">
-          <table id="protocolTable">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Protocol</th>
-                <th>TVL</th>
-                <th>24h Change</th>
-                <th>Category</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><span class="rank-num">1</span></td>
-                <td><div style="display:flex;align-items:center;gap:10px"><div class="proto-logo" style="background:rgba(124,58,237,0.15)">⚡</div><div><div style="font-weight:600;color:var(--text)">ArcSwap</div><div style="font-size:0.72rem;color:var(--muted)">DEX</div></div></div></td>
-                <td style="font-weight:700;color:var(--muted)">—</td>
-                <td style="color:var(--muted)">—</td>
-                <td><span class="tag tag-purple">DEX</span></td>
-              </tr>
-              <tr>
-                <td><span class="rank-num">2</span></td>
-                <td><div style="display:flex;align-items:center;gap:10px"><div class="proto-logo" style="background:rgba(245,158,11,0.12)">🌉</div><div><div style="font-weight:600;color:var(--text)">ArcBridge</div><div style="font-size:0.72rem;color:var(--muted)">Bridge</div></div></div></td>
-                <td style="font-weight:700;color:var(--muted)">—</td>
-                <td style="color:var(--muted)">—</td>
-                <td><span class="tag tag-blue">Bridge</span></td>
-              </tr>
-              <tr>
-                <td><span class="rank-num">3</span></td>
-                <td><div style="display:flex;align-items:center;gap:10px"><div class="proto-logo" style="background:rgba(16,185,129,0.12)">💰</div><div><div style="font-weight:600;color:var(--text)">ArcVault</div><div style="font-size:0.72rem;color:var(--muted)">Yield</div></div></div></td>
-                <td style="font-weight:700;color:var(--muted)">—</td>
-                <td style="color:var(--muted)">—</td>
-                <td><span class="tag tag-green">Yield</span></td>
-              </tr>
-              <tr>
-                <td><span class="rank-num">4</span></td>
-                <td><div style="display:flex;align-items:center;gap:10px"><div class="proto-logo" style="background:rgba(34,211,238,0.12)">📈</div><div><div style="font-weight:600;color:var(--text)">ArcPerp</div><div style="font-size:0.72rem;color:var(--muted)">Perps</div></div></div></td>
-                <td style="font-weight:700;color:var(--muted)">—</td>
-                <td style="color:var(--muted)">—</td>
-                <td><span class="tag tag-blue">Perps</span></td>
-              </tr>
-              <tr>
-                <td><span class="rank-num">5</span></td>
-                <td><div style="display:flex;align-items:center;gap:10px"><div class="proto-logo" style="background:rgba(99,102,241,0.15)">🏦</div><div><div style="font-weight:600;color:var(--text)">NovaLend</div><div style="font-size:0.72rem;color:var(--muted)">Lending</div></div></div></td>
-                <td style="font-weight:700;color:var(--muted)">—</td>
-                <td style="color:var(--muted)">—</td>
-                <td><span class="tag tag-yellow">Lending</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div style="font-weight:800;font-size:0.95rem;color:var(--text-primary);letter-spacing:-0.015em">Top Protocols by TVL</div>
+        <span style="font-size:0.72rem;color:var(--text-tertiary)">Arc Testnet</span>
+      </div>
+      <div class="table-wrap">
+        <table id="protocolTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Protocol</th>
+              <th>TVL</th>
+              <th>24h Change</th>
+              <th>Category</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="rank-num top">1</span></td>
+              <td><div style="display:flex;align-items:center;gap:11px"><div class="proto-logo" style="background:rgba(124,58,237,0.12)">⚡</div><div><div style="font-weight:600;color:var(--text-primary)">ArcSwap</div><div style="font-size:0.72rem;color:var(--text-tertiary)">DEX Protocol</div></div></div></td>
+              <td style="font-weight:700;color:var(--text-secondary)">—</td>
+              <td style="color:var(--text-tertiary)">—</td>
+              <td><span class="tag tag-purple">DEX</span></td>
+            </tr>
+            <tr>
+              <td><span class="rank-num">2</span></td>
+              <td><div style="display:flex;align-items:center;gap:11px"><div class="proto-logo" style="background:rgba(245,158,11,0.10)">🌉</div><div><div style="font-weight:600;color:var(--text-primary)">ArcBridge</div><div style="font-size:0.72rem;color:var(--text-tertiary)">Cross-chain Bridge</div></div></div></td>
+              <td style="font-weight:700;color:var(--text-secondary)">—</td>
+              <td style="color:var(--text-tertiary)">—</td>
+              <td><span class="tag tag-blue">Bridge</span></td>
+            </tr>
+            <tr>
+              <td><span class="rank-num">3</span></td>
+              <td><div style="display:flex;align-items:center;gap:11px"><div class="proto-logo" style="background:rgba(16,185,129,0.10)">💰</div><div><div style="font-weight:600;color:var(--text-primary)">ArcVault</div><div style="font-size:0.72rem;color:var(--text-tertiary)">Yield Vaults</div></div></div></td>
+              <td style="font-weight:700;color:var(--text-secondary)">—</td>
+              <td style="color:var(--text-tertiary)">—</td>
+              <td><span class="tag tag-green">Yield</span></td>
+            </tr>
+            <tr>
+              <td><span class="rank-num">4</span></td>
+              <td><div style="display:flex;align-items:center;gap:11px"><div class="proto-logo" style="background:rgba(34,211,238,0.10)">📈</div><div><div style="font-weight:600;color:var(--text-primary)">ArcPerp</div><div style="font-size:0.72rem;color:var(--text-tertiary)">Perpetuals DEX</div></div></div></td>
+              <td style="font-weight:700;color:var(--text-secondary)">—</td>
+              <td style="color:var(--text-tertiary)">—</td>
+              <td><span class="tag tag-blue">Perps</span></td>
+            </tr>
+            <tr>
+              <td><span class="rank-num">5</span></td>
+              <td><div style="display:flex;align-items:center;gap:11px"><div class="proto-logo" style="background:rgba(99,102,241,0.12)">🏦</div><div><div style="font-weight:600;color:var(--text-primary)">NovaLend</div><div style="font-size:0.72rem;color:var(--text-tertiary)">Lending Protocol</div></div></div></td>
+              <td style="font-weight:700;color:var(--text-secondary)">—</td>
+              <td style="color:var(--text-tertiary)">—</td>
+              <td><span class="tag tag-yellow">Lending</span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
-    <!-- XP Leaderboard + Quests -->
+    <!-- XP Leaderboard + Your Activity -->
     <div class="grid-2" style="margin-bottom:24px">
       <!-- Leaderboard -->
-      <div class="glass-panel fade-up d1" style="padding:22px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div class="glass-panel fade-up d1" style="padding:24px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
           <div>
-            <div style="font-weight:800;font-size:.95rem;color:var(--text);letter-spacing:-.01em">XP Leaderboard</div>
-            <div style="font-size:.72rem;color:var(--muted);margin-top:2px">Early adopter rankings</div>
+            <div style="font-weight:800;font-size:0.95rem;color:var(--text-primary);letter-spacing:-0.015em">XP Leaderboard</div>
+            <div style="font-size:0.72rem;color:var(--text-tertiary);margin-top:2px">Early adopter rankings</div>
           </div>
-          <span style="font-size:.68rem;font-weight:700;padding:3px 10px;border-radius:100px;background:rgba(245,158,11,.10);border:1px solid rgba(245,158,11,.25);color:#fbbf24">🪂 Airdrop</span>
+          <span style="font-size:0.67rem;font-weight:700;padding:3px 10px;border-radius:100px;background:rgba(245,158,11,0.09);border:1px solid rgba(245,158,11,0.22);color:#fbbf24">🪂 Airdrop</span>
         </div>
         <div id="xpLeaderboard" style="min-height:180px"></div>
-        <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.05);font-size:.75rem;color:var(--muted);text-align:center">
-          Your rank: <strong style="color:var(--lavender)" data-xp-rank>#—</strong> · <strong style="color:var(--text)" data-xp>0</strong> XP · Tier: <strong data-xp-tier>🥉 Bronze</strong>
+        <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.04);font-size:0.74rem;color:var(--text-tertiary);text-align:center">
+          Your rank: <strong style="color:var(--brand-light)" data-xp-rank>#—</strong> · <strong style="color:var(--text-primary)" data-xp>0</strong> XP · Tier: <strong data-xp-tier>🥉 Bronze</strong>
         </div>
       </div>
 
       <!-- Your Activity + Quests -->
-      <div class="glass-panel fade-up d2" style="padding:22px">
+      <div class="glass-panel fade-up d2" style="padding:24px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
           <div>
-            <div style="font-weight:800;font-size:.95rem;color:var(--text);letter-spacing:-.01em">Your Activity</div>
-            <div style="font-size:.72rem;color:var(--muted);margin-top:2px">Daily quests &amp; XP</div>
+            <div style="font-weight:800;font-size:0.95rem;color:var(--text-primary);letter-spacing:-0.015em">Your Activity</div>
+            <div style="font-size:0.72rem;color:var(--text-tertiary);margin-top:2px">Daily quests &amp; XP</div>
           </div>
           <div style="text-align:right">
-            <div style="font-size:1.6rem;font-weight:900;letter-spacing:-.03em;color:var(--text);line-height:1" data-xp>0</div>
-            <div style="font-size:.68rem;color:var(--muted);margin-top:2px">total XP</div>
+            <div style="font-size:1.65rem;font-weight:900;letter-spacing:-0.03em;color:var(--text-primary);line-height:1" data-xp>0</div>
+            <div style="font-size:0.67rem;color:var(--text-tertiary);margin-top:2px">total XP</div>
           </div>
         </div>
         <div class="xp-bar-wrap"><div class="xp-bar-fill" style="width:0%"></div></div>
-        <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:.72rem;color:var(--muted)">
+        <div style="display:flex;justify-content:space-between;margin-top:7px;font-size:0.72rem;color:var(--text-tertiary)">
           <span data-xp-tier>🥉 Bronze</span>
           <span data-xp-next></span>
         </div>
-        <div style="display:flex;gap:16px;margin:16px 0 4px;padding:12px;background:rgba(255,255,255,.02);border-radius:10px;border:1px solid rgba(255,255,255,.05)">
-          <div style="text-align:center;flex:1"><div style="font-weight:800;font-size:.95rem;color:var(--text)" data-xp-streak>0 days</div><div style="font-size:.7rem;color:var(--muted)">Streak</div></div>
-          <div style="width:1px;background:rgba(255,255,255,.06)"></div>
-          <div style="text-align:center;flex:1"><div style="font-weight:800;font-size:.95rem;color:var(--text)" data-xp-rank>#—</div><div style="font-size:.7rem;color:var(--muted)">Rank</div></div>
+        <div style="display:grid;grid-template-columns:1fr 1px 1fr;gap:0;margin:18px 0 4px;padding:14px;background:rgba(255,255,255,0.02);border-radius:12px;border:1px solid rgba(255,255,255,0.05)">
+          <div style="text-align:center"><div style="font-weight:800;font-size:1rem;color:var(--text-primary)" data-xp-streak>0 days</div><div style="font-size:0.7rem;color:var(--text-tertiary)">Streak</div></div>
+          <div style="background:rgba(255,255,255,0.06)"></div>
+          <div style="text-align:center"><div style="font-weight:800;font-size:1rem;color:var(--text-primary)" data-xp-rank>#—</div><div style="font-size:0.7rem;color:var(--text-tertiary)">Rank</div></div>
         </div>
-        <div style="font-size:.72rem;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;margin-top:14px">Daily Quests</div>
+        <div style="font-size:0.71rem;font-weight:700;color:var(--text-tertiary);letter-spacing:0.07em;text-transform:uppercase;margin-bottom:10px;margin-top:18px">Daily Quests</div>
         <div id="xpQuests"></div>
-        <a href="defi.html" class="btn btn-primary" style="width:100%;margin-top:16px;border-radius:12px;font-size:.84rem;text-decoration:none;justify-content:center">Go Earn XP →</a>
+        <a href="defi.html" class="btn btn-primary" style="width:100%;margin-top:18px;font-size:0.85rem;text-decoration:none;justify-content:center">Go Earn XP →</a>
       </div>
     </div>
 
@@ -319,12 +364,12 @@
 <!-- FOOTER -->
 <footer class="footer">
   <div class="container">
-    <div class="footer-bottom" style="border-top:none;padding-top:0">
+    <div class="footer-bottom">
       <div>© 2026 Arc Nova. Built on Arc Network.</div>
-      <div style="display:flex;gap:16px">
-        <a href="index.html" style="color:var(--muted);text-decoration:none" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--muted)'">Home</a>
-        <a href="launchpad.html" style="color:var(--muted);text-decoration:none" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--muted)'">Launchpad</a>
-        <a href="defi.html" style="color:var(--muted);text-decoration:none" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--muted)'">DeFi</a>
+      <div class="footer-social" style="display:flex;gap:18px">
+        <a href="index.html">Home</a>
+        <a href="launchpad.html">Launchpad</a>
+        <a href="defi.html">DeFi</a>
       </div>
     </div>
   </div>
@@ -337,91 +382,72 @@
 <script src="assets/js/app.js"></script>
 <script src="assets/js/livedata.js"></script>
 <script>
-/* ── CHARTS — real localStorage data only ── */
-
+/* ── Dashboard Charts (Chart.js) ── */
 function buildCharts() {
-  const s = (() => {
-    try { return JSON.parse(localStorage.getItem('arcnova_xp_v2') || '{}'); }
-    catch { return {}; }
-  })();
+  const s = (() => { try { return JSON.parse(localStorage.getItem('arcnova_xp_v2') || '{}'); } catch { return {}; } })();
   const c = s.counts || {};
 
-  /* ── Chart 1: Transaction Breakdown ── */
-  const txLabels = ['Swaps', 'Stakes', 'Unstakes', 'Claims', 'Faucet'];
+  // Chart 1: Transaction Breakdown (bar)
+  const txLabels = ['Swaps','Stakes','Unstakes','Claims','Faucet'];
   const txData   = [c.swap||0, c.stake||0, c.unstake||0, c.claim_rewards||0, c.faucet||0];
   const txColors = ['rgba(139,92,246,.8)','rgba(16,185,129,.8)','rgba(34,211,238,.8)','rgba(245,158,11,.8)','rgba(99,102,241,.8)'];
-
-  const txEmpty = txData.every(v => v === 0);
-  const txEmptyEl = document.getElementById('txEmptyState');
-
-  if (txEmpty) {
-    if (txEmptyEl) txEmptyEl.style.display = 'flex';
-  } else {
+  const txEmpty  = txData.every(v => v === 0);
+  const txEmptyEl= document.getElementById('txEmptyState');
+  if (txEmpty) { if (txEmptyEl) txEmptyEl.style.display = 'flex'; }
+  else {
     if (txEmptyEl) txEmptyEl.style.display = 'none';
     const txCtx = document.getElementById('txChart');
     if (txCtx) new Chart(txCtx, {
-      type: 'bar',
-      data: { labels: txLabels, datasets: [{ data: txData, backgroundColor: txColors, borderRadius: 8, borderSkipped: false }] },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false }, tooltip: {
-          backgroundColor: 'rgba(10,10,28,.96)', borderColor: 'rgba(139,92,246,.35)', borderWidth: 1,
-          titleColor: '#c084fc', bodyColor: '#f8fafc', padding: 10,
-          callbacks: { label: ctx => `${ctx.raw} transaction${ctx.raw !== 1 ? 's' : ''}` }
+      type:'bar',
+      data:{ labels:txLabels, datasets:[{ data:txData, backgroundColor:txColors, borderRadius:8, borderSkipped:false }] },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{display:false}, tooltip:{
+          backgroundColor:'rgba(11,18,32,.97)', borderColor:'rgba(139,92,246,.32)', borderWidth:1,
+          titleColor:'#c084fc', bodyColor:'#f8fafc', padding:12, cornerRadius:10,
+          callbacks:{ label:ctx=>`${ctx.raw} transaction${ctx.raw!==1?'s':''}` }
         }},
-        scales: {
-          x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 11 } } },
-          y: { grid: { color: 'rgba(255,255,255,.03)' }, ticks: { color: '#64748b', font: { size: 11 }, stepSize: 1 } }
+        scales:{
+          x:{ grid:{display:false}, ticks:{color:'#64748b',font:{size:11}} },
+          y:{ grid:{color:'rgba(255,255,255,.025)'}, ticks:{color:'#64748b',font:{size:11},stepSize:1} }
         }
       }
     });
   }
 
-  /* ── Chart 2: XP Breakdown by activity ── */
+  // Chart 2: XP by Activity (doughnut)
   const xpByAct = {
-    'Swap (+25)':   (c.swap||0) * 25,
-    'Stake (+40)':  (c.stake||0) * 40,
-    'Claim (+20)':  (c.claim_rewards||0) * 20,
-    'Faucet (+5)':  (c.faucet||0) * 5,
-    'Connect (+50)': s.xp > 0 ? 50 : 0,
+    'Swap (+25)':(c.swap||0)*25, 'Stake (+40)':(c.stake||0)*40,
+    'Claim (+20)':(c.claim_rewards||0)*20, 'Faucet (+5)':(c.faucet||0)*5,
+    'Connect (+50)': s.xp>0?50:0
   };
-  const xpLabels = Object.keys(xpByAct).filter(k => xpByAct[k] > 0);
-  const xpData   = xpLabels.map(k => xpByAct[k]);
+  const xpLabels = Object.keys(xpByAct).filter(k=>xpByAct[k]>0);
+  const xpData   = xpLabels.map(k=>xpByAct[k]);
   const xpColors = ['#a78bfa','#10b981','#f59e0b','#22d3ee','#818cf8'];
-  const xpEmpty  = xpData.length === 0;
-  const xpEmptyEl = document.getElementById('xpEmptyState');
-
-  if (xpEmpty) {
-    if (xpEmptyEl) xpEmptyEl.style.display = 'flex';
-  } else {
-    if (xpEmptyEl) xpEmptyEl.style.display = 'none';
-    const xpCtx = document.getElementById('xpBreakChart');
-    if (xpCtx) new Chart(xpCtx, {
-      type: 'doughnut',
-      data: { labels: xpLabels, datasets: [{ data: xpData, backgroundColor: xpColors, borderWidth: 2, borderColor: 'rgba(10,10,28,.8)', hoverOffset: 6 }] },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: {
-          legend: { display: true, position: 'right', labels: { color: '#94a3b8', font: { size: 11 }, boxWidth: 12, padding: 10 } },
-          tooltip: {
-            backgroundColor: 'rgba(10,10,28,.96)', borderColor: 'rgba(139,92,246,.35)', borderWidth: 1,
-            titleColor: '#c084fc', bodyColor: '#f8fafc', padding: 10,
-            callbacks: { label: ctx => ` ${ctx.raw} XP` }
-          }
+  const xpEmpty  = xpData.length===0;
+  const xpEmptyEl= document.getElementById('xpEmptyState');
+  if (xpEmpty) { if (xpEmptyEl) xpEmptyEl.style.display='flex'; }
+  else {
+    if (xpEmptyEl) xpEmptyEl.style.display='none';
+    const xpCtx=document.getElementById('xpBreakChart');
+    if (xpCtx) new Chart(xpCtx,{
+      type:'doughnut',
+      data:{ labels:xpLabels, datasets:[{ data:xpData, backgroundColor:xpColors, borderWidth:2, borderColor:'rgba(11,18,32,.85)', hoverOffset:7 }] },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{
+          legend:{ display:true, position:'right', labels:{ color:'#94a3b8', font:{size:11}, boxWidth:12, padding:10 } },
+          tooltip:{ backgroundColor:'rgba(11,18,32,.97)', borderColor:'rgba(139,92,246,.32)', borderWidth:1, titleColor:'#c084fc', bodyColor:'#f8fafc', padding:12, cornerRadius:10, callbacks:{label:ctx=>` ${ctx.raw} XP`} }
         },
-        cutout: '62%'
+        cutout:'62%'
       }
     });
   }
 }
 
-function refreshData() {
-  buildCharts();
-  showToast('Data refreshed!', 'success');
-}
-
+function refreshData() { buildCharts(); if(typeof showToast==='function') showToast('Data refreshed!','success'); }
 document.addEventListener('DOMContentLoaded', buildCharts);
-document.addEventListener('arcTxSuccess', () => setTimeout(buildCharts, 500));
+document.addEventListener('arcTxSuccess', ()=>setTimeout(buildCharts,500));
 </script>
 <script src="assets/js/animations.js"></script>
 <script src="assets/js/points.js"></script>
