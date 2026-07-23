@@ -306,6 +306,60 @@ function onReady() {
   document.querySelectorAll('.arc-accent-line-target').forEach(el => {
     el.insertAdjacentHTML('afterbegin','<div class="arc-accent-line"></div>');
   });
+
+  /* Web3 Cursor Spark Trail */
+  (function initSparkTrail() {
+    if (window.matchMedia('(pointer: coarse)').matches) return;
+    const colors = ['#a78bfa', '#c084fc', '#818cf8', '#22d3ee'];
+    let lastActive = Date.now();
+    const style = document.createElement('style');
+    style.textContent = `
+      .arc-spark {
+        position: fixed;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 999999;
+        transform: translate(-50%, -50%);
+        transition: transform 0.6s cubic-bezier(0.1, 0.8, 0.3, 1), opacity 0.6s ease-out;
+        opacity: 0.8;
+      }
+    `;
+    document.head.appendChild(style);
+    let lastX = 0, lastY = 0;
+    const distThreshold = 12;
+    document.addEventListener('mousemove', e => {
+      const now = Date.now();
+      if (now - lastActive < 30) return;
+      const dx = e.clientX - lastX;
+      const dy = e.clientY - lastY;
+      if (Math.sqrt(dx*dx + dy*dy) < distThreshold) return;
+      lastActive = now; lastX = e.clientX; lastY = e.clientY;
+      createSpark(e.clientX, e.clientY);
+    }, {passive:true});
+
+    function createSpark(x, y) {
+      const spark = document.createElement('div');
+      spark.className = 'arc-spark';
+      const col = colors[Math.floor(Math.random() * colors.length)];
+      const sz = Math.random() * 4 + 4;
+      spark.style.width = sz + 'px';
+      spark.style.height = sz + 'px';
+      spark.style.background = `radial-gradient(circle, ${col} 0%, transparent 80%)`;
+      spark.style.boxShadow = `0 0 8px ${col}`;
+      spark.style.left = x + 'px';
+      spark.style.top = y + 'px';
+      document.body.appendChild(spark);
+      const angle = Math.random() * Math.PI * 2;
+      const travel = Math.random() * 24 + 8;
+      requestAnimationFrame(() => {
+        spark.style.transform = `translate(calc(-50% + ${Math.cos(angle)*travel}px), calc(-50% + ${Math.sin(angle)*travel}px)) scale(0.1)`;
+        spark.style.opacity = '0';
+      });
+      setTimeout(() => spark.remove(), 600);
+    }
+  })();
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', onReady);
