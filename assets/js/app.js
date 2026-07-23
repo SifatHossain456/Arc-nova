@@ -351,3 +351,25 @@ document.addEventListener('click', e => {
     document.getElementById('notifPanel')?.classList.remove('show');
   }
 });
+
+/* ── BRIDGE HELPER ── */
+function doBridgeTokens() {
+  const inp = document.getElementById('bridgeAmount');
+  const amt = parseFloat(inp?.value || '0');
+  if (!amt || amt <= 0) {
+    showToast('Enter a valid amount to bridge', 'error');
+    return;
+  }
+  if (typeof walletConnected !== 'undefined' && !walletConnected) {
+    showToast('Connect wallet to complete bridge transaction', 'info');
+    if (typeof openWalletModal === 'function') openWalletModal();
+    return;
+  }
+  showToast(`Initiated cross-chain bridge for ${amt} ETH to Arc Testnet...`, 'info', 4000);
+  setTimeout(() => {
+    window.ArcPoints?.award('swap');
+    showToast(`Bridge transaction confirmed! ${amt} ETH minted on Arc Testnet.`, 'success', 5500);
+    if (inp) inp.value = '';
+  }, 2200);
+}
+

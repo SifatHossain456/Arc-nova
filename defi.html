@@ -269,6 +269,7 @@ input[type=number] { -moz-appearance:textfield; }
         <button class="tab-btn" role="tab" aria-controls="panel-stake" data-tab="stake" onclick="switchTab('stake',this)" type="button">💎 Stake</button>
         <button class="tab-btn" role="tab" aria-controls="panel-earn" data-tab="earn" onclick="switchTab('earn',this)" type="button">💰 Earn</button>
         <button class="tab-btn" role="tab" aria-controls="panel-pools" data-tab="pools" onclick="switchTab('pools',this)" type="button">🌊 Pools</button>
+        <button class="tab-btn" role="tab" aria-controls="panel-bridge" data-tab="bridge" onclick="switchTab('bridge',this)" type="button">🌉 Bridge</button>
       </div>
 
       <!-- ═══════════ SWAP ═══════════ -->
@@ -800,6 +801,64 @@ input[type=number] { -moz-appearance:textfield; }
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- ═══════════ BRIDGE ═══════════ -->
+      <div id="panel-bridge" style="display:none" class="defi-layout">
+        <div class="swap-card glass-panel" style="max-width:480px;margin:0 auto">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+            <div>
+              <div style="font-weight:900;font-size:1.05rem">ArcBridge</div>
+              <div style="font-size:0.75rem;color:var(--muted)">Cross-chain asset transfer</div>
+            </div>
+            <span class="tag tag-purple">Arc Testnet</span>
+          </div>
+
+          <!-- FROM CHAIN -->
+          <div class="swap-box" style="margin-bottom:12px">
+            <div class="swap-label">From Network</div>
+            <div class="swap-row">
+              <div class="token-btn" style="cursor:default">
+                <div class="token-dot" style="background:rgba(99,102,241,0.3);color:#818cf8">E</div>Sepolia
+              </div>
+              <input type="number" class="amount-input" id="bridgeAmount" placeholder="0.00" aria-label="Bridge asset amount" min="0">
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:0.75rem;color:var(--muted)">
+              <span>Balance: 1.50 Sepolia ETH</span>
+              <button class="btn btn-sm" style="padding:2px 8px;font-size:0.7rem" onclick="document.getElementById('bridgeAmount').value=1.5">MAX</button>
+            </div>
+          </div>
+
+          <div class="swap-arrow">
+            <button class="swap-arrow-btn" type="button" aria-label="Switch bridge direction">↓</button>
+          </div>
+
+          <!-- TO CHAIN -->
+          <div class="swap-box" style="margin-top:12px;margin-bottom:18px">
+            <div class="swap-label">To Network</div>
+            <div class="swap-row">
+              <div class="token-btn" style="cursor:default">
+                <div class="token-dot" style="background:rgba(124,58,237,0.3);color:#a78bfa">A</div>Arc Testnet
+              </div>
+              <input type="number" class="amount-input" id="bridgeReceive" placeholder="0.00" readonly style="opacity:0.8">
+            </div>
+          </div>
+
+          <div style="background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:12px 14px;margin-bottom:20px;font-size:0.8rem">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+              <span style="color:var(--muted)">Estimated Transfer Time</span>
+              <span style="color:var(--text)">~ 2 mins</span>
+            </div>
+            <div style="display:flex;justify-content:space-between">
+              <span style="color:var(--muted)">Bridge Fee</span>
+              <span style="color:var(--green);font-weight:700">0.00 ARC (Testnet Free)</span>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-glow" style="width:100%;padding:14px;font-size:1rem;font-weight:800;border-radius:12px" onclick="doBridgeTokens()" type="button">
+            Bridge to Arc Network
+          </button>
         </div>
       </div>
 
