@@ -11,22 +11,22 @@ const XP_TABLE = {
 const FIRST_TIME = { swap: 100, stake: 100 };
 
 const TIERS = [
-  { name:'Bronze',   min:0,    max:249,  color:'#cd7f32', icon:'🥉', alloc:'0.5%' },
-  { name:'Silver',   min:250,  max:799,  color:'#94a3b8', icon:'🥈', alloc:'1%'   },
-  { name:'Gold',     min:800,  max:1999, color:'#f59e0b', icon:'🥇', alloc:'2%'   },
-  { name:'Platinum', min:2000, max:4999, color:'#e2e8f0', icon:'🏆', alloc:'4%'   },
-  { name:'Diamond',  min:5000, max:1e9,  color:'#22d3ee', icon:'💎', alloc:'8%'   },
+  { name:'Bronze',   min:0,    max:249,  color:'#cd7f32', alloc:'0.5%' },
+  { name:'Silver',   min:250,  max:799,  color:'#94a3b8', alloc:'1%'   },
+  { name:'Gold',     min:800,  max:1999, color:'#f59e0b', alloc:'2%'   },
+  { name:'Platinum', min:2000, max:4999, color:'#e2e8f0', alloc:'4%'   },
+  { name:'Diamond',  min:5000, max:1e9,  color:'#22d3ee', alloc:'8%'   },
 ];
 
 const ACHIEVEMENTS = [
-  { id:'pioneer',  icon:'🌟', title:'Pioneer',        action:'connect_wallet', n:1    },
-  { id:'trader1',  icon:'⚡', title:'First Trade',    action:'swap',           n:1    },
-  { id:'trader10', icon:'📈', title:'Active Trader',  action:'swap',           n:10   },
-  { id:'staker1',  icon:'🏦', title:'Staker',         action:'stake',          n:1    },
-  { id:'staker5',  icon:'💎', title:'Diamond Hands',  action:'stake',          n:5    },
-  { id:'streak7',  icon:'🔥', title:'Daily Grinder',  action:'_streak',        n:7    },
-  { id:'harvest3', icon:'🌾', title:'Yield Harvester',action:'claim_rewards',  n:3    },
-  { id:'xp1000',   icon:'🎖', title:'Centurion',      action:'_xp',            n:1000 },
+  { id:'pioneer',   title:'Pioneer',        action:'connect_wallet', n:1    },
+  { id:'trader1',   title:'First Trade',    action:'swap',           n:1    },
+  { id:'trader10',  title:'Active Trader',  action:'swap',           n:10   },
+  { id:'staker1',   title:'Staker',         action:'stake',          n:1    },
+  { id:'staker5',  alloc:'8%', title:'Diamond Hands',  action:'stake',          n:5    },
+  { id:'streak7',   title:'Daily Grinder',  action:'_streak',        n:7    },
+  { id:'harvest3',  title:'Yield Harvester',action:'claim_rewards',  n:3    },
+  { id:'xp1000',    title:'Centurion',      action:'_xp',            n:1000 },
 ];
 
 const FAKE_BOARD = [];
@@ -57,7 +57,7 @@ function _checkAchievements(s) {
       s.achievements.push(a.id);
       setTimeout(() => {
         if (typeof showToast === 'function')
-          showToast(`${a.icon} Achievement unlocked: <strong>${a.title}</strong>`, 'success', 5000);
+          showToast(`Achievement unlocked: <strong>${a.title}</strong>`, 'success', 5000);
       }, 900);
     }
   });
@@ -113,7 +113,7 @@ function _updateUI(s) {
   document.querySelectorAll('[data-xp-rank]').forEach(e => e.textContent = '#' + rank);
   document.querySelectorAll('[data-xp-streak]').forEach(e => e.textContent = (s.streak || 0) + (s.streak === 1 ? ' day' : ' days'));
   document.querySelectorAll('[data-xp-tier]').forEach(e => {
-    e.textContent = tier.icon + ' ' + tier.name; e.style.color = tier.color;
+    e.textContent = tier.name; e.style.color = tier.color;
   });
   document.querySelectorAll('[data-xp-next]').forEach(e => {
     e.textContent = tier.max === 1e9 ? 'Max tier reached!' : tier.max - s.xp + ' XP to ' + TIERS[TIERS.indexOf(tier)+1]?.name;
@@ -148,11 +148,11 @@ function renderLeaderboard(state) {
   const row = u => {
     const r  = board.indexOf(u) + 1;
     const t  = _getTier(u.xp);
-    const lbl = r <= 3 ? ['🥇','🥈','🥉'][r-1] : r;
+    const lbl = '#' + r;
     return `<div class="lb-row${u.isMe ? ' lb-me' : ''}">
       <span class="lb-rank">${lbl}</span>
       <span class="lb-addr">${u.addr}${u.isMe ? ' <span style="color:#a78bfa;font-size:.65rem">(You)</span>' : ''}</span>
-      <span class="lb-tier">${t.icon}</span>
+      <span class="lb-tier" style="color:${t.color}">${t.name}</span>
       <span class="lb-xp">${u.xp.toLocaleString()} <span style="font-size:.7rem;color:var(--muted)">XP</span></span>
     </div>`;
   };
@@ -175,15 +175,15 @@ function renderQuests(state) {
   const today = new Date().toDateString();
 
   const quests = [
-    { icon:'📅', label:'Daily Check-in',   xp:15, done: s.lastDay === today },
-    { icon:'🔄', label:'Make a Swap',       xp:25, done: !!(s.counts.swap)   },
-    { icon:'🏦', label:'Stake NOVA',        xp:40, done: !!(s.counts.stake)  },
-    { icon:'🚰', label:'Claim from Faucet', xp:5,  done: !!(s.counts.faucet) },
+    { label:'Daily Check-in',   xp:15, done: s.lastDay === today },
+    { label:'Make a Swap',       xp:25, done: !!(s.counts.swap)   },
+    {  label:'Stake NOVA',        xp:40, done: !!(s.counts.stake)  },
+    { label:'Claim from Faucet', xp:5,  done: !!(s.counts.faucet) },
   ];
 
   el.innerHTML = quests.map(q => `
     <div class="quest-row${q.done ? ' quest-done' : ''}">
-      <span style="font-size:.95rem">${q.icon}</span>
+      
       <span class="quest-lbl" style="flex:1;font-size:.83rem;font-weight:600;color:var(--text)">${q.label}</span>
       <span style="font-size:.78rem;font-weight:800;color:${q.done ? '#10b981' : '#a78bfa'}">${q.done ? '✓ Done' : '+'+q.xp+' XP'}</span>
     </div>`).join('');
@@ -204,7 +204,7 @@ const ArcPoints = {
     if (bonus) {
       setTimeout(() => {
         if (typeof showToast === 'function')
-          showToast(`🎉 First ${action}! +${bonus} XP bonus`, 'success', 4500);
+          showToast(`First ${action}! +${bonus} XP bonus`, 'success', 4500);
       }, 400);
     }
 
@@ -227,7 +227,7 @@ const ArcPoints = {
     s.counts.daily_checkin = (s.counts.daily_checkin || 0) + 1;
     _checkAchievements(s);
     _save(s);
-    _showXpPop('+' + total + ' XP' + (s.streak > 1 ? ` 🔥 ${s.streak}-day streak!` : ''));
+    _showXpPop('+' + total + ' XP' + (s.streak > 1 ? ` ${s.streak}-day streak!` : ''));
     _updateUI(s);
     return true;
   },

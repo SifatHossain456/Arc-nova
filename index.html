@@ -183,7 +183,7 @@ body { background:#0b1220; }
     <span class="badge-testnet">Testnet</span>
     <div class="notif-wrapper">
       <button class="notif-btn" onclick="toggleNotifPanel();renderNotifications()" aria-label="Notifications" type="button" id="notifBtnHome">
-        🔔<span class="notif-badge" style="display:none" aria-live="polite">0</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg><span class="notif-badge" style="display:none" aria-live="polite">0</span>
       </button>
       <div class="notif-panel" id="notifPanel" role="log" aria-live="polite"></div>
     </div>
@@ -202,12 +202,12 @@ body { background:#0b1220; }
     <button class="mobile-nav-close" onclick="toggleMobileNav()" aria-label="Close menu" type="button">✕</button>
   </div>
   <ul class="mobile-nav-links" role="list">
-    <li><a href="index.html">🏠 Home</a></li>
-    <li><a href="dashboard.html">📊 Dashboard</a></li>
-    <li><a href="launchpad.html">🚀 Launchpad</a></li>
-    <li><a href="defi.html">🔄 DeFi</a></li>
-    <li><a href="portfolio.html">💼 Portfolio</a></li>
-    <li><a href="https://docs.arc.network/" target="_blank" rel="noopener noreferrer">📄 Docs ↗</a></li>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="launchpad.html">Launchpad</a></li>
+    <li><a href="defi.html">DeFi</a></li>
+    <li><a href="portfolio.html">Portfolio</a></li>
+    <li><a href="https://docs.arc.network/" target="_blank" rel="noopener noreferrer">Docs ↗</a></li>
   </ul>
   <div class="mobile-nav-footer">
     <span class="badge-testnet">Arc Testnet</span>
@@ -220,6 +220,7 @@ body { background:#0b1220; }
 ══════════════════════════════════════════════════════════ -->
 <section class="hero" aria-label="Hero section">
   <div class="hero-grid-bg" aria-hidden="true"></div>
+  <canvas id="heroParticlesCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.75;"></canvas>
   <div class="hero-orb-1" aria-hidden="true"></div>
   <div class="hero-orb-2" aria-hidden="true"></div>
 
@@ -316,32 +317,32 @@ body { background:#0b1220; }
 <section class="section" style="padding-top:20px">
   <div class="container">
     <div style="text-align:center;margin-bottom:56px">
-      <span class="section-label">⚡ Platform</span>
+      <span class="section-label">Platform</span>
       <h2 class="section-h" style="text-align:center;margin:14px auto 0">Everything you need in one place</h2>
       <p class="section-sub" style="text-align:center;margin:12px auto 0;max-width:480px">A complete suite of institutional-grade DeFi tools, all connected to Arc Network's on-chain infrastructure.</p>
     </div>
 
     <div class="grid-4">
       <a href="dashboard.html" class="feat-card fade-up d1" role="link">
-        <div class="feat-icon" style="background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.24)">📊</div>
+        <div class="feat-icon" style="background:rgba(139,92,246,0.14);border:1px solid rgba(139,92,246,0.28)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></div>
         <div class="feat-title">Analytics Dashboard</div>
         <div class="feat-desc">Real-time TVL, volume, and protocol analytics across all Arc-based projects with live on-chain data feeds.</div>
         <div class="feat-arrow">View Dashboard <span>→</span></div>
       </a>
       <a href="launchpad.html" class="feat-card fade-up d2" role="link">
-        <div class="feat-icon" style="background:rgba(245,158,11,0.10);border:1px solid rgba(245,158,11,0.22)">🚀</div>
+        <div class="feat-icon" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.26)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg></div>
         <div class="feat-title">Project Launchpad</div>
         <div class="feat-desc">Discover and invest in the next generation of Arc ecosystem projects before they go mainstream.</div>
         <div class="feat-arrow">Explore Projects <span>→</span></div>
       </a>
       <a href="defi.html" class="feat-card fade-up d3" role="link">
-        <div class="feat-icon" style="background:rgba(34,211,238,0.08);border:1px solid rgba(34,211,238,0.18)">🔄</div>
+        <div class="feat-icon" style="background:rgba(34,211,238,0.10);border:1px solid rgba(34,211,238,0.22)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 3 4 4-4 4"></path><path d="M20 7H4"></path><path d="m8 21-4-4 4-4"></path><path d="M4 17h16"></path></svg></div>
         <div class="feat-title">Instant Swap</div>
         <div class="feat-desc">Swap tokens with minimal slippage on Arc's deterministic settlement layer. Zero gas surprises.</div>
         <div class="feat-arrow">Start Swapping <span>→</span></div>
       </a>
       <a href="defi.html" class="feat-card fade-up d4" role="link">
-        <div class="feat-icon" style="background:rgba(16,185,129,0.09);border:1px solid rgba(16,185,129,0.20)">💎</div>
+        <div class="feat-icon" style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.25)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l4 6-10 12L2 9z"></path><path d="M11 3 8 9l4 12 4-12-3-6"></path><path d="M2 9h20"></path></svg></div>
         <div class="feat-title">Stake & Earn</div>
         <div class="feat-desc">Put your assets to work. Earn yield through NOVA staking, LP provision, and yield vaults.</div>
         <div class="feat-arrow">Start Earning <span>→</span></div>
@@ -351,25 +352,25 @@ body { background:#0b1220; }
     <!-- Additional features row -->
     <div class="grid-4" style="margin-top:20px">
       <a href="defi.html" class="feat-card fade-up d1" role="link">
-        <div class="feat-icon" style="background:rgba(99,102,241,0.10);border:1px solid rgba(99,102,241,0.22)">🌉</div>
+        <div class="feat-icon" style="background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.25)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14"></path><path d="M2 19h20"></path><path d="M18 13a6 6 0 0 0-12 0"></path></svg></div>
         <div class="feat-title">ArcBridge</div>
         <div class="feat-desc">Bridge assets cross-chain to Arc Testnet in seconds with no fees on testnet.</div>
         <div class="feat-arrow">Bridge Assets <span>→</span></div>
       </a>
       <a href="portfolio.html" class="feat-card fade-up d2" role="link">
-        <div class="feat-icon" style="background:rgba(168,85,247,0.10);border:1px solid rgba(168,85,247,0.22)">💼</div>
+        <div class="feat-icon" style="background:rgba(168,85,247,0.12);border:1px solid rgba(168,85,247,0.25)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg></div>
         <div class="feat-title">Portfolio Tracker</div>
         <div class="feat-desc">Track all your holdings, staking positions, and yield rewards in a unified dashboard.</div>
         <div class="feat-arrow">View Portfolio <span>→</span></div>
       </a>
       <a href="defi.html" class="feat-card fade-up d3" role="link">
-        <div class="feat-icon" style="background:rgba(6,182,212,0.09);border:1px solid rgba(6,182,212,0.19)">🌊</div>
+        <div class="feat-icon" style="background:rgba(6,182,212,0.12);border:1px solid rgba(6,182,212,0.25)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"></path></svg></div>
         <div class="feat-title">Liquidity Pools</div>
         <div class="feat-desc">Provide liquidity to earn swap fees on the most liquid Arc trading pairs.</div>
         <div class="feat-arrow">Add Liquidity <span>→</span></div>
       </a>
       <a href="defi.html" class="feat-card fade-up d4" role="link">
-        <div class="feat-icon" style="background:rgba(245,158,11,0.09);border:1px solid rgba(245,158,11,0.19)">💰</div>
+        <div class="feat-icon" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.25)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg></div>
         <div class="feat-title">Lending Markets</div>
         <div class="feat-desc">Borrow against collateral or earn lending yield with transparent on-chain rates.</div>
         <div class="feat-arrow">Explore Markets <span>→</span></div>
@@ -386,7 +387,7 @@ body { background:#0b1220; }
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start" class="eco-grid">
       <!-- Left: Arc Network -->
       <div class="fade-up d1">
-        <span class="section-label">🌐 Ecosystem</span>
+        <span class="section-label">Ecosystem</span>
         <h2 class="section-h" style="margin:16px 0 12px">Built on the Best</h2>
         <p class="section-sub" style="margin-bottom:28px">Arc Nova sits at the centre of Arc Network's growing DeFi ecosystem, harnessing deterministic settlement and stablecoin-native infrastructure.</p>
 
@@ -426,7 +427,7 @@ body { background:#0b1220; }
         <div class="projects-card">
           <div class="proj-row">
             <div class="proj-info">
-              <div class="proj-av" style="background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.2);color:#a78bfa">⚡</div>
+              <div class="proj-av" style="background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);color:#a78bfa;font-weight:800">AS</div>
               <div>
                 <div style="font-weight:700;font-size:0.9rem;color:#fff">ArcSwap</div>
                 <div style="font-size:0.74rem;color:rgba(248,250,252,0.35)">DEX Protocol</div>
@@ -439,20 +440,20 @@ body { background:#0b1220; }
           </div>
           <div class="proj-row">
             <div class="proj-info">
-              <div class="proj-av" style="background:rgba(34,211,238,0.10);border:1px solid rgba(34,211,238,0.18);color:#22d3ee">🏦</div>
+              <div class="proj-av" style="background:rgba(34,211,238,0.12);border:1px solid rgba(34,211,238,0.25);color:#22d3ee;font-weight:800">NL</div>
               <div>
                 <div style="font-weight:700;font-size:0.9rem;color:#fff">NovaLend</div>
                 <div style="font-size:0.74rem;color:rgba(248,250,252,0.35)">Lending Protocol</div>
               </div>
             </div>
             <div style="text-align:right">
-              <span class="tag tag-yellow">⏳ Upcoming</span>
+              <span class="tag tag-yellow">Upcoming</span>
               <div style="font-size:0.74rem;color:rgba(248,250,252,0.28);margin-top:4px">Raise: TBA</div>
             </div>
           </div>
           <div class="proj-row">
             <div class="proj-info">
-              <div class="proj-av" style="background:rgba(245,158,11,0.10);border:1px solid rgba(245,158,11,0.18);color:#f59e0b">🌉</div>
+              <div class="proj-av" style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.25);color:#f59e0b;font-weight:800">AB</div>
               <div>
                 <div style="font-weight:700;font-size:0.9rem;color:#fff">ArcBridge</div>
                 <div style="font-size:0.74rem;color:rgba(248,250,252,0.35)">Cross-chain Bridge</div>
@@ -465,27 +466,27 @@ body { background:#0b1220; }
           </div>
           <div class="proj-row">
             <div class="proj-info">
-              <div class="proj-av" style="background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.2);color:#818cf8">🎨</div>
+              <div class="proj-av" style="background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.28);color:#818cf8;font-weight:800">AN</div>
               <div>
                 <div style="font-weight:700;font-size:0.9rem;color:#fff">ArcNFT</div>
                 <div style="font-size:0.74rem;color:rgba(248,250,252,0.35)">NFT Marketplace</div>
               </div>
             </div>
             <div style="text-align:right">
-              <span class="tag tag-yellow">⏳ Upcoming</span>
+              <span class="tag tag-yellow">Upcoming</span>
               <div style="font-size:0.74rem;color:rgba(248,250,252,0.28);margin-top:4px">Raise: TBA</div>
             </div>
           </div>
           <div class="proj-row">
             <div class="proj-info">
-              <div class="proj-av" style="background:rgba(16,185,129,0.10);border:1px solid rgba(16,185,129,0.18);color:#10b981">📊</div>
+              <div class="proj-av" style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.25);color:#10b981;font-weight:800">AP</div>
               <div>
                 <div style="font-weight:700;font-size:0.9rem;color:#fff">ArcPerp</div>
                 <div style="font-size:0.74rem;color:rgba(248,250,252,0.35)">Perpetuals DEX</div>
               </div>
             </div>
             <div style="text-align:right">
-              <span class="tag tag-blue">🔮 Planned</span>
+              <span class="tag tag-blue">Planned</span>
               <div style="font-size:0.74rem;color:rgba(248,250,252,0.28);margin-top:4px">Q4 2026</div>
             </div>
           </div>
@@ -501,7 +502,7 @@ body { background:#0b1220; }
 <section class="section" style="border-top:1px solid rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.05)">
   <div class="container">
     <div style="text-align:center;margin-bottom:56px">
-      <span class="section-label">📋 How It Works</span>
+      <span class="section-label">How It Works</span>
       <h2 class="section-h" style="text-align:center;margin:14px auto 0">Get started in minutes</h2>
       <p class="section-sub" style="text-align:center;margin:12px auto 0;max-width:440px">No KYC, no sign-up, no custody. Just connect your wallet and go.</p>
     </div>
@@ -531,7 +532,7 @@ body { background:#0b1220; }
 <section class="section" style="background:rgba(245,158,11,0.018);border-top:1px solid rgba(245,158,11,0.08);border-bottom:1px solid rgba(245,158,11,0.08)">
   <div class="container">
     <div style="text-align:center;margin-bottom:48px">
-      <span class="section-label" style="background:rgba(245,158,11,0.09);border-color:rgba(245,158,11,0.25);color:#fbbf24">🪂 NOVA Airdrop</span>
+      <span class="section-label" style="background:rgba(245,158,11,0.09);border-color:rgba(245,158,11,0.25);color:#fbbf24">NOVA Airdrop</span>
       <h2 class="section-h fade-up" style="text-align:center;margin:16px auto 0">Earn your <span class="grad-text">NOVA allocation</span></h2>
       <p class="section-sub fade-up d1" style="text-align:center;margin:14px auto 0;max-width:540px">
         Arc Nova is preparing for mainnet. Early testnet participants who accumulate XP will receive a guaranteed <strong style="color:#fbbf24;font-weight:700">NOVA token allocation</strong> at launch. Snapshot date TBA — start earning now.
@@ -541,31 +542,31 @@ body { background:#0b1220; }
     <!-- Tier cards -->
     <div class="arc-tier-grid fade-up d2">
       <div class="card" style="text-align:center;padding:20px 12px;border-color:rgba(205,127,50,0.2)">
-        <div style="font-size:1.6rem;margin-bottom:8px">🥉</div>
+        <div style="font-size:0.75rem;font-weight:800;letter-spacing:0.06em;color:#cd7f32;text-transform:uppercase;margin-bottom:8px">Tier 1</div>
         <div style="font-weight:800;font-size:0.85rem;color:#cd7f32;margin-bottom:4px">Bronze</div>
         <div style="font-size:0.72rem;color:var(--muted);margin-bottom:8px">0 – 249 XP</div>
         <div style="font-size:0.82rem;font-weight:900;color:var(--text)">0.5%<br><span style="font-weight:400;font-size:0.7rem;color:var(--muted)">allocation</span></div>
       </div>
       <div class="card" style="text-align:center;padding:20px 12px;border-color:rgba(148,163,184,0.2)">
-        <div style="font-size:1.6rem;margin-bottom:8px">🥈</div>
+        <div style="font-size:0.75rem;font-weight:800;letter-spacing:0.06em;color:#94a3b8;text-transform:uppercase;margin-bottom:8px">Tier 2</div>
         <div style="font-weight:800;font-size:0.85rem;color:#94a3b8;margin-bottom:4px">Silver</div>
         <div style="font-size:0.72rem;color:var(--muted);margin-bottom:8px">250 – 799 XP</div>
         <div style="font-size:0.82rem;font-weight:900;color:var(--text)">1%<br><span style="font-weight:400;font-size:0.7rem;color:var(--muted)">allocation</span></div>
       </div>
       <div class="card" style="text-align:center;padding:20px 12px;border-color:rgba(245,158,11,0.26);background:rgba(245,158,11,0.035)">
-        <div style="font-size:1.6rem;margin-bottom:8px">🥇</div>
+        <div style="font-size:0.75rem;font-weight:800;letter-spacing:0.06em;color:#f59e0b;text-transform:uppercase;margin-bottom:8px">Tier 3</div>
         <div style="font-weight:800;font-size:0.85rem;color:#f59e0b;margin-bottom:4px">Gold</div>
         <div style="font-size:0.72rem;color:var(--muted);margin-bottom:8px">800 – 1,999 XP</div>
         <div style="font-size:0.82rem;font-weight:900;color:var(--text)">2%<br><span style="font-weight:400;font-size:0.7rem;color:var(--muted)">allocation</span></div>
       </div>
       <div class="card" style="text-align:center;padding:20px 12px;border-color:rgba(226,232,240,0.14)">
-        <div style="font-size:1.6rem;margin-bottom:8px">🏆</div>
+        <div style="font-size:0.75rem;font-weight:800;letter-spacing:0.06em;color:#e2e8f0;text-transform:uppercase;margin-bottom:8px">Tier 4</div>
         <div style="font-weight:800;font-size:0.85rem;color:#e2e8f0;margin-bottom:4px">Platinum</div>
         <div style="font-size:0.72rem;color:var(--muted);margin-bottom:8px">2,000 – 4,999 XP</div>
         <div style="font-size:0.82rem;font-weight:900;color:var(--text)">4%<br><span style="font-weight:400;font-size:0.7rem;color:var(--muted)">allocation</span></div>
       </div>
       <div class="card" style="text-align:center;padding:20px 12px;border-color:rgba(34,211,238,0.3);background:rgba(34,211,238,0.035)">
-        <div style="font-size:1.6rem;margin-bottom:8px">💎</div>
+        <div style="font-size:0.75rem;font-weight:800;letter-spacing:0.06em;color:#22d3ee;text-transform:uppercase;margin-bottom:8px">Tier 5</div>
         <div style="font-weight:800;font-size:0.85rem;color:#22d3ee;margin-bottom:4px">Diamond</div>
         <div style="font-size:0.72rem;color:var(--muted);margin-bottom:8px">5,000+ XP</div>
         <div style="font-size:0.82rem;font-weight:900;color:var(--text)">8%<br><span style="font-weight:400;font-size:0.7rem;color:var(--muted)">allocation</span></div>
@@ -577,7 +578,7 @@ body { background:#0b1220; }
       <div class="glass-panel" style="padding:24px;text-align:center">
         <div style="font-size:0.7rem;font-weight:700;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:12px">Your Progress</div>
         <div style="font-size:2.4rem;font-weight:900;letter-spacing:-0.03em;margin-bottom:4px" data-xp>0</div>
-        <div style="font-size:0.8rem;font-weight:700;margin-bottom:12px;color:#cd7f32" data-xp-tier>🥉 Bronze</div>
+        <div style="font-size:0.8rem;font-weight:700;margin-bottom:12px;color:#cd7f32" data-xp-tier>Bronze</div>
         <div class="xp-bar-wrap"><div class="xp-bar-fill" style="width:0%"></div></div>
         <div style="font-size:0.72rem;color:var(--muted);margin-top:8px" data-xp-next></div>
         <div style="display:flex;justify-content:center;gap:28px;margin-top:16px;font-size:0.8rem">
@@ -590,22 +591,22 @@ body { background:#0b1220; }
     <!-- How to earn XP -->
     <div class="arc-earn-grid fade-up d3">
       <div style="text-align:center;padding:18px 14px;border-radius:15px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06)">
-        <div style="font-size:1.5rem;margin-bottom:8px">🔗</div>
+        <div style="font-size:1.1rem;font-weight:800;color:#a78bfa;margin-bottom:8px">01</div>
         <div style="font-weight:700;font-size:0.82rem;color:var(--text);margin-bottom:4px">Connect Wallet</div>
         <div style="font-size:0.72rem;color:#a78bfa;font-weight:800">+50 XP</div>
       </div>
       <div style="text-align:center;padding:18px 14px;border-radius:15px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06)">
-        <div style="font-size:1.5rem;margin-bottom:8px">🔄</div>
+        <div style="font-size:1.1rem;font-weight:800;color:#22d3ee;margin-bottom:8px">02</div>
         <div style="font-weight:700;font-size:0.82rem;color:var(--text);margin-bottom:4px">Swap Tokens</div>
         <div style="font-size:0.72rem;color:#a78bfa;font-weight:800">+25 XP each</div>
       </div>
       <div style="text-align:center;padding:18px 14px;border-radius:15px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06)">
-        <div style="font-size:1.5rem;margin-bottom:8px">🏦</div>
+        <div style="font-size:1.1rem;font-weight:800;color:#10b981;margin-bottom:8px">03</div>
         <div style="font-weight:700;font-size:0.82rem;color:var(--text);margin-bottom:4px">Stake NOVA</div>
         <div style="font-size:0.72rem;color:#a78bfa;font-weight:800">+40 XP each</div>
       </div>
       <div style="text-align:center;padding:18px 14px;border-radius:15px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06)">
-        <div style="font-size:1.5rem;margin-bottom:8px">📅</div>
+        <div style="font-size:1.1rem;font-weight:800;color:#f59e0b;margin-bottom:8px">04</div>
         <div style="font-weight:700;font-size:0.82rem;color:var(--text);margin-bottom:4px">Daily Check-in</div>
         <div style="font-size:0.72rem;color:#a78bfa;font-weight:800">+15 XP / day</div>
       </div>
@@ -624,7 +625,7 @@ body { background:#0b1220; }
 <section class="section" style="border-top:1px solid rgba(255,255,255,0.05)">
   <div class="container">
     <div style="text-align:center;margin-bottom:40px">
-      <span class="section-label" style="background:rgba(16,185,129,0.08);border-color:rgba(16,185,129,0.22);color:#10b981">📈 Calculator</span>
+      <span class="section-label" style="background:rgba(16,185,129,0.08);border-color:rgba(16,185,129,0.22);color:#10b981">Calculator</span>
       <h2 class="section-h fade-up" style="text-align:center;margin:14px auto 0">NOVA Yield Calculator</h2>
       <p class="section-sub fade-up d1" style="text-align:center;max-width:440px;margin:12px auto 0">See exactly how much you can earn staking NOVA at the current APY</p>
     </div>
@@ -748,7 +749,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <section class="section" style="padding-top:16px">
   <div class="container">
     <div style="text-align:center;margin-bottom:48px">
-      <span class="section-label">🗺️ Roadmap</span>
+      <span class="section-label">Roadmap</span>
       <h2 class="section-h" style="text-align:center;margin:14px auto 0">Protocol Milestones &amp; Mainnet Journey</h2>
       <p class="section-sub" style="text-align:center;margin:12px auto 0;max-width:460px">From testnet infrastructure to global mainnet — here is our path to production.</p>
     </div>
@@ -769,7 +770,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <div class="glass-panel fade-up d2 roadmap-card-active" style="padding:24px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
           <span style="font-size:0.73rem;font-weight:800;color:var(--cyan);letter-spacing:0.06em">Q2 2026</span>
-          <span class="tag tag-purple">Active ⚡</span>
+          <span class="tag tag-purple">Active</span>
         </div>
         <div style="font-weight:800;font-size:1rem;color:var(--text);margin-bottom:10px;letter-spacing:-0.02em">DeFi Hub &amp; Launchpad</div>
         <ul style="font-size:0.81rem;color:var(--muted);line-height:1.72;list-style:none;display:flex;flex-direction:column;gap:6px">
@@ -824,8 +825,8 @@ document.addEventListener('DOMContentLoaded', () => {
         Join developers building, trading, and testing on Arc Network's high-performance stablecoin-native testnet. No KYC, no barriers.
       </p>
       <div class="cta-buttons">
-        <a href="defi.html" class="btn btn-primary btn-lg">🚀 Launch App</a>
-        <a href="https://docs.arc.network/" target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-lg">📄 Read Docs</a>
+        <a href="defi.html" class="btn btn-primary btn-lg">Launch App</a>
+        <a href="https://docs.arc.network/" target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-lg">Read Docs</a>
       </div>
     </div>
   </div>

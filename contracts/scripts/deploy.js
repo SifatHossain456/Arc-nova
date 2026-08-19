@@ -85,12 +85,12 @@ async function main() {
   );
   fs.writeFileSync(outPath, updated);
 
-  console.log("\n✅ Deployment complete!");
+  console.log("\n[OK] Deployment complete!");
   console.log("   NOVA Token:", tokenAddr);
   console.log("   Swap:      ", swapAddr);
   console.log("   Staking:   ", stakingAddr);
   console.log("   Explorer:  ", "https://testnet.arcscan.app/address/" + tokenAddr);
-  console.log("\n⚡ contracts.js updated — refresh the website!");
+  console.log("\n[INFO] contracts.js updated — refresh the website!");
 }
 
 main().catch(err => { console.error(err); process.exit(1); });

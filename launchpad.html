@@ -134,7 +134,7 @@
   <div class="nav-right">
     <span class="badge-testnet">Testnet</span>
     <div class="notif-wrapper">
-      <button class="notif-btn" onclick="toggleNotifPanel();renderNotifications()">🔔<span class="notif-badge" style="display:none">0</span></button>
+      <button class="notif-btn" onclick="toggleNotifPanel();renderNotifications()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg><span class="notif-badge" style="display:none">0</span></button>
       <div class="notif-panel" id="notifPanel"></div>
     </div>
     <button class="btn btn-primary" onclick="connectWallet()" id="walletBtn">Connect Wallet</button>
@@ -150,12 +150,12 @@
     <button class="mobile-nav-close" onclick="toggleMobileNav()">✕</button>
   </div>
   <ul class="mobile-nav-links">
-    <li><a href="index.html">🏠 Home</a></li>
-    <li><a href="dashboard.html">📊 Dashboard</a></li>
-    <li><a href="launchpad.html">🚀 Launchpad</a></li>
-    <li><a href="defi.html">🔄 DeFi</a></li>
-    <li><a href="portfolio.html">💼 Portfolio</a></li>
-    <li><a href="https://docs.arc.network/" target="_blank" rel="noopener noreferrer">📄 Docs ↗</a></li>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="launchpad.html">Launchpad</a></li>
+    <li><a href="defi.html">DeFi</a></li>
+    <li><a href="portfolio.html">Portfolio</a></li>
+    <li><a href="https://docs.arc.network/" target="_blank" rel="noopener noreferrer">Docs ↗</a></li>
   </ul>
   <div class="mobile-nav-footer">
     <span class="badge-testnet">Testnet</span>
@@ -186,7 +186,7 @@
   <div class="container">
     <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:28px;flex-wrap:wrap">
       <div>
-        <span class="hero-section-label">🚀 Launchpad</span>
+        <span class="hero-section-label">Launchpad</span>
         <h1 style="font-size:clamp(1.9rem,3.6vw,2.8rem);font-weight:900;letter-spacing:-0.035em;line-height:1.1;margin:10px 0 8px">
           Discover Early Projects<br>on <span class="grad-text">Arc Network</span>
         </h1>
@@ -218,9 +218,9 @@
     <!-- Filters -->
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px">
       <button class="filter-btn active" onclick="filterProjects('all',this)">All Projects</button>
-      <button class="filter-btn" onclick="filterProjects('live',this)">🟢 Live</button>
-      <button class="filter-btn" onclick="filterProjects('upcoming',this)">⏳ Upcoming</button>
-      <button class="filter-btn" onclick="filterProjects('ended',this)">✅ Ended</button>
+      <button class="filter-btn" onclick="filterProjects('live',this)">Live</button>
+      <button class="filter-btn" onclick="filterProjects('upcoming',this)">Upcoming</button>
+      <button class="filter-btn" onclick="filterProjects('ended',this)">Ended</button>
     </div>
 
     <!-- LIVE PROJECTS -->
@@ -236,7 +236,7 @@
             <div style="position:absolute;top:-30px;right:-30px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(168,85,247,.28) 0%,transparent 70%);pointer-events:none"></div>
             <div style="position:absolute;bottom:-20px;left:-20px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.18) 0%,transparent 70%);pointer-events:none"></div>
             <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(124,58,237,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,.06) 1px,transparent 1px);background-size:22px 22px;pointer-events:none"></div>
-            <div style="position:relative;z-index:1;width:60px;height:60px;border-radius:18px;background:linear-gradient(135deg,rgba(168,85,247,.25),rgba(124,58,237,.18));border:1px solid rgba(168,85,247,.45);display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 32px rgba(124,58,237,.35),0 4px 16px rgba(0,0,0,.4)">⚡</div>
+            <div style="position:relative;z-index:1;width:60px;height:60px;border-radius:18px;background:linear-gradient(135deg,rgba(168,85,247,.25),rgba(124,58,237,.18));border:1px solid rgba(168,85,247,.45);display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 32px rgba(124,58,237,.35),0 4px 16px rgba(0,0,0,.4)">AS</div>
           </div>
           <div class="launch-body">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
@@ -287,7 +287,7 @@
             <div style="position:absolute;top:-30px;right:-30px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(34,211,238,.24) 0%,transparent 70%);pointer-events:none"></div>
             <div style="position:absolute;bottom:-20px;left:-20px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(6,182,212,.15) 0%,transparent 70%);pointer-events:none"></div>
             <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(34,211,238,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(34,211,238,.05) 1px,transparent 1px);background-size:22px 22px;pointer-events:none"></div>
-            <div style="position:relative;z-index:1;width:60px;height:60px;border-radius:18px;background:linear-gradient(135deg,rgba(34,211,238,.22),rgba(6,182,212,.15));border:1px solid rgba(34,211,238,.42);display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 32px rgba(34,211,238,.32),0 4px 16px rgba(0,0,0,.4)">🌉</div>
+            <div style="position:relative;z-index:1;width:60px;height:60px;border-radius:18px;background:linear-gradient(135deg,rgba(34,211,238,.22),rgba(6,182,212,.15));border:1px solid rgba(34,211,238,.42);display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 32px rgba(34,211,238,.32),0 4px 16px rgba(0,0,0,.4)">AB</div>
           </div>
           <div class="launch-body">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
@@ -337,7 +337,7 @@
             <div style="position:absolute;top:-30px;right:-30px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(52,211,153,.24) 0%,transparent 70%);pointer-events:none"></div>
             <div style="position:absolute;bottom:-20px;left:-20px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(16,185,129,.15) 0%,transparent 70%);pointer-events:none"></div>
             <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(16,185,129,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(16,185,129,.06) 1px,transparent 1px);background-size:22px 22px;pointer-events:none"></div>
-            <div style="position:relative;z-index:1;width:60px;height:60px;border-radius:18px;background:linear-gradient(135deg,rgba(52,211,153,.22),rgba(16,185,129,.15));border:1px solid rgba(52,211,153,.42);display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 32px rgba(16,185,129,.32),0 4px 16px rgba(0,0,0,.4)">💰</div>
+            <div style="position:relative;z-index:1;width:60px;height:60px;border-radius:18px;background:linear-gradient(135deg,rgba(52,211,153,.22),rgba(16,185,129,.15));border:1px solid rgba(52,211,153,.42);display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 32px rgba(16,185,129,.32),0 4px 16px rgba(0,0,0,.4)">NL</div>
           </div>
           <div class="launch-body">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
@@ -387,7 +387,7 @@
     <!-- UPCOMING -->
     <div style="margin-bottom:40px">
       <div style="font-weight:700;font-size:1rem;color:var(--text-2);margin-bottom:16px;display:flex;align-items:center;gap:8px">
-        ⏳ Upcoming Launches
+        Upcoming Launches
       </div>
       <div class="grid-3">
 
@@ -396,12 +396,12 @@
             <div style="position:absolute;top:-30px;right:-30px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(129,140,248,.24) 0%,transparent 70%);pointer-events:none"></div>
             <div style="position:absolute;bottom:-20px;left:-20px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.15) 0%,transparent 70%);pointer-events:none"></div>
             <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(99,102,241,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(99,102,241,.06) 1px,transparent 1px);background-size:22px 22px;pointer-events:none"></div>
-            <div style="position:relative;z-index:1;width:60px;height:60px;border-radius:18px;background:linear-gradient(135deg,rgba(129,140,248,.22),rgba(99,102,241,.15));border:1px solid rgba(129,140,248,.42);display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 32px rgba(99,102,241,.32),0 4px 16px rgba(0,0,0,.4)">🏦</div>
+            <div style="position:relative;z-index:1;width:60px;height:60px;border-radius:18px;background:linear-gradient(135deg,rgba(129,140,248,.22),rgba(99,102,241,.15));border:1px solid rgba(129,140,248,.42);display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 32px rgba(99,102,241,.32),0 4px 16px rgba(0,0,0,.4)">NV</div>
           </div>
           <div class="launch-body">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
               <div class="launch-name">NovaLend</div>
-              <span class="tag tag-yellow">⏳ Upcoming</span>
+              <span class="tag tag-yellow">Upcoming</span>
             </div>
             <div class="launch-desc">Decentralized lending and borrowing protocol built natively on Arc Network with undercollateralized loans.</div>
             <div class="tag-row">
@@ -435,12 +435,12 @@
             <div style="position:absolute;top:-30px;right:-30px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(251,191,36,.22) 0%,transparent 70%);pointer-events:none"></div>
             <div style="position:absolute;bottom:-20px;left:-20px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(245,158,11,.14) 0%,transparent 70%);pointer-events:none"></div>
             <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(245,158,11,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(245,158,11,.06) 1px,transparent 1px);background-size:22px 22px;pointer-events:none"></div>
-            <div style="position:relative;z-index:1;width:60px;height:60px;border-radius:18px;background:linear-gradient(135deg,rgba(251,191,36,.22),rgba(245,158,11,.15));border:1px solid rgba(251,191,36,.40);display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 32px rgba(245,158,11,.28),0 4px 16px rgba(0,0,0,.4)">🎨</div>
+            <div style="position:relative;z-index:1;width:60px;height:60px;border-radius:18px;background:linear-gradient(135deg,rgba(251,191,36,.22),rgba(245,158,11,.15));border:1px solid rgba(251,191,36,.40);display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 32px rgba(245,158,11,.28),0 4px 16px rgba(0,0,0,.4)">AN</div>
           </div>
           <div class="launch-body">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
               <div class="launch-name">ArcNFT</div>
-              <span class="tag tag-yellow">⏳ Upcoming</span>
+              <span class="tag tag-yellow">Upcoming</span>
             </div>
             <div class="launch-desc">The first NFT marketplace on Arc Network — create, buy, sell, and auction NFTs with stablecoin payments.</div>
             <div class="tag-row">
@@ -474,12 +474,12 @@
             <div style="position:absolute;top:-30px;right:-30px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(248,113,113,.22) 0%,transparent 70%);pointer-events:none"></div>
             <div style="position:absolute;bottom:-20px;left:-20px;width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,rgba(239,68,68,.14) 0%,transparent 70%);pointer-events:none"></div>
             <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(239,68,68,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(239,68,68,.06) 1px,transparent 1px);background-size:22px 22px;pointer-events:none"></div>
-            <div style="position:relative;z-index:1;width:60px;height:60px;border-radius:18px;background:linear-gradient(135deg,rgba(248,113,113,.22),rgba(239,68,68,.15));border:1px solid rgba(248,113,113,.40);display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 32px rgba(239,68,68,.28),0 4px 16px rgba(0,0,0,.4)">📈</div>
+            <div style="position:relative;z-index:1;width:60px;height:60px;border-radius:18px;background:linear-gradient(135deg,rgba(248,113,113,.22),rgba(239,68,68,.15));border:1px solid rgba(248,113,113,.40);display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 0 32px rgba(239,68,68,.28),0 4px 16px rgba(0,0,0,.4)">AP</div>
           </div>
           <div class="launch-body">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
               <div class="launch-name">ArcPerp</div>
-              <span class="tag tag-yellow">⏳ Upcoming</span>
+              <span class="tag tag-yellow">Upcoming</span>
             </div>
             <div class="launch-desc">Perpetuals trading platform with up to 50x leverage, powered by Arc's high-speed settlement and stablecoin-native infrastructure.</div>
             <div class="tag-row">
@@ -513,7 +513,7 @@
 
     <!-- ENDED -->
     <div style="margin-bottom:48px">
-      <div style="font-weight:700;font-size:1rem;color:var(--text-2);margin-bottom:16px">✅ Completed Launches</div>
+      <div style="font-weight:700;font-size:1rem;color:var(--text-2);margin-bottom:16px">Completed Launches</div>
       <div class="table-wrap">
         <table>
           <thead>
@@ -528,7 +528,7 @@
           </thead>
           <tbody>
             <tr>
-              <td><div style="display:flex;align-items:center;gap:10px;font-weight:600;color:var(--text)"><span style="font-size:1.2rem">🌊</span>ArcLiquid</div></td>
+              <td><div style="display:flex;align-items:center;gap:10px;font-weight:600;color:var(--text)">ArcLiquid</div></td>
               <td><span class="tag tag-blue">Liquidity</span></td>
               <td style="color:var(--muted)">—</td>
               <td style="color:var(--muted)">—</td>
@@ -536,7 +536,7 @@
               <td><span class="tag tag-green">Completed</span></td>
             </tr>
             <tr>
-              <td><div style="display:flex;align-items:center;gap:10px;font-weight:600;color:var(--text)"><span style="font-size:1.2rem">🔐</span>NovaAuth</div></td>
+              <td><div style="display:flex;align-items:center;gap:10px;font-weight:600;color:var(--text)">NovaAuth</div></td>
               <td><span class="tag tag-purple">Identity</span></td>
               <td style="color:var(--muted)">—</td>
               <td style="color:var(--muted)">—</td>
@@ -544,7 +544,7 @@
               <td><span class="tag tag-green">Completed</span></td>
             </tr>
             <tr>
-              <td><div style="display:flex;align-items:center;gap:10px;font-weight:600;color:var(--text)"><span style="font-size:1.2rem">📊</span>ArcOracle</div></td>
+              <td><div style="display:flex;align-items:center;gap:10px;font-weight:600;color:var(--text)">ArcOracle</div></td>
               <td><span class="tag tag-yellow">Oracle</span></td>
               <td style="color:var(--muted)">—</td>
               <td style="color:var(--muted)">—</td>
@@ -558,7 +558,7 @@
 
     <!-- APPLY CARD -->
     <div class="apply-card">
-      <div style="font-size:2rem;margin-bottom:12px">🚀</div>
+      
       <div style="font-size:1.5rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:10px">
         Launch Your Project on Arc Nova
       </div>
@@ -598,7 +598,7 @@
     <div class="modal-body">
       <div id="confirmDetails"></div>
       <div style="margin-top:20px;padding:12px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:10px;font-size:0.8rem;color:var(--yellow);line-height:1.6" role="note">
-        ⚠️ Testnet participation is simulated. Tokens will be claimable at TGE.
+        Testnet participation is simulated. Tokens will be claimable at TGE.
       </div>
       <div style="display:flex;gap:10px;margin-top:16px">
         <button class="btn btn-ghost" style="flex:1" onclick="closeConfirmModal()" type="button">Cancel</button>

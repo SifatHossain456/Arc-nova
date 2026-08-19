@@ -46,16 +46,16 @@
 
   <!-- Feature pills -->
   <rect x="80" y="510" width="120" height="36" rx="18" fill="rgba(124,58,237,0.20)" stroke="rgba(139,92,246,0.4)" stroke-width="1"/>
-  <text x="140" y="533" font-family="Arial,sans-serif" font-size="15" font-weight="700" text-anchor="middle" fill="#a78bfa">🔄 Swap</text>
+  <text x="140" y="533" font-family="Arial,sans-serif" font-size="15" font-weight="700" text-anchor="middle" fill="#a78bfa"> Swap</text>
 
   <rect x="214" y="510" width="130" height="36" rx="18" fill="rgba(16,185,129,0.15)" stroke="rgba(16,185,129,0.35)" stroke-width="1"/>
-  <text x="279" y="533" font-family="Arial,sans-serif" font-size="15" font-weight="700" text-anchor="middle" fill="#10b981">🏦 Stake</text>
+  <text x="279" y="533" font-family="Arial,sans-serif" font-size="15" font-weight="700" text-anchor="middle" fill="#10b981"> Stake</text>
 
   <rect x="358" y="510" width="130" height="36" rx="18" fill="rgba(34,211,238,0.12)" stroke="rgba(34,211,238,0.3)" stroke-width="1"/>
-  <text x="423" y="533" font-family="Arial,sans-serif" font-size="15" font-weight="700" text-anchor="middle" fill="#22d3ee">💰 Earn</text>
+  <text x="423" y="533" font-family="Arial,sans-serif" font-size="15" font-weight="700" text-anchor="middle" fill="#22d3ee"> Earn</text>
 
   <rect x="502" y="510" width="150" height="36" rx="18" fill="rgba(245,158,11,0.12)" stroke="rgba(245,158,11,0.3)" stroke-width="1"/>
-  <text x="577" y="533" font-family="Arial,sans-serif" font-size="15" font-weight="700" text-anchor="middle" fill="#f59e0b">🪂 Airdrop XP</text>
+  <text x="577" y="533" font-family="Arial,sans-serif" font-size="15" font-weight="700" text-anchor="middle" fill="#f59e0b"> Airdrop XP</text>
 
   <!-- URL -->
   <text x="1120" y="590" font-family="Arial,sans-serif" font-size="18" font-weight="600" text-anchor="end" fill="rgba(255,255,255,0.28)">arc-nova.vercel.app</text>

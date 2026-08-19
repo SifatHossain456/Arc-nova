@@ -176,7 +176,7 @@ Button variants (inconsistent):
 
 - **Critical:** No `:focus-visible` styles — keyboard users cannot see where they are.
 - **Critical:** Interactive cards (`<a class="feat-card">`) have no focus ring.
-- **High:** Emoji used as icons (📊🚀🔄💎) — screen readers announce "bar chart emoji".
+- **High:** Emoji used as icons () — screen readers announce "bar chart emoji".
 - **High:** `onclick` on `<div>` elements without `role="button"` / `tabindex="0"`.
 - **High:** Color contrast fails — `rgba(248,250,252,.35)` on `#040412` = **3.2:1** (WCAG AA needs 4.5:1 for body text).
 - **Medium:** No `skip-to-content` link.

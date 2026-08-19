@@ -10,13 +10,13 @@
 
 | | |
 |---|---|
-| 🔄 **Token Swap** | NOVA ↔ USDC with live on-chain quote, 0.3% fee, configurable slippage |
-| 🏦 **NOVA Staking** | 12% APY, 24h unbonding, real-time reward accrual |
-| 💰 **Yield Vaults** | Multiple strategies with live APY and TVL |
-| 🌊 **Liquidity Pools** | Add/remove LP, track fees and 24h volume |
-| 📊 **Live Dashboard** | Real block data, CoinGecko prices, DEX analytics |
-| 🚀 **Launchpad** | IDO discovery and fair-launch participation |
-| 🪂 **XP Airdrop** | Earn XP for every on-chain action → NOVA allocation at mainnet |
+|  **Token Swap** | NOVA ↔ USDC with live on-chain quote, 0.3% fee, configurable slippage |
+|  **NOVA Staking** | 12% APY, 24h unbonding, real-time reward accrual |
+|  **Yield Vaults** | Multiple strategies with live APY and TVL |
+|  **Liquidity Pools** | Add/remove LP, track fees and 24h volume |
+|  **Live Dashboard** | Real block data, CoinGecko prices, DEX analytics |
+|  **Launchpad** | IDO discovery and fair-launch participation |
+|  **XP Airdrop** | Earn XP for every on-chain action → NOVA allocation at mainnet |
 
 ---
 
@@ -43,7 +43,7 @@
 
 **XP & Airdrop Engine**
 - Awards XP for every on-chain action (swap, stake, claim, faucet, daily check-in)
-- Tier system: Bronze → Silver → Gold → Platinum → 💎 Diamond
+- Tier system: Bronze → Silver → Gold → Platinum →  Diamond
 - Achievement badges, daily streak with compounding bonus, leaderboard
 - All state in `localStorage` — no backend required
 
@@ -136,11 +136,11 @@ Early testnet users accumulate XP through on-chain activity. Higher tier at main
 
 | Tier | XP | Allocation |
 |---|---|---|
-| 🥉 Bronze | 0 – 249 | 0.5% |
-| 🥈 Silver | 250 – 799 | 1% |
-| 🥇 Gold | 800 – 1,999 | 2% |
-| 🏆 Platinum | 2,000 – 4,999 | 4% |
-| 💎 Diamond | 5,000+ | 8% |
+|  Bronze | 0 – 249 | 0.5% |
+|  Silver | 250 – 799 | 1% |
+|  Gold | 800 – 1,999 | 2% |
+|  Platinum | 2,000 – 4,999 | 4% |
+|  Diamond | 5,000+ | 8% |
 
 Snapshot date: TBA at mainnet launch.
 

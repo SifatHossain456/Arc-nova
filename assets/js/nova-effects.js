@@ -50,11 +50,11 @@ const NovaFX = (() => {
     const r = Math.random();
     if (r < 0.55) {
       const s = _SWAPS[Math.floor(Math.random() * _SWAPS.length)];
-      return { icon: '🔄', text: `swapped ${s[0]} ${s[1]} → ${s[2]}`, col: '#a78bfa' };
+      return { icon: 'SWAP', text: `swapped ${s[0]} ${s[1]} → ${s[2]}`, col: '#a78bfa' };
     } else if (r < 0.82) {
-      return { icon: '💎', text: _STAKES[Math.floor(Math.random() * _STAKES.length)], col: '#10b981' };
+      return { icon: 'STAKE', text: _STAKES[Math.floor(Math.random() * _STAKES.length)], col: '#10b981' };
     } else {
-      return { icon: '🪂', text: `earned +${Math.floor(Math.random()*20+5)} XP`, col: '#22d3ee' };
+      return { icon: 'XP', text: `earned +${Math.floor(Math.random()*20+5)} XP`, col: '#22d3ee' };
     }
   }
 
@@ -131,7 +131,7 @@ const NovaFX = (() => {
 
   /* ─────────────────────────────────────────────────────────────────
      4. ACHIEVEMENT TOAST
-     Call: NovaFX.achievement('Title', 'desc', '🏆')
+     Call: NovaFX.achievement('Title', 'desc', '✓')
   ───────────────────────────────────────────────────────────────── */
   let _achStack = 0;
   function achievement(title, desc, icon) {
@@ -139,7 +139,7 @@ const NovaFX = (() => {
     el.className = 'nfx-ach';
     el.style.bottom = (24 + _achStack * 80) + 'px';
     _achStack++;
-    el.innerHTML = `<div class="nfx-ach-icon">${icon || '🏆'}</div>
+    el.innerHTML = `<div class="nfx-ach-icon">${icon || '✓'}</div>
       <div><div class="nfx-ach-title">${title}</div>
       <div class="nfx-ach-desc">${desc}</div></div>
       <div class="nfx-ach-bar"></div>`;
@@ -201,7 +201,7 @@ const NovaFX = (() => {
     const btn = document.createElement('button');
     btn.id = 'nfxTryDemo';
     btn.className = 'nfx-try-demo';
-    btn.innerHTML = '<span class="nfx-demo-pulse"></span>⚡ Try Demo';
+    btn.innerHTML = '<span class="nfx-demo-pulse"></span>Try Demo';
     btn.title = 'Explore all features without a real wallet';
     btn.onclick = () => {
       if (!window.location.pathname.includes('defi')) {
@@ -232,7 +232,7 @@ const NovaFX = (() => {
 
     // Wallet connect
     document.addEventListener('arcWalletConnected', () => {
-      achievement('Connected!', 'Welcome to Arc Nova — you earned 50 XP', '🎉');
+      achievement('Connected!', 'Welcome to Arc Nova — you earned 50 XP', '✓');
     });
 
     // Tx success
@@ -247,14 +247,14 @@ const NovaFX = (() => {
       }
       // achievement
       const map = {
-        swap:    ['Swap Complete!',    'You earned 10 XP',             '🔄'],
-        stake:   ['NOVA Staked!',      'Earning 12.5% APY — +25 XP',  '💎'],
-        unstake: ['Unstaking…',        'Tokens unlock in 24 hours',    '🔓'],
-        claim:   ['Rewards Claimed!',  'Tokens back in your wallet',   '🎁'],
-        faucet:  ['Faucet Claimed!',   '1,000 NOVA sent — +5 XP',     '🚰'],
-        withdraw:['Withdrawn!',        'Tokens in your wallet',        '✅'],
+        swap:    ['Swap Complete!',    'You earned 10 XP',             '✓'],
+        stake:   ['NOVA Staked!',      'Earning 12.5% APY — +25 XP',  '✓'],
+        unstake: ['Unstaking…',        'Tokens unlock in 24 hours',    '✓'],
+        claim:   ['Rewards Claimed!',  'Tokens back in your wallet',   '✓'],
+        faucet:  ['Faucet Claimed!',   '1,000 NOVA sent — +5 XP',     '✓'],
+        withdraw:['Withdrawn!',        'Tokens in your wallet',        '✓'],
       };
-      const [t, desc, ico] = map[d.type] || ['Done!', 'Transaction complete', '✅'];
+      const [t, desc, ico] = map[d.type] || ['Done!', 'Transaction complete', '✓'];
       achievement(t, desc, ico);
     });
   });

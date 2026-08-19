@@ -366,3 +366,93 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 else onReady();
 
 })();
+
+
+/* ── Hero Interactive Particle Constellation ── */
+function initHeroParticleCanvas() {
+  const canvas = document.getElementById('heroParticlesCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let w = canvas.width = canvas.parentElement.offsetWidth || window.innerWidth;
+  let h = canvas.height = canvas.parentElement.offsetHeight || window.innerHeight;
+
+  const particles = [];
+  const count = Math.min(Math.floor((w * h) / 18000), 55);
+
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.45,
+      vy: (Math.random() - 0.5) * 0.45,
+      radius: Math.random() * 1.8 + 0.8,
+      color: Math.random() > 0.4 ? 'rgba(139,92,246,' : (Math.random() > 0.5 ? 'rgba(0,242,254,' : 'rgba(167,139,250,'),
+      alpha: Math.random() * 0.6 + 0.2
+    });
+  }
+
+  let mouse = { x: -1000, y: -1000 };
+  window.addEventListener('mousemove', e => {
+    const r = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - r.left;
+    mouse.y = e.clientY - r.top;
+  });
+
+  window.addEventListener('resize', () => {
+    if (!canvas.parentElement) return;
+    w = canvas.width = canvas.parentElement.offsetWidth || window.innerWidth;
+    h = canvas.height = canvas.parentElement.offsetHeight || window.innerHeight;
+  });
+
+  function render() {
+    ctx.clearRect(0, 0, w, h);
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+
+      if (p.x < 0) p.x = w;
+      if (p.x > w) p.x = 0;
+      if (p.y < 0) p.y = h;
+      if (p.y > h) p.y = 0;
+
+      // Mouse attraction
+      const dx = mouse.x - p.x;
+      const dy = mouse.y - p.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 140) {
+        p.x += (dx / dist) * 0.4;
+        p.y += (dy / dist) * 0.4;
+      }
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = p.color + p.alpha + ')';
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = p.color + '0.8)';
+      ctx.fill();
+
+      // Connect nearby particles
+      for (let j = i + 1; j < particles.length; j++) {
+        const p2 = particles[j];
+        const d2x = p.x - p2.x;
+        const d2y = p.y - p2.y;
+        const d2 = Math.sqrt(d2x*d2x + d2y*d2y);
+        if (d2 < 120) {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.strokeStyle = 'rgba(139,92,246,' + (1 - d2/120) * 0.18 + ')';
+          ctx.lineWidth = 0.75;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(render);
+  }
+  render();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(initHeroParticleCanvas, 100);
+});

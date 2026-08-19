@@ -13,14 +13,14 @@ const eip6963Wallets = new Map();
 
 /* ── Known wallet display info ── */
 const WALLET_META = {
-  'MetaMask':        { emoji: '🦊', color: '#f6851b', bg: 'rgba(246,133,27,0.12)' },
-  'Rabby Wallet':    { emoji: '🐰', color: '#8697ff', bg: 'rgba(134,151,255,0.12)' },
-  'Coinbase Wallet': { emoji: '🔵', color: '#0052ff', bg: 'rgba(0,82,255,0.12)'   },
-  'Trust Wallet':    { emoji: '🛡️', color: '#3375bb', bg: 'rgba(51,117,187,0.12)' },
-  'Brave Wallet':    { emoji: '🦁', color: '#fb542b', bg: 'rgba(251,84,43,0.12)'  },
-  'Frame':           { emoji: '🖼️', color: '#7c7c7c', bg: 'rgba(124,124,124,0.1)' },
-  'OKX Wallet':      { emoji: '⭕', color: '#aaaaaa', bg: 'rgba(170,170,170,0.1)' },
-  'Phantom':         { emoji: '👻', color: '#ab9ff2', bg: 'rgba(171,159,242,0.12)'},
+  'MetaMask':        { initial: 'M', color: '#f6851b', bg: 'rgba(246,133,27,0.12)' },
+  'Rabby Wallet':    { initial: 'R', color: '#8697ff', bg: 'rgba(134,151,255,0.12)' },
+  'Coinbase Wallet': { initial: 'C', color: '#0052ff', bg: 'rgba(0,82,255,0.12)'   },
+  'Trust Wallet':    { initial: 'T', color: '#3375bb', bg: 'rgba(51,117,187,0.12)' },
+  'Brave Wallet':    { initial: 'B', color: '#fb542b', bg: 'rgba(251,84,43,0.12)'  },
+  'Frame':           { initial: 'F', color: '#7c7c7c', bg: 'rgba(124,124,124,0.1)' },
+  'OKX Wallet':      { initial: 'O', color: '#aaaaaa', bg: 'rgba(170,170,170,0.1)' },
+  'Phantom':         { initial: 'P', color: '#ab9ff2', bg: 'rgba(171,159,242,0.12)'},
 };
 
 /* ── Session helpers ── */
@@ -300,7 +300,7 @@ function _injectNetworkBanner() {
   const el = document.createElement('div');
   el.id = 'arcNetworkBanner';
   el.innerHTML = `
-    <span class="net-banner-icon">⚠️</span>
+    <span class="net-banner-icon">!</span>
     <span class="net-banner-msg">You are connected to the wrong network. Please switch to <strong>Arc Testnet</strong>.</span>
     <button class="net-banner-btn" onclick="switchToArcNetwork()">Switch Network</button>
   `;
@@ -356,21 +356,21 @@ function _injectWalletModal() {
           <div class="wlt-info-title">What is a Wallet?</div>
           <div class="wlt-info-blocks">
             <div class="wlt-info-block">
-              <div class="wlt-info-icon" style="background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.2)">🏦</div>
+              <div class="wlt-info-icon" style="background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.2);color:#a78bfa;font-weight:800">1</div>
               <div>
                 <div class="wlt-info-block-title">A Home for Your Assets</div>
                 <div class="wlt-info-block-desc">Wallets are used to send, receive, and store digital assets like tokens and NFTs.</div>
               </div>
             </div>
             <div class="wlt-info-block">
-              <div class="wlt-info-icon" style="background:rgba(34,211,238,.10);border:1px solid rgba(34,211,238,.18)">🔑</div>
+              <div class="wlt-info-icon" style="background:rgba(34,211,238,.10);border:1px solid rgba(34,211,238,.18);color:#22d3ee;font-weight:800">2</div>
               <div>
                 <div class="wlt-info-block-title">A New Way to Sign In</div>
                 <div class="wlt-info-block-desc">No passwords. Connect your wallet once to access any Web3 app instantly.</div>
               </div>
             </div>
             <div class="wlt-info-block">
-              <div class="wlt-info-icon" style="background:rgba(245,158,11,.10);border:1px solid rgba(245,158,11,.18)">🪂</div>
+              <div class="wlt-info-icon" style="background:rgba(245,158,11,.10);border:1px solid rgba(245,158,11,.18);color:#f59e0b;font-weight:800">3</div>
               <div>
                 <div class="wlt-info-block-title">Earn XP on Arc Nova</div>
                 <div class="wlt-info-block-desc">Every swap and stake earns you XP toward your NOVA airdrop allocation.</div>
@@ -499,10 +499,10 @@ function _renderWalletList() {
   const recent  = _getRecentWallet();
 
   const POPULAR_WALLETS = [
-    { name:'MetaMask',        emoji:'🦊', color:'#f6851b', bg:'rgba(246,133,27,0.12)',  url:'https://metamask.io/download/' },
-    { name:'Rabby Wallet',    emoji:'🐰', color:'#8697ff', bg:'rgba(134,151,255,0.12)', url:'https://rabby.io/' },
-    { name:'Coinbase Wallet', emoji:'🔵', color:'#0052ff', bg:'rgba(0,82,255,0.12)',    url:'https://www.coinbase.com/wallet' },
-    { name:'Phantom',         emoji:'👻', color:'#ab9ff2', bg:'rgba(171,159,242,0.12)', url:'https://phantom.app/' },
+    { name:'MetaMask',         color:'#f6851b', bg:'rgba(246,133,27,0.12)',  url:'https://metamask.io/download/' },
+    { name:'Rabby Wallet',     color:'#8697ff', bg:'rgba(134,151,255,0.12)', url:'https://rabby.io/' },
+    { name:'Coinbase Wallet',  color:'#0052ff', bg:'rgba(0,82,255,0.12)',    url:'https://www.coinbase.com/wallet' },
+    { name:'Phantom',          color:'#ab9ff2', bg:'rgba(171,159,242,0.12)', url:'https://phantom.app/' },
   ];
 
   if (wallets.length === 0) {
@@ -530,7 +530,7 @@ function _renderWalletList() {
 
   /* Detected wallets section */
   const installedItems = sorted.map((w, i) => {
-    const meta     = WALLET_META[w.name] || { emoji: '👛', color: '#8b5cf6', bg: 'rgba(139,92,246,0.12)' };
+    const meta     = WALLET_META[w.name] || {  color: '#8b5cf6', bg: 'rgba(139,92,246,0.12)' };
     const isRecent = w.name === recent;
 
     const icon = w.iconUrl
@@ -583,7 +583,7 @@ function _retryDetect() {
 
 /* ── Show connecting state in right panel ── */
 function _showConnecting(walletName) {
-  const meta  = WALLET_META[walletName] || { emoji: '👛', color: '#8b5cf6', bg: 'rgba(139,92,246,0.12)' };
+  const meta  = WALLET_META[walletName] || {  color: '#8b5cf6', bg: 'rgba(139,92,246,0.12)' };
   const right = document.getElementById('wltRightPanel');
   if (!right) return;
   right.innerHTML = `
@@ -626,7 +626,7 @@ async function _connect(uuid) {
     if (w) _saveRecentWallet(w.name);
 
     closeWalletModal();
-    showToast('Wallet connected! Welcome to Arc Nova 🎉', 'success');
+    showToast('Wallet connected! Welcome to Arc Nova', 'success');
     document.dispatchEvent(new CustomEvent('arcWalletConnected'));
     await _loadBalances();
     if (typeof initDemoBalances === 'function') initDemoBalances();
@@ -840,9 +840,9 @@ function openTxModal(title, desc) {
   document.getElementById('txHashRow').style.display  = 'none';
   document.getElementById('txCloseBtn').style.display = 'none';
   _txStepState = [
-    { icon: '✍️', title: 'Confirm in Wallet', sub: desc || 'Approve this transaction in your wallet extension', state: 'active' },
-    { icon: '📡', title: 'Broadcasting',      sub: 'Sending transaction to Arc Network',                      state: 'idle'   },
-    { icon: '✅', title: 'Confirmed',          sub: 'Transaction finalized on-chain',                          state: 'idle'   },
+    { icon: '1', title: 'Confirm in Wallet', sub: desc || 'Approve this transaction in your wallet extension', state: 'active' },
+    { icon: '2', title: 'Broadcasting',      sub: 'Sending transaction to Arc Network',                      state: 'idle'   },
+    { icon: '✓', title: 'Confirmed',          sub: 'Transaction finalized on-chain',                          state: 'idle'   },
   ];
   _renderTxSteps();
   m.classList.add('open');
@@ -850,7 +850,7 @@ function openTxModal(title, desc) {
 
 function txPending(hash) {
   _txStepState[0].state = 'done';
-  _txStepState[0].icon  = '✅';
+  _txStepState[0].icon = '✓';
   _txStepState[1].state = 'active';
   _renderTxSteps();
   const row  = document.getElementById('txHashRow');
@@ -862,8 +862,8 @@ function txPending(hash) {
 }
 
 function txSuccess(msg) {
-  _txStepState[0].state = 'done'; _txStepState[0].icon = '✅';
-  _txStepState[1].state = 'done'; _txStepState[1].icon = '✅';
+  _txStepState[0].state = 'done'; _txStepState[0].icon = '✓';
+  _txStepState[1].state = 'done'; _txStepState[1].icon = '✓';
   _txStepState[2].state = 'done'; _txStepState[2].sub  = msg;
   _renderTxSteps();
   const closeBtn = document.getElementById('txCloseBtn');
@@ -877,7 +877,7 @@ function txError(msg) {
   const pendingIdx = _txStepState.findIndex(s => s.state === 'active');
   const idx = pendingIdx >= 0 ? pendingIdx : 0;
   _txStepState[idx].state = 'error';
-  _txStepState[idx].icon  = '❌';
+  _txStepState[idx].icon = '✕';
   _txStepState[idx].sub   = msg;
   _renderTxSteps();
   const closeBtn = document.getElementById('txCloseBtn');

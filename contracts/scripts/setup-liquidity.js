@@ -43,7 +43,7 @@ async function main() {
   console.log("Adding liquidity (5,000 NOVA + 5 USDC)...");
   const swap = await hre.ethers.getContractAt("ArcNovaSwap", SWAP_ADDR, deployer);
   await (await swap.addLiquidity(novaLiq, usdcLiq)).wait();
-  console.log("✅ Liquidity seeded!");
+  console.log("[OK] Liquidity seeded!");
 
   /* ── Fund staking rewards ── */
   console.log("\nFunding staking (500,000 NOVA rewards)...");
@@ -51,7 +51,7 @@ async function main() {
   await (await token.approve(STAKING_ADDR, rewardAmt)).wait();
   const staking = await hre.ethers.getContractAt("ArcNovaStaking", STAKING_ADDR, deployer);
   await (await staking.fundRewards(rewardAmt)).wait();
-  console.log("✅ Staking rewards funded!");
+  console.log("[OK] Staking rewards funded!");
 
   /* ── Update contracts.js ── */
   const addresses = {
@@ -69,7 +69,7 @@ async function main() {
   );
   fs.writeFileSync(outPath, updated);
 
-  console.log("\n✅ contracts.js updated!");
+  console.log("\n[OK] contracts.js updated!");
   console.log("   NOVA :", TOKEN_ADDR);
   console.log("   Swap :", SWAP_ADDR);
   console.log("   Stake:", STAKING_ADDR);
